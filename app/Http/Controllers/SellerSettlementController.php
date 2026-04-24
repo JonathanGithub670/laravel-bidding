@@ -26,6 +26,7 @@ class SellerSettlementController extends Controller
         // Append formatted attributes
         $settlements->getCollection()->transform(function ($settlement) {
             $settlement->append(['status_badge', 'fund_status_badge', 'delivery_status_badge', 'formatted_amount', 'formatted_admin_fee', 'formatted_seller_amount']);
+
             return $settlement;
         });
 
@@ -56,7 +57,7 @@ class SellerSettlementController extends Controller
         }
 
         // Check if shipping can be confirmed
-        if (!$settlement->canSellerConfirmShipping()) {
+        if (! $settlement->canSellerConfirmShipping()) {
             return back()->with('error', 'Pengiriman tidak dapat dikonfirmasi pada status ini.');
         }
 

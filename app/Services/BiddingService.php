@@ -12,9 +12,9 @@ use App\Models\AuctionDeposit;
 use App\Models\Bid;
 use App\Models\Transaction;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Exception;
 
 class BiddingService
 {
@@ -48,7 +48,7 @@ class BiddingService
     {
         // Check snap lock - prevent rapid bidding
         $lockKey = "auction_bid_lock:{$auction->id}";
-        if (!Cache::add($lockKey, true, self::SNAP_LOCK_SECONDS)) {
+        if (! Cache::add($lockKey, true, self::SNAP_LOCK_SECONDS)) {
             throw new Exception('Sistem sedang memproses bid lain. Coba lagi dalam 1 detik.');
         }
 
@@ -106,7 +106,7 @@ class BiddingService
                         $user->id,
                         Transaction::TYPE_BID,
                         $chargeAmount,
-                        'Bid lelang: ' . $auction->title . ' (Rp ' . number_format($amount, 0, ',', '.') . ')',
+                        'Bid lelang: '.$auction->title.' (Rp '.number_format($amount, 0, ',', '.').')',
                         $bid
                     );
                 }
@@ -128,7 +128,7 @@ class BiddingService
                     // Create system activity for time extension
                     $activity = AuctionActivity::createSystemActivity(
                         $auction,
-                        "⏰ Waktu diperpanjang +{self::EXTENSION_SECONDS} detik!"
+                        '⏰ Waktu diperpanjang +{self::EXTENSION_SECONDS} detik!'
                     );
                     broadcast(new ActivityPosted($activity))->toOthers();
                 }
@@ -182,8 +182,8 @@ class BiddingService
 
         if ($amount < $minBid) {
             throw new Exception(
-                "Bid minimum adalah Rp " . number_format($minBid, 0, ',', '.') .
-                ". Anda menawar Rp " . number_format($amount, 0, ',', '.')
+                'Bid minimum adalah Rp '.number_format($minBid, 0, ',', '.').
+                '. Anda menawar Rp '.number_format($amount, 0, ',', '.')
             );
         }
 
@@ -191,7 +191,7 @@ class BiddingService
         $difference = $amount - $auction->current_price;
         if ($difference % $auction->bid_increment !== 0) {
             throw new Exception(
-                "Bid harus kelipatan Rp " . number_format($auction->bid_increment, 0, ',', '.')
+                'Bid harus kelipatan Rp '.number_format($auction->bid_increment, 0, ',', '.')
             );
         }
     }
@@ -217,8 +217,8 @@ class BiddingService
     {
         if ($user->balance < $amount) {
             throw new Exception(
-                'Saldo tidak mencukupi. Saldo Anda: Rp ' . number_format($user->balance, 0, ',', '.') .
-                ', Bid: Rp ' . number_format($amount, 0, ',', '.')
+                'Saldo tidak mencukupi. Saldo Anda: Rp '.number_format($user->balance, 0, ',', '.').
+                ', Bid: Rp '.number_format($amount, 0, ',', '.')
             );
         }
     }
@@ -233,19 +233,19 @@ class BiddingService
 
         return [
             [
-                'label' => '+' . $this->formatShort($increment),
+                'label' => '+'.$this->formatShort($increment),
                 'amount' => $currentPrice + $increment,
             ],
             [
-                'label' => '+' . $this->formatShort($increment * 2),
+                'label' => '+'.$this->formatShort($increment * 2),
                 'amount' => $currentPrice + ($increment * 2),
             ],
             [
-                'label' => '+' . $this->formatShort($increment * 5),
+                'label' => '+'.$this->formatShort($increment * 5),
                 'amount' => $currentPrice + ($increment * 5),
             ],
             [
-                'label' => '+' . $this->formatShort($increment * 10),
+                'label' => '+'.$this->formatShort($increment * 10),
                 'amount' => $currentPrice + ($increment * 10),
             ],
         ];
@@ -257,14 +257,15 @@ class BiddingService
     protected function formatShort(int $number): string
     {
         if ($number >= 1000000000) {
-            return round($number / 1000000000, 1) . 'B';
+            return round($number / 1000000000, 1).'B';
         }
         if ($number >= 1000000) {
-            return round($number / 1000000, 1) . 'M';
+            return round($number / 1000000, 1).'M';
         }
         if ($number >= 1000) {
-            return round($number / 1000, 1) . 'K';
+            return round($number / 1000, 1).'K';
         }
+
         return (string) $number;
     }
 
@@ -310,7 +311,7 @@ class BiddingService
                             $depositor->id,
                             Transaction::TYPE_BID_REFUND,
                             $deposit->amount,
-                            'Pengembalian deposit lelang: ' . $auction->title,
+                            'Pengembalian deposit lelang: '.$auction->title,
                             $auction
                         );
 
@@ -336,7 +337,7 @@ class BiddingService
                             $depositor->id,
                             Transaction::TYPE_BID_REFUND,
                             $deposit->amount,
-                            'Pengembalian deposit lelang (tanpa pemenang): ' . $auction->title,
+                            'Pengembalian deposit lelang (tanpa pemenang): '.$auction->title,
                             $auction
                         );
 
@@ -357,7 +358,7 @@ class BiddingService
             } else {
                 AuctionActivity::createSystemActivity(
                     $auction,
-                    "⚠️ Lelang berakhir tanpa pemenang."
+                    '⚠️ Lelang berakhir tanpa pemenang.'
                 );
             }
         });

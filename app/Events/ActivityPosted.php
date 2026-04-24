@@ -2,12 +2,9 @@
 
 namespace App\Events;
 
-use App\Models\Auction;
 use App\Models\AuctionActivity;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -34,7 +31,7 @@ class ActivityPosted implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PresenceChannel('auction.' . $this->activity->auction_id),
+            new PresenceChannel('auction.'.$this->activity->auction_id),
         ];
     }
 

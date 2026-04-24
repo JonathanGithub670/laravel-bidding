@@ -1,7 +1,16 @@
 import { Head, useForm, router } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
+import {
+    Plus,
+    Trash2,
+    Star,
+    Building2,
+    CreditCard,
+    Edit2,
+    Check,
+    X,
+} from 'lucide-react';
 import { useState } from 'react';
-import { Plus, Trash2, Star, Building2, CreditCard, Edit2, Check, X } from 'lucide-react';
+import AppLayout from '@/layouts/app-layout';
 
 interface BankAccount {
     id: number;
@@ -73,82 +82,102 @@ export default function BankAccountsIndex({ accounts, banks }: Props) {
         <AppLayout>
             <Head title="Rekening Bank" />
 
-            <div className="p-6 max-w-4xl mx-auto">
+            <div className="mx-auto max-w-4xl p-6">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-8">
+                <div className="mb-8 flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                             Rekening Bank
                         </h1>
-                        <p className="text-gray-500 dark:text-gray-400 mt-1">
+                        <p className="mt-1 text-gray-500 dark:text-gray-400">
                             Kelola rekening untuk pencairan dana
                         </p>
                     </div>
                     <button
                         onClick={() => setShowAddForm(!showAddForm)}
-                        className="flex items-center gap-2 px-4 py-2.5 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-xl transition-colors"
+                        className="flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-violet-700"
                     >
-                        <Plus className="w-5 h-5" />
+                        <Plus className="h-5 w-5" />
                         Tambah Rekening
                     </button>
                 </div>
 
                 {/* Add Form */}
                 {showAddForm && (
-                    <div className="mb-6 p-6 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
-                        <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
+                    <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                        <h3 className="mb-4 font-semibold text-gray-900 dark:text-white">
                             Tambah Rekening Baru
                         </h3>
                         <form onSubmit={handleSubmit} className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                                         Bank
                                     </label>
                                     <select
                                         value={data.bank_code}
-                                        onChange={(e) => setData('bank_code', e.target.value)}
-                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-violet-500"
+                                        onChange={(e) =>
+                                            setData('bank_code', e.target.value)
+                                        }
+                                        className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-violet-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                     >
                                         <option value="">Pilih Bank</option>
-                                        {Object.entries(banks).map(([code, name]) => (
-                                            <option key={code} value={code}>
-                                                {code} - {name}
-                                            </option>
-                                        ))}
+                                        {Object.entries(banks).map(
+                                            ([code, name]) => (
+                                                <option key={code} value={code}>
+                                                    {code} - {name}
+                                                </option>
+                                            ),
+                                        )}
                                     </select>
                                     {errors.bank_code && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.bank_code}</p>
+                                        <p className="mt-1 text-sm text-red-500">
+                                            {errors.bank_code}
+                                        </p>
                                     )}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                                         Nomor Rekening
                                     </label>
                                     <input
                                         type="text"
                                         value={data.account_number}
-                                        onChange={(e) => setData('account_number', e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                'account_number',
+                                                e.target.value,
+                                            )
+                                        }
                                         placeholder="1234567890"
-                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-violet-500"
+                                        className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-violet-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                     />
                                     {errors.account_number && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.account_number}</p>
+                                        <p className="mt-1 text-sm text-red-500">
+                                            {errors.account_number}
+                                        </p>
                                     )}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                                         Nama Pemilik
                                     </label>
                                     <input
                                         type="text"
                                         value={data.account_name}
-                                        onChange={(e) => setData('account_name', e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                'account_name',
+                                                e.target.value,
+                                            )
+                                        }
                                         placeholder="Nama sesuai rekening"
-                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-violet-500"
+                                        className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-gray-900 focus:ring-2 focus:ring-violet-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                     />
                                     {errors.account_name && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.account_name}</p>
+                                        <p className="mt-1 text-sm text-red-500">
+                                            {errors.account_name}
+                                        </p>
                                     )}
                                 </div>
                             </div>
@@ -159,14 +188,14 @@ export default function BankAccountsIndex({ accounts, banks }: Props) {
                                         setShowAddForm(false);
                                         reset();
                                     }}
-                                    className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors"
+                                    className="rounded-xl px-4 py-2 text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-xl transition-colors disabled:opacity-50"
+                                    className="rounded-xl bg-violet-600 px-4 py-2 text-white transition-colors hover:bg-violet-700 disabled:opacity-50"
                                 >
                                     {processing ? 'Menyimpan...' : 'Simpan'}
                                 </button>
@@ -177,9 +206,9 @@ export default function BankAccountsIndex({ accounts, banks }: Props) {
 
                 {/* Account List */}
                 {accounts.length === 0 ? (
-                    <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700">
-                        <Building2 className="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                    <div className="rounded-2xl border border-gray-200 bg-white py-16 text-center dark:border-gray-700 dark:bg-gray-800">
+                        <Building2 className="mx-auto mb-4 h-16 w-16 text-gray-300 dark:text-gray-600" />
+                        <h3 className="mb-2 text-lg font-medium text-gray-900 dark:text-white">
                             Belum ada rekening
                         </h3>
                         <p className="text-gray-500 dark:text-gray-400">
@@ -191,53 +220,81 @@ export default function BankAccountsIndex({ accounts, banks }: Props) {
                         {accounts.map((account) => (
                             <div
                                 key={account.id}
-                                className={`p-5 bg-white dark:bg-gray-800 rounded-2xl border transition-all ${
+                                className={`rounded-2xl border bg-white p-5 transition-all dark:bg-gray-800 ${
                                     account.is_primary
-                                        ? 'border-violet-300 dark:border-violet-600 ring-2 ring-violet-100 dark:ring-violet-900/30'
+                                        ? 'border-violet-300 ring-2 ring-violet-100 dark:border-violet-600 dark:ring-violet-900/30'
                                         : 'border-gray-200 dark:border-gray-700'
                                 }`}
                             >
                                 {editingId === account.id ? (
                                     /* Edit Mode */
                                     <div className="space-y-4">
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                                             <select
                                                 value={editForm.data.bank_code}
-                                                onChange={(e) => editForm.setData('bank_code', e.target.value)}
-                                                className="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                                onChange={(e) =>
+                                                    editForm.setData(
+                                                        'bank_code',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                             >
-                                                {Object.entries(banks).map(([code, name]) => (
-                                                    <option key={code} value={code}>
-                                                        {code} - {name}
-                                                    </option>
-                                                ))}
+                                                {Object.entries(banks).map(
+                                                    ([code, name]) => (
+                                                        <option
+                                                            key={code}
+                                                            value={code}
+                                                        >
+                                                            {code} - {name}
+                                                        </option>
+                                                    ),
+                                                )}
                                             </select>
                                             <input
                                                 type="text"
-                                                value={editForm.data.account_number}
-                                                onChange={(e) => editForm.setData('account_number', e.target.value)}
-                                                className="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                                value={
+                                                    editForm.data.account_number
+                                                }
+                                                onChange={(e) =>
+                                                    editForm.setData(
+                                                        'account_number',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                             />
                                             <input
                                                 type="text"
-                                                value={editForm.data.account_name}
-                                                onChange={(e) => editForm.setData('account_name', e.target.value)}
-                                                className="px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                                value={
+                                                    editForm.data.account_name
+                                                }
+                                                onChange={(e) =>
+                                                    editForm.setData(
+                                                        'account_name',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                             />
                                         </div>
                                         <div className="flex justify-end gap-2">
                                             <button
-                                                onClick={() => setEditingId(null)}
-                                                className="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                                                onClick={() =>
+                                                    setEditingId(null)
+                                                }
+                                                className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
                                             >
-                                                <X className="w-5 h-5" />
+                                                <X className="h-5 w-5" />
                                             </button>
                                             <button
-                                                onClick={() => handleUpdate(account.id)}
+                                                onClick={() =>
+                                                    handleUpdate(account.id)
+                                                }
                                                 disabled={editForm.processing}
-                                                className="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg"
+                                                className="rounded-lg p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20"
                                             >
-                                                <Check className="w-5 h-5" />
+                                                <Check className="h-5 w-5" />
                                             </button>
                                         </div>
                                     </div>
@@ -245,8 +302,8 @@ export default function BankAccountsIndex({ accounts, banks }: Props) {
                                     /* View Mode */
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-4">
-                                            <div className="p-3 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600">
-                                                <CreditCard className="w-6 h-6 text-white" />
+                                            <div className="rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 p-3">
+                                                <CreditCard className="h-6 w-6 text-white" />
                                             </div>
                                             <div>
                                                 <div className="flex items-center gap-2">
@@ -254,40 +311,49 @@ export default function BankAccountsIndex({ accounts, banks }: Props) {
                                                         {account.bank_name}
                                                     </h3>
                                                     {account.is_primary && (
-                                                        <span className="flex items-center gap-1 px-2 py-0.5 bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 text-xs font-medium rounded-full">
-                                                            <Star className="w-3 h-3" />
+                                                        <span className="flex items-center gap-1 rounded-full bg-violet-100 px-2 py-0.5 text-xs font-medium text-violet-700 dark:bg-violet-900/30 dark:text-violet-400">
+                                                            <Star className="h-3 w-3" />
                                                             Utama
                                                         </span>
                                                     )}
                                                 </div>
                                                 <p className="text-gray-600 dark:text-gray-400">
-                                                    {account.account_number} • {account.account_name}
+                                                    {account.account_number} •{' '}
+                                                    {account.account_name}
                                                 </p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">
                                             {!account.is_primary && (
                                                 <button
-                                                    onClick={() => handleSetPrimary(account.id)}
-                                                    className="p-2 text-gray-500 hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/20 rounded-lg transition-colors"
+                                                    onClick={() =>
+                                                        handleSetPrimary(
+                                                            account.id,
+                                                        )
+                                                    }
+                                                    className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-violet-50 hover:text-violet-600 dark:hover:bg-violet-900/20"
                                                     title="Jadikan Utama"
                                                 >
-                                                    <Star className="w-5 h-5" />
+                                                    <Star className="h-5 w-5" />
                                                 </button>
                                             )}
                                             <button
-                                                onClick={() => handleEdit(account)}
-                                                className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                                                onClick={() =>
+                                                    handleEdit(account)
+                                                }
+                                                className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20"
                                                 title="Edit"
                                             >
-                                                <Edit2 className="w-5 h-5" />
+                                                <Edit2 className="h-5 w-5" />
                                             </button>
                                             <button
-                                                onClick={() => handleDelete(account.id)}
-                                                className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                                                onClick={() =>
+                                                    handleDelete(account.id)
+                                                }
+                                                className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
                                                 title="Hapus"
                                             >
-                                                <Trash2 className="w-5 h-5" />
+                                                <Trash2 className="h-5 w-5" />
                                             </button>
                                         </div>
                                     </div>

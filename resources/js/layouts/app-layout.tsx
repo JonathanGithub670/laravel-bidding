@@ -1,16 +1,18 @@
-import { SidebarProvider } from '@/context/SidebarContext';
 import { AppHeader } from '@/components/layout/AppHeader';
 import { AppSidebar } from '@/components/layout/AppSidebar';
 import { Backdrop } from '@/components/layout/Backdrop';
-import { useSidebar } from '@/context/SidebarContext';
 import { Toaster } from '@/components/ui/toast';
+import { useSidebar } from '@/context/SidebarContext';
+import { SidebarProvider } from '@/context/SidebarContext';
 import type { AppLayoutProps } from '@/types';
 
-const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const LayoutContent: React.FC<{ children: React.ReactNode }> = ({
+    children,
+}) => {
     const { isExpanded, isHovered, isMobileOpen } = useSidebar();
 
     return (
-        <div className="min-h-screen xl:flex bg-gray-50 dark:bg-gray-950">
+        <div className="min-h-screen bg-gray-50 xl:flex dark:bg-gray-950">
             <div>
                 <AppSidebar />
                 <Backdrop />
@@ -21,7 +23,7 @@ const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                 } ${isMobileOpen ? 'ml-0' : ''}`}
             >
                 <AppHeader />
-                <div className="p-4 mx-auto max-w-[1536px] md:p-6">
+                <div className="mx-auto max-w-[1536px] p-4 md:p-6">
                     {children}
                 </div>
             </div>
@@ -37,4 +39,3 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </SidebarProvider>
     );
 }
-

@@ -36,11 +36,11 @@ class TransactionController extends Controller
             'transactions' => $transactions,
             'summary' => [
                 'balance' => (float) $user->balance,
-                'formatted_balance' => 'Rp ' . number_format($user->balance, 0, ',', '.'),
+                'formatted_balance' => 'Rp '.number_format($user->balance, 0, ',', '.'),
                 'total_income' => (float) $totalIncome,
-                'formatted_income' => 'Rp ' . number_format($totalIncome, 0, ',', '.'),
+                'formatted_income' => 'Rp '.number_format($totalIncome, 0, ',', '.'),
                 'total_expense' => (float) $totalExpense,
-                'formatted_expense' => 'Rp ' . number_format($totalExpense, 0, ',', '.'),
+                'formatted_expense' => 'Rp '.number_format($totalExpense, 0, ',', '.'),
             ],
             'currentFilter' => $filter,
         ]);

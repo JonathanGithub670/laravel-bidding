@@ -1,6 +1,6 @@
-import settlements from './settlements'
+import settlements from './settlements';
 const seller = {
     settlements: Object.assign(settlements, settlements),
-}
+};
 
-export default seller
+export default seller;

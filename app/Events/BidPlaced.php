@@ -4,10 +4,8 @@ namespace App\Events;
 
 use App\Models\Auction;
 use App\Models\Bid;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -17,6 +15,7 @@ class BidPlaced implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public Auction $auction;
+
     public Bid $bid;
 
     /**
@@ -36,7 +35,7 @@ class BidPlaced implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PresenceChannel('auction.' . $this->auction->id),
+            new PresenceChannel('auction.'.$this->auction->id),
         ];
     }
 

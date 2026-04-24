@@ -7,7 +7,12 @@ interface ErrorPageProps {
     actions?: { label: string; href: string; primary?: boolean }[];
 }
 
-export default function ErrorPage({ code, title, message, actions }: ErrorPageProps) {
+export default function ErrorPage({
+    code,
+    title,
+    message,
+    actions,
+}: ErrorPageProps) {
     const defaultActions = [
         { label: '← Kembali ke Beranda', href: '/', primary: true },
     ];
@@ -28,16 +33,17 @@ export default function ErrorPage({ code, title, message, actions }: ErrorPagePr
                 />
 
                 {/* Glow effects */}
-                <div className="pointer-events-none fixed -left-32 -top-48 h-[500px] w-[500px] rounded-full bg-violet-600/10 blur-[120px]" />
-                <div className="pointer-events-none fixed -bottom-48 -right-32 h-[500px] w-[500px] rounded-full bg-indigo-600/10 blur-[120px]" />
+                <div className="pointer-events-none fixed -top-48 -left-32 h-[500px] w-[500px] rounded-full bg-violet-600/10 blur-[120px]" />
+                <div className="pointer-events-none fixed -right-32 -bottom-48 h-[500px] w-[500px] rounded-full bg-indigo-600/10 blur-[120px]" />
 
                 {/* Content */}
                 <div className="relative z-10 w-full max-w-md text-center">
                     {/* Error Code */}
                     <h1
-                        className="mb-2 text-[8rem] font-black leading-none tracking-tight sm:text-[10rem]"
+                        className="mb-2 text-[8rem] leading-none font-black tracking-tight sm:text-[10rem]"
                         style={{
-                            background: 'linear-gradient(135deg, #8b5cf6, #6366f1, #a78bfa)',
+                            background:
+                                'linear-gradient(135deg, #8b5cf6, #6366f1, #a78bfa)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                         }}
@@ -60,8 +66,9 @@ export default function ErrorPage({ code, title, message, actions }: ErrorPagePr
 
                     {/* Actions */}
                     <div className="flex flex-wrap items-center justify-center gap-3">
-                        {pageActions.map((action, i) => (
-                            action.href.startsWith('javascript:') || action.href === '#reload' ? (
+                        {pageActions.map((action, i) =>
+                            action.href.startsWith('javascript:') ||
+                            action.href === '#reload' ? (
                                 <button
                                     key={i}
                                     onClick={() => window.location.reload()}
@@ -85,8 +92,8 @@ export default function ErrorPage({ code, title, message, actions }: ErrorPagePr
                                 >
                                     {action.label}
                                 </Link>
-                            )
-                        ))}
+                            ),
+                        )}
                     </div>
                 </div>
 

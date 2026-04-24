@@ -33,7 +33,7 @@ class CreateNewUser implements CreatesNewUsers
 
         // Verify OTP
         $isValid = EmailOtp::verify($input['email'], $input['otp_code']);
-        if (!$isValid) {
+        if (! $isValid) {
             throw ValidationException::withMessages([
                 'otp_code' => 'Kode OTP tidak valid atau sudah kedaluwarsa.',
             ]);
@@ -56,4 +56,3 @@ class CreateNewUser implements CreatesNewUsers
         return $user;
     }
 }
-

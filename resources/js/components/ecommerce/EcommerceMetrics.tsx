@@ -1,4 +1,9 @@
-import { ArrowUpIcon, ArrowDownIcon, GroupIcon, ShoppingBagIcon } from '@/icons';
+import {
+    ArrowUpIcon,
+    ArrowDownIcon,
+    GroupIcon,
+    ShoppingBagIcon,
+} from '@/icons';
 
 interface BadgeProps {
     children: React.ReactNode;
@@ -7,9 +12,11 @@ interface BadgeProps {
 
 const Badge: React.FC<BadgeProps> = ({ children, color }) => {
     const colorClasses = {
-        success: 'bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500',
+        success:
+            'bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500',
         error: 'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500',
-        warning: 'bg-warning-50 text-warning-600 dark:bg-warning-500/15 dark:text-warning-500',
+        warning:
+            'bg-warning-50 text-warning-600 dark:bg-warning-500/15 dark:text-warning-500',
     };
 
     return (
@@ -25,12 +32,12 @@ export default function EcommerceMetrics() {
     return (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
             {/* Metric Item - Customers */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-                <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-                    <GroupIcon className="text-gray-800 size-6 dark:text-white/90" />
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 md:p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800">
+                    <GroupIcon className="size-6 text-gray-800 dark:text-white/90" />
                 </div>
 
-                <div className="flex items-end justify-between mt-5">
+                <div className="mt-5 flex items-end justify-between">
                     <div>
                         <span className="text-sm text-gray-500 dark:text-gray-400">
                             Customers
@@ -47,11 +54,11 @@ export default function EcommerceMetrics() {
             </div>
 
             {/* Metric Item - Orders */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-                <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-                    <ShoppingBagIcon className="text-gray-800 size-6 dark:text-white/90" />
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 md:p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800">
+                    <ShoppingBagIcon className="size-6 text-gray-800 dark:text-white/90" />
                 </div>
-                <div className="flex items-end justify-between mt-5">
+                <div className="mt-5 flex items-end justify-between">
                     <div>
                         <span className="text-sm text-gray-500 dark:text-gray-400">
                             Orders

@@ -62,6 +62,6 @@ class AuctionParticipant extends Model
      */
     public function getFormattedFeePaidAttribute(): string
     {
-        return 'Rp ' . number_format($this->fee_paid, 0, ',', '.');
+        return 'Rp '.number_format($this->fee_paid, 0, ',', '.');
     }
 }

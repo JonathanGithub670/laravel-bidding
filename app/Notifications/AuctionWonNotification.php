@@ -32,7 +32,7 @@ class AuctionWonNotification extends Notification
             'auction_title' => $this->auction->title,
             'invoice_id' => $this->invoice->id,
             'amount' => $this->invoice->amount,
-            'url' => "/user/invoices",
+            'url' => '/user/invoices',
         ];
     }
 }

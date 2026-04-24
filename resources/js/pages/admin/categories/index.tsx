@@ -1,7 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
 import { Plus, Edit, Trash2, Tag, Package } from 'lucide-react';
 import { useState } from 'react';
+import AppLayout from '@/layouts/app-layout';
 
 interface Category {
     id: number;
@@ -36,7 +36,7 @@ export default function CategoriesIndex({ categories }: Props) {
 
             <div className="p-6">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-6">
+                <div className="mb-6 flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                             Kelola Kategori
@@ -47,45 +47,47 @@ export default function CategoriesIndex({ categories }: Props) {
                     </div>
                     <Link
                         href="/admin/categories/create"
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#4A7FB5] to-[#3d6d9e] text-white font-semibold hover:shadow-lg hover:shadow-[#4A7FB5]/25 transition-all duration-300 hover:-translate-y-0.5"
+                        className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#4A7FB5] to-[#3d6d9e] px-4 py-2.5 font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#4A7FB5]/25"
                     >
-                        <Plus className="w-5 h-5" />
+                        <Plus className="h-5 w-5" />
                         Tambah Kategori
                     </Link>
                 </div>
 
                 {/* Categories Grid */}
                 {categories.length === 0 ? (
-                    <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl">
-                        <Tag className="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-                        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    <div className="rounded-2xl bg-white py-16 text-center dark:bg-gray-800">
+                        <Tag className="mx-auto mb-4 h-16 w-16 text-gray-300 dark:text-gray-600" />
+                        <h3 className="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-300">
                             Belum Ada Kategori
                         </h3>
-                        <p className="text-gray-500 dark:text-gray-400 mb-6">
+                        <p className="mb-6 text-gray-500 dark:text-gray-400">
                             Tambahkan kategori pertama untuk barang lelang
                         </p>
                         <Link
                             href="/admin/categories/create"
-                            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#4A7FB5] text-white font-semibold hover:bg-[#3d6d9e] transition-colors"
+                            className="inline-flex items-center gap-2 rounded-xl bg-[#4A7FB5] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#3d6d9e]"
                         >
-                            <Plus className="w-5 h-5" />
+                            <Plus className="h-5 w-5" />
                             Tambah Kategori
                         </Link>
                     </div>
                 ) : (
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {categories.map((category) => (
                             <div
                                 key={category.id}
-                                className={`bg-white dark:bg-gray-800 rounded-2xl p-6 border-2 transition-all ${
+                                className={`rounded-2xl border-2 bg-white p-6 transition-all dark:bg-gray-800 ${
                                     category.is_active
                                         ? 'border-transparent hover:border-[#4A7FB5]/30 dark:hover:border-[#4A7FB5]/40'
-                                        : 'border-gray-200 dark:border-gray-700 opacity-60'
+                                        : 'border-gray-200 opacity-60 dark:border-gray-700'
                                 }`}
                             >
-                                <div className="flex items-start justify-between mb-4">
+                                <div className="mb-4 flex items-start justify-between">
                                     <div className="flex items-center gap-3">
-                                        <span className="text-3xl">{category.icon}</span>
+                                        <span className="text-3xl">
+                                            {category.icon}
+                                        </span>
                                         <div>
                                             <h3 className="font-semibold text-gray-900 dark:text-white">
                                                 {category.name}
@@ -95,41 +97,56 @@ export default function CategoriesIndex({ categories }: Props) {
                                             </p>
                                         </div>
                                     </div>
-                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                        category.is_active
-                                            ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                                            : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
-                                    }`}>
-                                        {category.is_active ? 'Aktif' : 'Nonaktif'}
+                                    <span
+                                        className={`rounded-full px-2 py-1 text-xs font-medium ${
+                                            category.is_active
+                                                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                                                : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                                        }`}
+                                    >
+                                        {category.is_active
+                                            ? 'Aktif'
+                                            : 'Nonaktif'}
                                     </span>
                                 </div>
 
                                 {category.description && (
-                                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                                    <p className="mb-4 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
                                         {category.description}
                                     </p>
                                 )}
 
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
-                                        <Package className="w-4 h-4" />
-                                        <span className="text-sm">{category.auctions_count} Lelang</span>
+                                        <Package className="h-4 w-4" />
+                                        <span className="text-sm">
+                                            {category.auctions_count} Lelang
+                                        </span>
                                     </div>
 
                                     <div className="flex items-center gap-2">
                                         <Link
                                             href={`/admin/categories/${category.id}/edit`}
-                                            className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                            className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
                                         >
-                                            <Edit className="w-4 h-4" />
+                                            <Edit className="h-4 w-4" />
                                         </Link>
                                         <button
-                                            onClick={() => handleDelete(category)}
-                                            disabled={deletingId === category.id || category.auctions_count > 0}
-                                            className="p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                            title={category.auctions_count > 0 ? 'Tidak dapat dihapus karena masih memiliki lelang' : 'Hapus kategori'}
+                                            onClick={() =>
+                                                handleDelete(category)
+                                            }
+                                            disabled={
+                                                deletingId === category.id ||
+                                                category.auctions_count > 0
+                                            }
+                                            className="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-red-900/20"
+                                            title={
+                                                category.auctions_count > 0
+                                                    ? 'Tidak dapat dihapus karena masih memiliki lelang'
+                                                    : 'Hapus kategori'
+                                            }
                                         >
-                                            <Trash2 className="w-4 h-4" />
+                                            <Trash2 className="h-4 w-4" />
                                         </button>
                                     </div>
                                 </div>

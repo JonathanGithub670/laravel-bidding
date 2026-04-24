@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Invoice;
 use App\Models\Reimbursement;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class UserInvoiceController extends Controller
 {
@@ -24,7 +24,7 @@ class UserInvoiceController extends Controller
             ->where('winner_id', $user->id)
             ->orderByDesc('created_at')
             ->get()
-            ->map(fn($inv) => [
+            ->map(fn ($inv) => [
                 'id' => $inv->uuid,
                 'type' => 'invoice',
                 'reference' => $inv->invoice_number,
@@ -54,7 +54,7 @@ class UserInvoiceController extends Controller
             ->where('user_id', $user->id)
             ->orderByDesc('created_at')
             ->get()
-            ->map(fn($rmb) => [
+            ->map(fn ($rmb) => [
                 'id' => $rmb->uuid,
                 'type' => 'reimbursement',
                 'reference' => $rmb->reference_number,
@@ -132,10 +132,10 @@ class UserInvoiceController extends Controller
                 'registration_fee' => $invoice->registration_fee,
                 'app_fee' => $invoice->app_fee,
                 'total_amount' => $invoice->total_amount,
-                'formatted_amount' => 'Rp ' . number_format($invoice->amount, 0, ',', '.'),
-                'formatted_admin_fee' => 'Rp ' . number_format($invoice->admin_fee, 0, ',', '.'),
-                'formatted_registration_fee' => 'Rp ' . number_format($invoice->registration_fee, 0, ',', '.'),
-                'formatted_app_fee' => 'Rp ' . number_format($invoice->app_fee, 0, ',', '.'),
+                'formatted_amount' => 'Rp '.number_format($invoice->amount, 0, ',', '.'),
+                'formatted_admin_fee' => 'Rp '.number_format($invoice->admin_fee, 0, ',', '.'),
+                'formatted_registration_fee' => 'Rp '.number_format($invoice->registration_fee, 0, ',', '.'),
+                'formatted_app_fee' => 'Rp '.number_format($invoice->app_fee, 0, ',', '.'),
                 'formatted_total' => $invoice->formatted_total,
                 'status' => $invoice->status,
                 'status_label' => match ($invoice->status) {
@@ -228,10 +228,10 @@ class UserInvoiceController extends Controller
                 'registration_fee' => $invoice->registration_fee,
                 'app_fee' => $invoice->app_fee,
                 'total_amount' => $invoice->total_amount,
-                'formatted_amount' => 'Rp ' . number_format($invoice->amount, 0, ',', '.'),
-                'formatted_admin_fee' => 'Rp ' . number_format($invoice->admin_fee, 0, ',', '.'),
-                'formatted_registration_fee' => 'Rp ' . number_format($invoice->registration_fee, 0, ',', '.'),
-                'formatted_app_fee' => 'Rp ' . number_format($invoice->app_fee, 0, ',', '.'),
+                'formatted_amount' => 'Rp '.number_format($invoice->amount, 0, ',', '.'),
+                'formatted_admin_fee' => 'Rp '.number_format($invoice->admin_fee, 0, ',', '.'),
+                'formatted_registration_fee' => 'Rp '.number_format($invoice->registration_fee, 0, ',', '.'),
+                'formatted_app_fee' => 'Rp '.number_format($invoice->app_fee, 0, ',', '.'),
                 'formatted_total' => $invoice->formatted_total,
                 'status' => $invoice->status,
                 'status_label' => match ($invoice->status) {
@@ -298,7 +298,7 @@ class UserInvoiceController extends Controller
 
         // Embed logo as base64 for PDF
         $logoPath = public_path('Logo.png');
-        $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
+        $logoBase64 = 'data:image/png;base64,'.base64_encode(file_get_contents($logoPath));
 
         $pdf = Pdf::loadView('pdf.invoice', [
             'doc' => $data,
@@ -307,6 +307,6 @@ class UserInvoiceController extends Controller
 
         $pdf->setPaper('a4', 'portrait');
 
-        return $pdf->download($data['reference'] . '.pdf');
+        return $pdf->download($data['reference'].'.pdf');
     }
 }

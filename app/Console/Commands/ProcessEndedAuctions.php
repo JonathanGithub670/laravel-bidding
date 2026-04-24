@@ -29,6 +29,7 @@ class ProcessEndedAuctions extends Command
 
         if ($count === 0) {
             $this->info('No auctions to process.');
+
             return Command::SUCCESS;
         }
 

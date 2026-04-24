@@ -14,8 +14,11 @@ class Topup extends Model
      * Status constants
      */
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_PAID = 'paid';
+
     public const STATUS_EXPIRED = 'expired';
+
     public const STATUS_FAILED = 'failed';
 
     /**
@@ -47,6 +50,7 @@ class Topup extends Model
      * Minimum and maximum amount
      */
     public const MIN_AMOUNT = 10000;
+
     public const MAX_AMOUNT = 2000000;
 
     /**
@@ -91,7 +95,7 @@ class Topup extends Model
 
         static::creating(function ($topup) {
             // Generate reference number
-            $topup->reference_number = 'TPU-' . strtoupper(uniqid()) . '-' . date('Ymd');
+            $topup->reference_number = 'TPU-'.strtoupper(uniqid()).'-'.date('Ymd');
 
             // Set expiry
             $topup->expired_at = now()->addMinutes(self::EXPIRY_MINUTES);
@@ -116,7 +120,7 @@ class Topup extends Model
      */
     public function getFormattedAmountAttribute(): string
     {
-        return 'Rp ' . number_format($this->amount, 0, ',', '.');
+        return 'Rp '.number_format($this->amount, 0, ',', '.');
     }
 
     /**
@@ -164,9 +168,10 @@ class Topup extends Model
      */
     public function getRemainingSecondsAttribute(): int
     {
-        if (!$this->expired_at || $this->expired_at->isPast()) {
+        if (! $this->expired_at || $this->expired_at->isPast()) {
             return 0;
         }
+
         return now()->diffInSeconds($this->expired_at);
     }
 

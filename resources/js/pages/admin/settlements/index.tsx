@@ -1,6 +1,4 @@
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
-import { useState } from 'react';
 import {
     Clock,
     CheckCircle,
@@ -15,6 +13,8 @@ import {
     Banknote,
     ShieldCheck,
 } from 'lucide-react';
+import { useState } from 'react';
+import AppLayout from '@/layouts/app-layout';
 
 interface User {
     id: number;
@@ -72,7 +72,10 @@ interface Props {
     currentStatus: string;
 }
 
-const statusConfig: Record<string, { label: string; icon: typeof Clock; color: string }> = {
+const statusConfig: Record<
+    string,
+    { label: string; icon: typeof Clock; color: string }
+> = {
     pending: {
         label: 'Menunggu',
         icon: Clock,
@@ -102,23 +105,37 @@ const statusConfig: Record<string, { label: string; icon: typeof Clock; color: s
 
 const fundStatusColors: Record<string, string> = {
     held: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-    approved: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-    scheduled: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400',
-    disbursed: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+    approved:
+        'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+    scheduled:
+        'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400',
+    disbursed:
+        'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
 };
 
 const deliveryStatusColors: Record<string, string> = {
-    pending: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-    shipping: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-    delivered: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+    pending:
+        'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+    shipping:
+        'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+    delivered:
+        'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
 };
 
-export default function AdminSettlementsIndex({ settlements, counts, currentStatus }: Props) {
+export default function AdminSettlementsIndex({
+    settlements,
+    counts,
+    currentStatus,
+}: Props) {
     const [approvingId, setApprovingId] = useState<number | null>(null);
     const [rejectingId, setRejectingId] = useState<number | null>(null);
     const [processingId, setProcessingId] = useState<number | null>(null);
-    const [confirmShippingId, setConfirmShippingId] = useState<number | null>(null);
-    const [confirmDeliveredId, setConfirmDeliveredId] = useState<number | null>(null);
+    const [confirmShippingId, setConfirmShippingId] = useState<number | null>(
+        null,
+    );
+    const [confirmDeliveredId, setConfirmDeliveredId] = useState<number | null>(
+        null,
+    );
 
     const approveForm = useForm({
         disbursement_date: '',
@@ -127,7 +144,8 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
     });
 
     const rejectForm = useForm({ reason: '' });
-    const { flash } = usePage<{ flash: { success?: string; error?: string } }>().props as any;
+    const { flash } = usePage<{ flash: { success?: string; error?: string } }>()
+        .props as { flash: { success?: string; error?: string } };
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('id-ID', {
@@ -168,17 +186,25 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
     const handleConfirmShipping = (id: number) => {
         setConfirmShippingId(null);
         setProcessingId(id);
-        router.post(`/admin/settlements/${id}/confirm-shipping`, {}, {
-            onFinish: () => setProcessingId(null),
-        });
+        router.post(
+            `/admin/settlements/${id}/confirm-shipping`,
+            {},
+            {
+                onFinish: () => setProcessingId(null),
+            },
+        );
     };
 
     const handleMarkDelivered = (id: number) => {
         setConfirmDeliveredId(null);
         setProcessingId(id);
-        router.post(`/admin/settlements/${id}/mark-delivered`, {}, {
-            onFinish: () => setProcessingId(null),
-        });
+        router.post(
+            `/admin/settlements/${id}/mark-delivered`,
+            {},
+            {
+                onFinish: () => setProcessingId(null),
+            },
+        );
     };
 
     const tabs = [
@@ -206,7 +232,8 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                 Konfirmasi Pengiriman
                             </h3>
                             <p className="mb-6 text-center text-sm text-gray-600 dark:text-gray-400">
-                                Konfirmasi bahwa barang telah dikirim ke pemenang lelang?
+                                Konfirmasi bahwa barang telah dikirim ke
+                                pemenang lelang?
                             </p>
                             <div className="flex gap-3">
                                 <button
@@ -216,8 +243,10 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                     Tidak
                                 </button>
                                 <button
-                                    onClick={() => handleConfirmShipping(confirmShippingId)}
-                                    className="flex-1 rounded-xl bg-indigo-500 px-4 py-2.5 font-semibold text-white transition-colors hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    onClick={() =>
+                                        handleConfirmShipping(confirmShippingId)
+                                    }
+                                    className="flex-1 rounded-xl bg-indigo-500 px-4 py-2.5 font-semibold text-white transition-colors hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
                                 >
                                     Setuju
                                 </button>
@@ -237,7 +266,8 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                 Konfirmasi Barang Sampai
                             </h3>
                             <p className="mb-6 text-center text-sm text-gray-600 dark:text-gray-400">
-                                Konfirmasi bahwa barang telah sampai ke pemenang lelang?
+                                Konfirmasi bahwa barang telah sampai ke pemenang
+                                lelang?
                             </p>
                             <div className="flex gap-3">
                                 <button
@@ -247,8 +277,10 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                     Tidak
                                 </button>
                                 <button
-                                    onClick={() => handleMarkDelivered(confirmDeliveredId)}
-                                    className="flex-1 rounded-xl bg-green-500 px-4 py-2.5 font-semibold text-white transition-colors hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                                    onClick={() =>
+                                        handleMarkDelivered(confirmDeliveredId)
+                                    }
+                                    className="flex-1 rounded-xl bg-green-500 px-4 py-2.5 font-semibold text-white transition-colors hover:bg-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-none"
                                 >
                                     Setuju
                                 </button>
@@ -281,7 +313,8 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                         Penyelesaian Lelang
                     </h1>
                     <p className="mt-1 text-gray-500 dark:text-gray-400">
-                        Kelola pencairan dana dan pengiriman barang dari lelang yang sudah berakhir
+                        Kelola pencairan dana dan pengiriman barang dari lelang
+                        yang sudah berakhir
                     </p>
                 </div>
 
@@ -293,8 +326,12 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                 <Clock className="h-5 w-5 text-yellow-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-yellow-600">{counts.pending}</p>
-                                <p className="text-sm text-yellow-700 dark:text-yellow-400">Menunggu</p>
+                                <p className="text-2xl font-bold text-yellow-600">
+                                    {counts.pending}
+                                </p>
+                                <p className="text-sm text-yellow-700 dark:text-yellow-400">
+                                    Menunggu
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -304,8 +341,12 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                 <ShieldCheck className="h-5 w-5 text-blue-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-blue-600">{counts.approved}</p>
-                                <p className="text-sm text-blue-700 dark:text-blue-400">Disetujui</p>
+                                <p className="text-2xl font-bold text-blue-600">
+                                    {counts.approved}
+                                </p>
+                                <p className="text-sm text-blue-700 dark:text-blue-400">
+                                    Disetujui
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -315,8 +356,12 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                 <Banknote className="h-5 w-5 text-indigo-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-indigo-600">{counts.disbursed}</p>
-                                <p className="text-sm text-indigo-700 dark:text-indigo-400">Dicairkan</p>
+                                <p className="text-2xl font-bold text-indigo-600">
+                                    {counts.disbursed}
+                                </p>
+                                <p className="text-sm text-indigo-700 dark:text-indigo-400">
+                                    Dicairkan
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -326,8 +371,12 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                 <CheckCircle className="h-5 w-5 text-green-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-green-600">{counts.completed}</p>
-                                <p className="text-sm text-green-700 dark:text-green-400">Selesai</p>
+                                <p className="text-2xl font-bold text-green-600">
+                                    {counts.completed}
+                                </p>
+                                <p className="text-sm text-green-700 dark:text-green-400">
+                                    Selesai
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -337,8 +386,12 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                 <XCircle className="h-5 w-5 text-red-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-red-600">{counts.rejected}</p>
-                                <p className="text-sm text-red-700 dark:text-red-400">Ditolak</p>
+                                <p className="text-2xl font-bold text-red-600">
+                                    {counts.rejected}
+                                </p>
+                                <p className="text-sm text-red-700 dark:text-red-400">
+                                    Ditolak
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -350,14 +403,16 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                         <Link
                             key={tab.key}
                             href={`/admin/settlements?status=${tab.key}`}
-                            className={`whitespace-nowrap rounded-lg px-4 py-2 font-medium transition-colors ${
+                            className={`rounded-lg px-4 py-2 font-medium whitespace-nowrap transition-colors ${
                                 currentStatus === tab.key
                                     ? 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400'
                                     : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
                             }`}
                         >
                             {tab.label}
-                            <span className="ml-2 text-xs">({counts[tab.key] || 0})</span>
+                            <span className="ml-2 text-xs">
+                                ({counts[tab.key] || 0})
+                            </span>
                         </Link>
                     ))}
                 </div>
@@ -376,7 +431,9 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                 ) : (
                     <div className="space-y-4">
                         {settlements.data.map((item) => {
-                            const status = statusConfig[item.status] || statusConfig.pending;
+                            const status =
+                                statusConfig[item.status] ||
+                                statusConfig.pending;
                             const isApproving = approvingId === item.id;
                             const isRejecting = rejectingId === item.id;
 
@@ -408,7 +465,7 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                         <div className="grid gap-6 md:grid-cols-3">
                                             {/* Auction Info */}
                                             <div>
-                                                <h4 className="mb-2 text-xs font-semibold uppercase text-gray-400">
+                                                <h4 className="mb-2 text-xs font-semibold text-gray-400 uppercase">
                                                     Lelang
                                                 </h4>
                                                 <p className="font-semibold text-gray-900 dark:text-white">
@@ -416,11 +473,15 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                 </p>
                                                 <div className="mt-2 space-y-1">
                                                     <p className="text-sm text-gray-500">
-                                                        <span className="font-medium">Pemilik:</span>{' '}
+                                                        <span className="font-medium">
+                                                            Pemilik:
+                                                        </span>{' '}
                                                         {item.seller?.name}
                                                     </p>
                                                     <p className="text-sm text-gray-500">
-                                                        <span className="font-medium">Pemenang:</span>{' '}
+                                                        <span className="font-medium">
+                                                            Pemenang:
+                                                        </span>{' '}
                                                         {item.winner?.name}
                                                     </p>
                                                 </div>
@@ -428,14 +489,16 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
 
                                             {/* Financial Info */}
                                             <div>
-                                                <h4 className="mb-2 text-xs font-semibold uppercase text-gray-400">
+                                                <h4 className="mb-2 text-xs font-semibold text-gray-400 uppercase">
                                                     Dana
                                                 </h4>
                                                 <div className="space-y-1">
                                                     <p className="text-sm text-gray-500">
                                                         Bid Pemenang:{' '}
                                                         <span className="font-semibold text-gray-900 dark:text-white">
-                                                            {item.formatted_amount}
+                                                            {
+                                                                item.formatted_amount
+                                                            }
                                                         </span>
                                                     </p>
                                                     <p className="text-sm text-gray-500">
@@ -447,11 +510,17 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                     <p className="text-sm text-gray-500">
                                                         Biaya Aplikasi:{' '}
                                                         <span className="text-red-500">
-                                                            -{item.formatted_app_fee}
+                                                            -
+                                                            {
+                                                                item.formatted_app_fee
+                                                            }
                                                         </span>
                                                     </p>
                                                     <p className="text-sm font-semibold text-green-600">
-                                                        Dana Seller: {item.formatted_seller_amount}
+                                                        Dana Seller:{' '}
+                                                        {
+                                                            item.formatted_seller_amount
+                                                        }
                                                     </p>
                                                 </div>
                                                 <div className="mt-2">
@@ -459,14 +528,18 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                         className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${fundStatusColors[item.fund_status] || ''}`}
                                                     >
                                                         <Banknote className="h-3 w-3" />
-                                                        {item.fund_status_badge?.label}
+                                                        {
+                                                            item
+                                                                .fund_status_badge
+                                                                ?.label
+                                                        }
                                                     </span>
                                                 </div>
                                             </div>
 
                                             {/* Delivery & Schedule Info */}
                                             <div>
-                                                <h4 className="mb-2 text-xs font-semibold uppercase text-gray-400">
+                                                <h4 className="mb-2 text-xs font-semibold text-gray-400 uppercase">
                                                     Pengiriman & Jadwal
                                                 </h4>
                                                 <div className="space-y-1">
@@ -475,7 +548,9 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                             <CalendarClock className="h-3.5 w-3.5" />
                                                             Pencairan:{' '}
                                                             <span className="font-medium">
-                                                                {formatDateShort(item.disbursement_date)}
+                                                                {formatDateShort(
+                                                                    item.disbursement_date,
+                                                                )}
                                                             </span>
                                                         </p>
                                                     )}
@@ -505,7 +580,11 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                         className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${deliveryStatusColors[item.delivery_status] || ''}`}
                                                     >
                                                         <Truck className="h-3 w-3" />
-                                                        {item.delivery_status_badge?.label}
+                                                        {
+                                                            item
+                                                                .delivery_status_badge
+                                                                ?.label
+                                                        }
                                                     </span>
                                                 </div>
                                             </div>
@@ -515,7 +594,9 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                         {item.admin_notes && (
                                             <div className="mt-4 rounded-lg bg-gray-50 p-3 dark:bg-gray-900/30">
                                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                                    <span className="font-medium">Catatan Admin:</span>{' '}
+                                                    <span className="font-medium">
+                                                        Catatan Admin:
+                                                    </span>{' '}
                                                     {item.admin_notes}
                                                 </p>
                                             </div>
@@ -530,33 +611,46 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                 <div className="grid gap-4 md:grid-cols-2">
                                                     <div>
                                                         <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                            Tanggal Pencairan Dana
+                                                            Tanggal Pencairan
+                                                            Dana
                                                         </label>
                                                         <input
                                                             type="date"
-                                                            value={approveForm.data.disbursement_date}
+                                                            value={
+                                                                approveForm.data
+                                                                    .disbursement_date
+                                                            }
                                                             onChange={(e) =>
                                                                 approveForm.setData(
                                                                     'disbursement_date',
-                                                                    e.target.value,
+                                                                    e.target
+                                                                        .value,
                                                                 )
                                                             }
                                                             min={
                                                                 new Date()
                                                                     .toISOString()
-                                                                    .split('T')[0]
+                                                                    .split(
+                                                                        'T',
+                                                                    )[0]
                                                             }
                                                             className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                                         />
-                                                        {approveForm.errors.disbursement_date && (
+                                                        {approveForm.errors
+                                                            .disbursement_date && (
                                                             <p className="mt-1 text-xs text-red-500">
-                                                                {approveForm.errors.disbursement_date}
+                                                                {
+                                                                    approveForm
+                                                                        .errors
+                                                                        .disbursement_date
+                                                                }
                                                             </p>
                                                         )}
                                                     </div>
                                                     <div>
                                                         <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                            Estimasi Barang Sampai
+                                                            Estimasi Barang
+                                                            Sampai
                                                         </label>
                                                         <input
                                                             type="date"
@@ -567,13 +661,16 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                             onChange={(e) =>
                                                                 approveForm.setData(
                                                                     'estimated_delivery_date',
-                                                                    e.target.value,
+                                                                    e.target
+                                                                        .value,
                                                                 )
                                                             }
                                                             min={
                                                                 new Date()
                                                                     .toISOString()
-                                                                    .split('T')[0]
+                                                                    .split(
+                                                                        'T',
+                                                                    )[0]
                                                             }
                                                             className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                                         />
@@ -581,7 +678,8 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                             .estimated_delivery_date && (
                                                             <p className="mt-1 text-xs text-red-500">
                                                                 {
-                                                                    approveForm.errors
+                                                                    approveForm
+                                                                        .errors
                                                                         .estimated_delivery_date
                                                                 }
                                                             </p>
@@ -594,7 +692,10 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                     </label>
                                                     <input
                                                         type="text"
-                                                        value={approveForm.data.notes}
+                                                        value={
+                                                            approveForm.data
+                                                                .notes
+                                                        }
                                                         onChange={(e) =>
                                                             approveForm.setData(
                                                                 'notes',
@@ -607,9 +708,14 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                 </div>
                                                 <div className="mt-3 flex gap-2">
                                                     <button
-                                                        onClick={() => handleApprove(item.id)}
+                                                        onClick={() =>
+                                                            handleApprove(
+                                                                item.id,
+                                                            )
+                                                        }
                                                         disabled={
-                                                            !approveForm.data.disbursement_date ||
+                                                            !approveForm.data
+                                                                .disbursement_date ||
                                                             !approveForm.data
                                                                 .estimated_delivery_date ||
                                                             approveForm.processing
@@ -621,7 +727,9 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                     </button>
                                                     <button
                                                         onClick={() => {
-                                                            setApprovingId(null);
+                                                            setApprovingId(
+                                                                null,
+                                                            );
                                                             approveForm.reset();
                                                         }}
                                                         className="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
@@ -640,7 +748,9 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                 </h4>
                                                 <input
                                                     type="text"
-                                                    value={rejectForm.data.reason}
+                                                    value={
+                                                        rejectForm.data.reason
+                                                    }
                                                     onChange={(e) =>
                                                         rejectForm.setData(
                                                             'reason',
@@ -652,14 +762,22 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                 />
                                                 {rejectForm.errors.reason && (
                                                     <p className="mt-1 text-xs text-red-500">
-                                                        {rejectForm.errors.reason}
+                                                        {
+                                                            rejectForm.errors
+                                                                .reason
+                                                        }
                                                     </p>
                                                 )}
                                                 <div className="mt-3 flex gap-2">
                                                     <button
-                                                        onClick={() => handleReject(item.id)}
+                                                        onClick={() =>
+                                                            handleReject(
+                                                                item.id,
+                                                            )
+                                                        }
                                                         disabled={
-                                                            !rejectForm.data.reason ||
+                                                            !rejectForm.data
+                                                                .reason ||
                                                             rejectForm.processing
                                                         }
                                                         className="flex items-center gap-1.5 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50"
@@ -669,7 +787,9 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                     </button>
                                                     <button
                                                         onClick={() => {
-                                                            setRejectingId(null);
+                                                            setRejectingId(
+                                                                null,
+                                                            );
                                                             rejectForm.reset();
                                                         }}
                                                         className="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
@@ -686,14 +806,22 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                 {item.status === 'pending' && (
                                                     <>
                                                         <button
-                                                            onClick={() => setApprovingId(item.id)}
+                                                            onClick={() =>
+                                                                setApprovingId(
+                                                                    item.id,
+                                                                )
+                                                            }
                                                             className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
                                                         >
                                                             <ShieldCheck className="h-4 w-4" />
                                                             Approve Dana
                                                         </button>
                                                         <button
-                                                            onClick={() => setRejectingId(item.id)}
+                                                            onClick={() =>
+                                                                setRejectingId(
+                                                                    item.id,
+                                                                )
+                                                            }
                                                             className="flex items-center gap-1.5 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700"
                                                         >
                                                             <X className="h-4 w-4" />
@@ -703,25 +831,38 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
                                                 )}
 
                                                 {item.status === 'approved' &&
-                                                    item.delivery_status === 'pending' && (
+                                                    item.delivery_status ===
+                                                        'pending' && (
                                                         <button
                                                             onClick={() =>
-                                                                setConfirmShippingId(item.id)
+                                                                setConfirmShippingId(
+                                                                    item.id,
+                                                                )
                                                             }
-                                                            disabled={processingId === item.id}
+                                                            disabled={
+                                                                processingId ===
+                                                                item.id
+                                                            }
                                                             className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:opacity-50"
                                                         >
                                                             <Truck className="h-4 w-4" />
-                                                            Konfirmasi Kirim Barang
+                                                            Konfirmasi Kirim
+                                                            Barang
                                                         </button>
                                                     )}
 
-                                                {item.delivery_status === 'shipping' && (
+                                                {item.delivery_status ===
+                                                    'shipping' && (
                                                     <button
                                                         onClick={() =>
-                                                            setConfirmDeliveredId(item.id)
+                                                            setConfirmDeliveredId(
+                                                                item.id,
+                                                            )
                                                         }
-                                                        disabled={processingId === item.id}
+                                                        disabled={
+                                                            processingId ===
+                                                            item.id
+                                                        }
                                                         className="flex items-center gap-1.5 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700 disabled:opacity-50"
                                                     >
                                                         <Package className="h-4 w-4" />
@@ -731,7 +872,12 @@ export default function AdminSettlementsIndex({ settlements, counts, currentStat
 
                                                 {item.approved_by_user && (
                                                     <span className="ml-auto self-center text-xs text-gray-400">
-                                                        Diproses oleh {item.approved_by_user.name}
+                                                        Diproses oleh{' '}
+                                                        {
+                                                            item
+                                                                .approved_by_user
+                                                                .name
+                                                        }
                                                     </span>
                                                 )}
                                             </div>

@@ -37,7 +37,7 @@ class BankAccountController extends Controller
         ]);
 
         // Check if bank code is valid
-        if (!array_key_exists($validated['bank_code'], BankAccount::BANKS)) {
+        if (! array_key_exists($validated['bank_code'], BankAccount::BANKS)) {
             return back()->withErrors(['bank_code' => 'Bank tidak valid']);
         }
 
@@ -69,7 +69,7 @@ class BankAccountController extends Controller
             'account_name' => 'required|string|max:100',
         ]);
 
-        if (!array_key_exists($validated['bank_code'], BankAccount::BANKS)) {
+        if (! array_key_exists($validated['bank_code'], BankAccount::BANKS)) {
             return back()->withErrors(['bank_code' => 'Bank tidak valid']);
         }
 

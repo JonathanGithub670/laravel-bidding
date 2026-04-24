@@ -5,7 +5,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -40,7 +41,7 @@ return new class extends Migration {
         // Set all existing users to 'approved' status
         DB::table('users')->update([
             'verification_status' => 'approved',
-            'verified_at' => now()
+            'verified_at' => now(),
         ]);
     }
 
@@ -56,7 +57,7 @@ return new class extends Migration {
                 'verification_status',
                 'verification_note',
                 'verified_at',
-                'verified_by'
+                'verified_by',
             ]);
         });
     }

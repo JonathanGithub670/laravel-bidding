@@ -1,83 +1,125 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
+import {
+    queryParams,
+    type RouteQueryOptions,
+    type RouteDefinition,
+    type RouteFormDefinition,
+    applyUrlDefaults,
+} from './../../../../wayfinder';
 /**
-* @see \App\Http\Controllers\AuctionActivityController::store
+ * @see \App\Http\Controllers\AuctionActivityController::store
  * @see app/Http/Controllers/AuctionActivityController.php:15
  * @route '/auctions/{auction}/activity'
  */
-export const store = (args: { auction: string | { uuid: string } } | [auction: string | { uuid: string } ] | string | { uuid: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const store = (
+    args:
+        | { auction: string | { uuid: string } }
+        | [auction: string | { uuid: string }]
+        | string
+        | { uuid: string },
+    options?: RouteQueryOptions,
+): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
-})
+});
 
 store.definition = {
-    methods: ["post"],
+    methods: ['post'],
     url: '/auctions/{auction}/activity',
-} satisfies RouteDefinition<["post"]>
+} satisfies RouteDefinition<['post']>;
 
 /**
-* @see \App\Http\Controllers\AuctionActivityController::store
+ * @see \App\Http\Controllers\AuctionActivityController::store
  * @see app/Http/Controllers/AuctionActivityController.php:15
  * @route '/auctions/{auction}/activity'
  */
-store.url = (args: { auction: string | { uuid: string } } | [auction: string | { uuid: string } ] | string | { uuid: string }, options?: RouteQueryOptions) => {
+store.url = (
+    args:
+        | { auction: string | { uuid: string } }
+        | [auction: string | { uuid: string }]
+        | string
+        | { uuid: string },
+    options?: RouteQueryOptions,
+) => {
     if (typeof args === 'string' || typeof args === 'number') {
-        args = { auction: args }
+        args = { auction: args };
     }
 
-            if (typeof args === 'object' && !Array.isArray(args) && 'uuid' in args) {
-            args = { auction: args.uuid }
-        }
-    
+    if (typeof args === 'object' && !Array.isArray(args) && 'uuid' in args) {
+        args = { auction: args.uuid };
+    }
+
     if (Array.isArray(args)) {
         args = {
-                    auction: args[0],
-                }
+            auction: args[0],
+        };
     }
 
-    args = applyUrlDefaults(args)
+    args = applyUrlDefaults(args);
 
     const parsedArgs = {
-                        auction: typeof args.auction === 'object'
-                ? args.auction.uuid
-                : args.auction,
-                }
+        auction:
+            typeof args.auction === 'object' ? args.auction.uuid : args.auction,
+    };
 
-    return store.definition.url
+    return (
+        store.definition.url
             .replace('{auction}', parsedArgs.auction.toString())
             .replace(/\/+$/, '') + queryParams(options)
-}
+    );
+};
 
 /**
-* @see \App\Http\Controllers\AuctionActivityController::store
+ * @see \App\Http\Controllers\AuctionActivityController::store
  * @see app/Http/Controllers/AuctionActivityController.php:15
  * @route '/auctions/{auction}/activity'
  */
-store.post = (args: { auction: string | { uuid: string } } | [auction: string | { uuid: string } ] | string | { uuid: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+store.post = (
+    args:
+        | { auction: string | { uuid: string } }
+        | [auction: string | { uuid: string }]
+        | string
+        | { uuid: string },
+    options?: RouteQueryOptions,
+): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
-})
+});
 
-    /**
-* @see \App\Http\Controllers\AuctionActivityController::store
+/**
+ * @see \App\Http\Controllers\AuctionActivityController::store
  * @see app/Http/Controllers/AuctionActivityController.php:15
  * @route '/auctions/{auction}/activity'
  */
-    const storeForm = (args: { auction: string | { uuid: string } } | [auction: string | { uuid: string } ] | string | { uuid: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-        action: store.url(args, options),
-        method: 'post',
-    })
+const storeForm = (
+    args:
+        | { auction: string | { uuid: string } }
+        | [auction: string | { uuid: string }]
+        | string
+        | { uuid: string },
+    options?: RouteQueryOptions,
+): RouteFormDefinition<'post'> => ({
+    action: store.url(args, options),
+    method: 'post',
+});
 
-            /**
-* @see \App\Http\Controllers\AuctionActivityController::store
+/**
+ * @see \App\Http\Controllers\AuctionActivityController::store
  * @see app/Http/Controllers/AuctionActivityController.php:15
  * @route '/auctions/{auction}/activity'
  */
-        storeForm.post = (args: { auction: string | { uuid: string } } | [auction: string | { uuid: string } ] | string | { uuid: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-            action: store.url(args, options),
-            method: 'post',
-        })
-    
-    store.form = storeForm
-const AuctionActivityController = { store }
+storeForm.post = (
+    args:
+        | { auction: string | { uuid: string } }
+        | [auction: string | { uuid: string }]
+        | string
+        | { uuid: string },
+    options?: RouteQueryOptions,
+): RouteFormDefinition<'post'> => ({
+    action: store.url(args, options),
+    method: 'post',
+});
 
-export default AuctionActivityController
+store.form = storeForm;
+const AuctionActivityController = { store };
+
+export default AuctionActivityController;

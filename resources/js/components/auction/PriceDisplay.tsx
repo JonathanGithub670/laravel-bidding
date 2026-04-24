@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
 import { TrendingUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface PriceDisplayProps {
     amount: number;
@@ -24,7 +24,7 @@ export default function PriceDisplay({
     useEffect(() => {
         if (previousAmount && amount !== previousAmount && showAnimation) {
             setIsAnimating(true);
-            
+
             // Animate the number change
             const duration = 500;
             const steps = 20;
@@ -38,7 +38,9 @@ export default function PriceDisplay({
                     clearInterval(timer);
                     setTimeout(() => setIsAnimating(false), 500);
                 } else {
-                    setDisplayAmount(Math.round(previousAmount + increment * currentStep));
+                    setDisplayAmount(
+                        Math.round(previousAmount + increment * currentStep),
+                    );
                 }
             }, duration / steps);
 
@@ -59,19 +61,15 @@ export default function PriceDisplay({
         <div className="relative">
             {/* Price Display */}
             <div
-                className={`
-                    font-bold text-slate-900 dark:text-white transition-all duration-300
-                    ${sizeClasses[size]}
-                    ${isAnimating ? 'scale-110 text-amber-500' : 'scale-100'}
-                `}
+                className={`font-bold text-slate-900 transition-all duration-300 dark:text-white ${sizeClasses[size]} ${isAnimating ? 'scale-110 text-amber-500' : 'scale-100'} `}
             >
                 {formatCurrency(displayAmount)}
             </div>
 
             {/* Increase Indicator */}
             {isAnimating && previousAmount && amount > previousAmount && (
-                <div className="absolute -top-6 left-1/2 -translate-x-1/2 flex items-center gap-1 text-green-500 animate-bounce">
-                    <TrendingUp className="w-4 h-4" />
+                <div className="absolute -top-6 left-1/2 flex -translate-x-1/2 animate-bounce items-center gap-1 text-green-500">
+                    <TrendingUp className="h-4 w-4" />
                     <span className="text-sm font-semibold">
                         +{formatCurrency(amount - previousAmount)}
                     </span>
@@ -80,8 +78,8 @@ export default function PriceDisplay({
 
             {/* Pop Animation Overlay */}
             {isAnimating && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="absolute inset-0 bg-amber-500/20 rounded-xl animate-ping" />
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                    <div className="absolute inset-0 animate-ping rounded-xl bg-amber-500/20" />
                 </div>
             )}
         </div>

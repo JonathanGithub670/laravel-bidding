@@ -1,5 +1,4 @@
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
 import {
     RefreshCcw,
     Clock,
@@ -8,6 +7,7 @@ import {
     ShieldCheck,
     Timer,
 } from 'lucide-react';
+import AppLayout from '@/layouts/app-layout';
 
 interface Auction {
     id: number;
@@ -50,7 +50,10 @@ interface Props {
     currentStatus: string;
 }
 
-const statusConfig: Record<string, { label: string; icon: typeof Clock; color: string }> = {
+const statusConfig: Record<
+    string,
+    { label: string; icon: typeof Clock; color: string }
+> = {
     pending: {
         label: 'Menunggu',
         icon: Clock,
@@ -78,7 +81,11 @@ const statusConfig: Record<string, { label: string; icon: typeof Clock; color: s
     },
 };
 
-export default function UserReimbursementsIndex({ reimbursements, counts, currentStatus }: Props) {
+export default function UserReimbursementsIndex({
+    reimbursements,
+    counts,
+    currentStatus,
+}: Props) {
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('id-ID', {
             day: 'numeric',
@@ -108,7 +115,8 @@ export default function UserReimbursementsIndex({ reimbursements, counts, curren
                         💰 Reimbursement Saya
                     </h1>
                     <p className="mt-1 text-gray-500 dark:text-gray-400">
-                        Status pengembalian biaya pendaftaran lelang yang tidak dimenangkan
+                        Status pengembalian biaya pendaftaran lelang yang tidak
+                        dimenangkan
                     </p>
                 </div>
 
@@ -120,8 +128,12 @@ export default function UserReimbursementsIndex({ reimbursements, counts, curren
                                 <Clock className="h-5 w-5 text-yellow-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-yellow-600">{counts.pending}</p>
-                                <p className="text-sm text-yellow-700 dark:text-yellow-400">Menunggu</p>
+                                <p className="text-2xl font-bold text-yellow-600">
+                                    {counts.pending}
+                                </p>
+                                <p className="text-sm text-yellow-700 dark:text-yellow-400">
+                                    Menunggu
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -131,8 +143,12 @@ export default function UserReimbursementsIndex({ reimbursements, counts, curren
                                 <ShieldCheck className="h-5 w-5 text-blue-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-blue-600">{counts.eligible}</p>
-                                <p className="text-sm text-blue-700 dark:text-blue-400">Eligible</p>
+                                <p className="text-2xl font-bold text-blue-600">
+                                    {counts.eligible}
+                                </p>
+                                <p className="text-sm text-blue-700 dark:text-blue-400">
+                                    Eligible
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -142,8 +158,12 @@ export default function UserReimbursementsIndex({ reimbursements, counts, curren
                                 <CheckCircle className="h-5 w-5 text-green-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-green-600">{counts.completed}</p>
-                                <p className="text-sm text-green-700 dark:text-green-400">Selesai</p>
+                                <p className="text-2xl font-bold text-green-600">
+                                    {counts.completed}
+                                </p>
+                                <p className="text-sm text-green-700 dark:text-green-400">
+                                    Selesai
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -153,8 +173,12 @@ export default function UserReimbursementsIndex({ reimbursements, counts, curren
                                 <XCircle className="h-5 w-5 text-red-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-red-600">{counts.rejected}</p>
-                                <p className="text-sm text-red-700 dark:text-red-400">Ditolak</p>
+                                <p className="text-2xl font-bold text-red-600">
+                                    {counts.rejected}
+                                </p>
+                                <p className="text-sm text-red-700 dark:text-red-400">
+                                    Ditolak
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -166,14 +190,16 @@ export default function UserReimbursementsIndex({ reimbursements, counts, curren
                         <Link
                             key={tab.key}
                             href={`/user/reimbursements?status=${tab.key}`}
-                            className={`whitespace-nowrap rounded-lg px-4 py-2 font-medium transition-colors ${
+                            className={`rounded-lg px-4 py-2 font-medium whitespace-nowrap transition-colors ${
                                 currentStatus === tab.key
                                     ? 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400'
                                     : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
                             }`}
                         >
                             {tab.label}
-                            <span className="ml-2 text-xs">({counts[tab.key] || 0})</span>
+                            <span className="ml-2 text-xs">
+                                ({counts[tab.key] || 0})
+                            </span>
                         </Link>
                     ))}
                 </div>
@@ -195,26 +221,28 @@ export default function UserReimbursementsIndex({ reimbursements, counts, curren
                             <table className="w-full">
                                 <thead className="bg-gray-50 dark:bg-gray-900/50">
                                     <tr>
-                                        <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
                                             Lelang
                                         </th>
-                                        <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
                                             Jumlah
                                         </th>
-                                        <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
                                             Status
                                         </th>
-                                        <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
                                             Eligible
                                         </th>
-                                        <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
                                             Tanggal
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                                     {reimbursements.data.map((item) => {
-                                        const status = statusConfig[item.status] || statusConfig.pending;
+                                        const status =
+                                            statusConfig[item.status] ||
+                                            statusConfig.pending;
 
                                         return (
                                             <tr
@@ -225,12 +253,16 @@ export default function UserReimbursementsIndex({ reimbursements, counts, curren
                                                 <td className="max-w-[200px] px-6 py-4">
                                                     <p
                                                         className="truncate font-medium text-gray-900 dark:text-white"
-                                                        title={item.auction?.title}
+                                                        title={
+                                                            item.auction?.title
+                                                        }
                                                     >
-                                                        {item.auction?.title || '-'}
+                                                        {item.auction?.title ||
+                                                            '-'}
                                                     </p>
                                                     <p className="text-xs text-gray-500">
-                                                        Ref: {item.reference_number}
+                                                        Ref:{' '}
+                                                        {item.reference_number}
                                                     </p>
                                                 </td>
 
@@ -258,28 +290,41 @@ export default function UserReimbursementsIndex({ reimbursements, counts, curren
 
                                                 {/* Eligible countdown */}
                                                 <td className="px-6 py-4">
-                                                    {item.status === 'pending' &&
+                                                    {item.status ===
+                                                        'pending' &&
                                                     item.remaining_days > 0 ? (
                                                         <div className="flex items-center gap-1.5 text-sm text-amber-600 dark:text-amber-400">
                                                             <Timer className="h-4 w-4" />
-                                                            <span>{item.remaining_days} hari lagi</span>
+                                                            <span>
+                                                                {
+                                                                    item.remaining_days
+                                                                }{' '}
+                                                                hari lagi
+                                                            </span>
                                                         </div>
-                                                    ) : item.status === 'pending' ? (
+                                                    ) : item.status ===
+                                                      'pending' ? (
                                                         <span className="text-sm text-blue-600 dark:text-blue-400">
                                                             Segera eligible
                                                         </span>
                                                     ) : item.eligible_at ? (
                                                         <span className="text-sm text-gray-500">
-                                                            {formatDate(item.eligible_at)}
+                                                            {formatDate(
+                                                                item.eligible_at,
+                                                            )}
                                                         </span>
                                                     ) : (
-                                                        <span className="text-sm text-gray-400">-</span>
+                                                        <span className="text-sm text-gray-400">
+                                                            -
+                                                        </span>
                                                     )}
                                                 </td>
 
                                                 {/* Date */}
                                                 <td className="px-6 py-4 text-sm text-gray-500">
-                                                    {formatDate(item.created_at)}
+                                                    {formatDate(
+                                                        item.created_at,
+                                                    )}
                                                 </td>
                                             </tr>
                                         );

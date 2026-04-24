@@ -6,7 +6,6 @@ use App\Models\Auction;
 use App\Models\AuctionCategory;
 use App\Models\BadgeRead;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -89,7 +88,7 @@ class AuctionListController extends Controller
             ->withCount([
                 'auctions' => function ($query) {
                     $query->whereIn('status', ['scheduled', 'live', 'ended']);
-                }
+                },
             ])
             ->get();
 

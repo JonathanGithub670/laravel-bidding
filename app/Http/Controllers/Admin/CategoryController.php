@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\AuctionCategory;
 use App\Models\BadgeRead;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -81,7 +81,7 @@ class CategoryController extends Controller
     public function update(Request $request, AuctionCategory $category)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:auction_categories,name,' . $category->id,
+            'name' => 'required|string|max:255|unique:auction_categories,name,'.$category->id,
             'icon' => 'nullable|string|max:10',
             'description' => 'nullable|string|max:500',
             'is_active' => 'boolean',

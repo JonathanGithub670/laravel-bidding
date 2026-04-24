@@ -101,8 +101,9 @@ class AuctionSeeder extends Seeder
         foreach ($auctions as $index => $auctionData) {
             $category = $categories->where('slug', $auctionData['category_slug'])->first();
 
-            if (!$category)
+            if (! $category) {
                 continue;
+            }
 
             $startsAt = now()->addMinutes($index * 5 + 1);
             $endsAt = $startsAt->copy()->addHours($auctionData['duration_hours']);

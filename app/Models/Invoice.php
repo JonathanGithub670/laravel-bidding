@@ -51,10 +51,10 @@ class Invoice extends Model
             if (empty($invoice->uuid)) {
                 $invoice->uuid = Str::uuid()->toString();
             }
-            if (!$invoice->invoice_number) {
+            if (! $invoice->invoice_number) {
                 $invoice->invoice_number = static::generateInvoiceNumber();
             }
-            if (!$invoice->total_amount) {
+            if (! $invoice->total_amount) {
                 $invoice->total_amount = $invoice->amount + $invoice->admin_fee + $invoice->app_fee;
             }
         });
@@ -68,6 +68,7 @@ class Invoice extends Model
         $prefix = 'INV';
         $date = now()->format('Ymd');
         $random = strtoupper(Str::random(6));
+
         return "{$prefix}-{$date}-{$random}";
     }
 
@@ -111,6 +112,7 @@ class Invoice extends Model
         if ($this->status !== 'pending') {
             return 0;
         }
+
         return max(0, $this->payment_due_at->diffInSeconds(now(), false) * -1);
     }
 
@@ -119,27 +121,27 @@ class Invoice extends Model
      */
     public function getFormattedTotalAttribute(): string
     {
-        return 'Rp ' . number_format($this->total_amount, 0, ',', '.');
+        return 'Rp '.number_format($this->total_amount, 0, ',', '.');
     }
 
     public function getFormattedAmountAttribute(): string
     {
-        return 'Rp ' . number_format($this->amount, 0, ',', '.');
+        return 'Rp '.number_format($this->amount, 0, ',', '.');
     }
 
     public function getFormattedAdminFeeAttribute(): string
     {
-        return 'Rp ' . number_format($this->admin_fee, 0, ',', '.');
+        return 'Rp '.number_format($this->admin_fee, 0, ',', '.');
     }
 
     public function getFormattedRegistrationFeeAttribute(): string
     {
-        return 'Rp ' . number_format($this->registration_fee, 0, ',', '.');
+        return 'Rp '.number_format($this->registration_fee, 0, ',', '.');
     }
 
     public function getFormattedAppFeeAttribute(): string
     {
-        return 'Rp ' . number_format($this->app_fee, 0, ',', '.');
+        return 'Rp '.number_format($this->app_fee, 0, ',', '.');
     }
 
     /**

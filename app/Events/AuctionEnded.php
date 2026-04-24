@@ -3,11 +3,8 @@
 namespace App\Events;
 
 use App\Models\Auction;
-use App\Models\User;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -34,7 +31,7 @@ class AuctionEnded implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PresenceChannel('auction.' . $this->auction->id),
+            new PresenceChannel('auction.'.$this->auction->id),
         ];
     }
 
@@ -64,7 +61,7 @@ class AuctionEnded implements ShouldBroadcastNow
             'total_bids' => $this->auction->total_bids,
             'winner' => $winner ? [
                 'id' => $winner->id,
-                'name' => substr($winner->name, 0, 3) . '***',
+                'name' => substr($winner->name, 0, 3).'***',
             ] : null,
             'winning_bid' => $winningBid ? [
                 'amount' => $winningBid->amount,

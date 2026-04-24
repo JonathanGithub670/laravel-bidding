@@ -20,12 +20,12 @@ class DisbursementService
     {
         // Validate minimum amount
         if ($amount < Disbursement::MIN_AMOUNT) {
-            throw new Exception('Minimum penarikan adalah Rp ' . number_format(Disbursement::MIN_AMOUNT, 0, ',', '.'));
+            throw new Exception('Minimum penarikan adalah Rp '.number_format(Disbursement::MIN_AMOUNT, 0, ',', '.'));
         }
 
         // Validate sufficient balance
         if ($user->balance < $amount) {
-            throw new Exception('Saldo tidak mencukupi. Saldo Anda: Rp ' . number_format($user->balance, 0, ',', '.'));
+            throw new Exception('Saldo tidak mencukupi. Saldo Anda: Rp '.number_format($user->balance, 0, ',', '.'));
         }
 
         // Validate bank account ownership
@@ -81,7 +81,7 @@ class DisbursementService
      */
     public function approveDisbursement(Disbursement $disbursement, User $admin): Disbursement
     {
-        if (!$disbursement->canBeApproved()) {
+        if (! $disbursement->canBeApproved()) {
             throw new Exception('Disbursement ini tidak dapat disetujui.');
         }
 
@@ -109,7 +109,7 @@ class DisbursementService
      */
     public function rejectDisbursement(Disbursement $disbursement, User $admin, string $reason): Disbursement
     {
-        if (!$disbursement->canBeApproved()) {
+        if (! $disbursement->canBeApproved()) {
             throw new Exception('Disbursement ini tidak dapat ditolak.');
         }
 
@@ -154,7 +154,7 @@ class DisbursementService
             throw new Exception('Anda tidak memiliki akses ke disbursement ini.');
         }
 
-        if (!$disbursement->canBeCancelled()) {
+        if (! $disbursement->canBeCancelled()) {
             throw new Exception('Disbursement ini tidak dapat dibatalkan.');
         }
 
@@ -192,7 +192,7 @@ class DisbursementService
      */
     public function processDisbursement(Disbursement $disbursement): Disbursement
     {
-        if (!$disbursement->canBeProcessed()) {
+        if (! $disbursement->canBeProcessed()) {
             throw new Exception('Disbursement tidak dalam status yang dapat diproses.');
         }
 
@@ -202,12 +202,12 @@ class DisbursementService
             'processed_at' => now(),
         ]);
 
-        // SIMULATION: In production, this would be an async job 
+        // SIMULATION: In production, this would be an async job
         // that calls the payment gateway API (Xendit/Midtrans)
         // For now, we'll simulate success after a delay
 
         // Simulate API call with external ID
-        $externalId = 'SIM-' . strtoupper(uniqid());
+        $externalId = 'SIM-'.strtoupper(uniqid());
 
         // Simulate success (in production, this would be a webhook callback)
         $disbursement->update([
@@ -232,10 +232,11 @@ class DisbursementService
     {
         $disbursement = Disbursement::where('external_id', $externalId)->first();
 
-        if (!$disbursement) {
+        if (! $disbursement) {
             Log::warning('Disbursement callback received for unknown external_id', [
                 'external_id' => $externalId,
             ]);
+
             return null;
         }
 
@@ -270,9 +271,9 @@ class DisbursementService
             'fee' => $fee,
             'fee_percentage' => Disbursement::FEE_PERCENTAGE,
             'total' => $total,
-            'formatted_amount' => 'Rp ' . number_format($amount, 0, ',', '.'),
-            'formatted_fee' => 'Rp ' . number_format($fee, 0, ',', '.'),
-            'formatted_total' => 'Rp ' . number_format($total, 0, ',', '.'),
+            'formatted_amount' => 'Rp '.number_format($amount, 0, ',', '.'),
+            'formatted_fee' => 'Rp '.number_format($fee, 0, ',', '.'),
+            'formatted_total' => 'Rp '.number_format($total, 0, ',', '.'),
         ];
     }
 }

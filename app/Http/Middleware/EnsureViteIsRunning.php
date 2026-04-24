@@ -19,14 +19,14 @@ class EnsureViteIsRunning
     public function handle(Request $request, Closure $next): Response
     {
         // Only enforce in local/development environment
-        if (!app()->environment('local', 'development')) {
+        if (! app()->environment('local', 'development')) {
             return $next($request);
         }
 
         // Check if the Vite hot file exists (created by `npm run dev`)
         $hotFilePath = public_path('hot');
 
-        if (!file_exists($hotFilePath)) {
+        if (! file_exists($hotFilePath)) {
             return response()->view('errors.vite-offline', [], 503);
         }
 

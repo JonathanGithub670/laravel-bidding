@@ -17,7 +17,7 @@ class AuctionSettlementService
     public function createForAuction(Auction $auction): ?AuctionSettlement
     {
         // Only process ended auctions with a winner
-        if ($auction->status !== 'ended' || !$auction->winner_id) {
+        if ($auction->status !== 'ended' || ! $auction->winner_id) {
             return null;
         }
 
@@ -28,7 +28,7 @@ class AuctionSettlementService
 
         /** @var \App\Models\Bid|null $winningBid */
         $winningBid = $auction->bids()->where('is_winning', true)->first();
-        if (!$winningBid) {
+        if (! $winningBid) {
             return null;
         }
 
@@ -72,7 +72,7 @@ class AuctionSettlementService
         string $estimatedDeliveryDate,
         ?string $notes = null
     ): AuctionSettlement {
-        if (!$settlement->canBeApproved()) {
+        if (! $settlement->canBeApproved()) {
             throw new Exception('Settlement ini tidak dapat disetujui.');
         }
 
@@ -132,14 +132,14 @@ class AuctionSettlementService
      */
     public function disburseToSeller(AuctionSettlement $settlement): AuctionSettlement
     {
-        if (!$settlement->canBeDisbursed()) {
+        if (! $settlement->canBeDisbursed()) {
             throw new Exception('Dana belum bisa dicairkan.');
         }
 
         return DB::transaction(function () use ($settlement) {
             // Transfer seller_amount to seller's balance
             $seller = User::lockForUpdate()->find($settlement->seller_id);
-            if (!$seller) {
+            if (! $seller) {
                 throw new Exception('Seller tidak ditemukan.');
             }
 
@@ -150,7 +150,7 @@ class AuctionSettlementService
                 $seller->id,
                 \App\Models\Transaction::TYPE_SETTLEMENT_SELLER,
                 $settlement->seller_amount,
-                'Pencairan dana lelang: ' . ($settlement->auction->title ?? 'Lelang #' . $settlement->auction_id),
+                'Pencairan dana lelang: '.($settlement->auction->title ?? 'Lelang #'.$settlement->auction_id),
                 $settlement
             );
 
@@ -183,7 +183,7 @@ class AuctionSettlementService
      */
     public function confirmShipping(AuctionSettlement $settlement, User $admin): AuctionSettlement
     {
-        if (!$settlement->canConfirmShipping()) {
+        if (! $settlement->canConfirmShipping()) {
             throw new Exception('Pengiriman tidak dapat dikonfirmasi pada status ini.');
         }
 
@@ -206,7 +206,7 @@ class AuctionSettlementService
      */
     public function markDelivered(AuctionSettlement $settlement, User $admin): AuctionSettlement
     {
-        if (!$settlement->canMarkDelivered()) {
+        if (! $settlement->canMarkDelivered()) {
             throw new Exception('Barang belum dalam status pengiriman.');
         }
 
@@ -235,7 +235,7 @@ class AuctionSettlementService
      */
     public function reject(AuctionSettlement $settlement, User $admin, string $reason): AuctionSettlement
     {
-        if (!$settlement->canBeRejected()) {
+        if (! $settlement->canBeRejected()) {
             throw new Exception('Settlement ini tidak dapat ditolak.');
         }
 
@@ -250,7 +250,7 @@ class AuctionSettlementService
                     $winner->id,
                     \App\Models\Transaction::TYPE_SETTLEMENT_REFUND,
                     $settlement->amount,
-                    'Pengembalian dana lelang (ditolak): ' . ($settlement->auction->title ?? 'Lelang #' . $settlement->auction_id),
+                    'Pengembalian dana lelang (ditolak): '.($settlement->auction->title ?? 'Lelang #'.$settlement->auction_id),
                     $settlement
                 );
             }

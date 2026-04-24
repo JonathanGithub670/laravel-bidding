@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\EmailOtp;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -19,11 +21,18 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register()
     {
+        // Create the required 'user' role
+        Role::create(['name' => Role::USER, 'display_name' => 'User']);
+
+        // Generate a valid OTP for the test email
+        $otp = EmailOtp::generate('test@example.com');
+
         $response = $this->post(route('register.store'), [
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
+            'otp_code' => $otp->otp_code,
         ]);
 
         // User should NOT be authenticated after registration (requires superadmin approval)
@@ -39,4 +48,3 @@ class RegistrationTest extends TestCase
         ]);
     }
 }
-

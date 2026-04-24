@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BadgeRead;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\BadgeRead;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -26,6 +26,7 @@ class ChatController extends Controller
             ->get()
             ->map(function ($chat) use ($user) {
                 $otherUser = $chat->getOtherUser($user->id);
+
                 return [
                     'id' => $chat->id,
                     'user' => [
@@ -51,7 +52,7 @@ class ChatController extends Controller
         $adminUsers = [];
         $isCurrentUserAdmin = $user->hasRole([Role::SUPERADMIN, Role::ADMIN]);
 
-        if (!$isCurrentUserAdmin) {
+        if (! $isCurrentUserAdmin) {
             $adminRoles = Role::whereIn('name', [Role::SUPERADMIN, Role::ADMIN])->pluck('id');
             $adminUsers = User::whereIn('role_id', $adminRoles)
                 ->where('id', '!=', $user->id)
@@ -93,7 +94,7 @@ class ChatController extends Controller
             ->where('id', '!=', $currentUser->id)
             ->first();
 
-        if (!$foundUser) {
+        if (! $foundUser) {
             return response()->json([
                 'success' => false,
                 'message' => 'User not found with this PIN',
@@ -241,7 +242,7 @@ class ChatController extends Controller
         $adminUser = User::findOrFail($request->admin_user_id);
 
         // Verify the target user is actually an admin or superadmin
-        if (!$adminUser->hasRole([Role::SUPERADMIN, Role::ADMIN])) {
+        if (! $adminUser->hasRole([Role::SUPERADMIN, Role::ADMIN])) {
             return response()->json(['error' => 'Target user is not an admin'], 400);
         }
 
@@ -261,6 +262,7 @@ class ChatController extends Controller
 
         if ($existingChat) {
             session()->flash('selected_chat_id', $existingChat->id);
+
             return response()->json([
                 'success' => true,
                 'chat_id' => $existingChat->id,

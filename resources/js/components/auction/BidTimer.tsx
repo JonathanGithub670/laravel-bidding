@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
 import { Clock } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 
 interface BidTimerProps {
     endsAt: string;
@@ -7,7 +7,11 @@ interface BidTimerProps {
     className?: string;
 }
 
-export default function BidTimer({ endsAt, onTimeUp, className = '' }: BidTimerProps) {
+export default function BidTimer({
+    endsAt,
+    onTimeUp,
+    className = '',
+}: BidTimerProps) {
     const [remainingSeconds, setRemainingSeconds] = useState(0);
     const [isUrgent, setIsUrgent] = useState(false);
     const [isCritical, setIsCritical] = useState(false);
@@ -21,7 +25,9 @@ export default function BidTimer({ endsAt, onTimeUp, className = '' }: BidTimerP
             return diff;
         };
 
-        setRemainingSeconds(calculateRemaining());
+        const initial = calculateRemaining();
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setRemainingSeconds(initial);
 
         intervalRef.current = setInterval(() => {
             const remaining = calculateRemaining();
@@ -51,6 +57,7 @@ export default function BidTimer({ endsAt, onTimeUp, className = '' }: BidTimerP
             const now = Date.now();
             return Math.max(0, Math.floor((endTime - now) / 1000));
         };
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setRemainingSeconds(calculateRemaining());
     }, [endsAt]);
 
@@ -86,7 +93,7 @@ export default function BidTimer({ endsAt, onTimeUp, className = '' }: BidTimerP
     return (
         <div className={`space-y-2 ${className}`}>
             {/* Progress Bar */}
-            <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+            <div className="h-3 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
                 <div
                     className={`h-full transition-all duration-1000 ${getProgressColor()} ${isCritical ? 'animate-pulse' : ''}`}
                     style={{ width: `${getProgressPercentage()}%` }}
@@ -94,16 +101,22 @@ export default function BidTimer({ endsAt, onTimeUp, className = '' }: BidTimerP
             </div>
 
             {/* Timer Display */}
-            <div className={`flex items-center justify-center gap-2 ${getTextColor()}`}>
-                <Clock className={`w-5 h-5 ${isCritical ? 'animate-bounce' : ''}`} />
-                <span className={`font-mono text-2xl font-bold ${isCritical ? 'animate-pulse' : ''}`}>
+            <div
+                className={`flex items-center justify-center gap-2 ${getTextColor()}`}
+            >
+                <Clock
+                    className={`h-5 w-5 ${isCritical ? 'animate-bounce' : ''}`}
+                />
+                <span
+                    className={`font-mono text-2xl font-bold ${isCritical ? 'animate-pulse' : ''}`}
+                >
                     {formatTime(remainingSeconds)}
                 </span>
             </div>
 
             {/* Status Text */}
             {isCritical && (
-                <p className="text-center text-red-500 font-semibold animate-pulse">
+                <p className="animate-pulse text-center font-semibold text-red-500">
                     ⚠️ Waktu hampir habis!
                 </p>
             )}

@@ -14,24 +14,33 @@ class AuctionSettlement extends Model
      * Status constants
      */
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_APPROVED = 'approved';
+
     public const STATUS_DISBURSED = 'disbursed';
+
     public const STATUS_COMPLETED = 'completed';
+
     public const STATUS_REJECTED = 'rejected';
 
     /**
      * Fund status constants
      */
     public const FUND_HELD = 'held';
+
     public const FUND_APPROVED = 'approved';
+
     public const FUND_SCHEDULED = 'scheduled';
+
     public const FUND_DISBURSED = 'disbursed';
 
     /**
      * Delivery status constants
      */
     public const DELIVERY_PENDING = 'pending';
+
     public const DELIVERY_SHIPPING = 'shipping';
+
     public const DELIVERY_DELIVERED = 'delivered';
 
     /**
@@ -85,8 +94,8 @@ class AuctionSettlement extends Model
         parent::boot();
 
         static::creating(function ($settlement) {
-            if (!$settlement->reference_number) {
-                $settlement->reference_number = 'STL-' . strtoupper(uniqid()) . '-' . date('Ymd');
+            if (! $settlement->reference_number) {
+                $settlement->reference_number = 'STL-'.strtoupper(uniqid()).'-'.date('Ymd');
             }
         });
     }
@@ -117,22 +126,22 @@ class AuctionSettlement extends Model
 
     public function getFormattedAmountAttribute(): string
     {
-        return 'Rp ' . number_format($this->amount, 0, ',', '.');
+        return 'Rp '.number_format($this->amount, 0, ',', '.');
     }
 
     public function getFormattedAdminFeeAttribute(): string
     {
-        return 'Rp ' . number_format($this->admin_fee, 0, ',', '.');
+        return 'Rp '.number_format($this->admin_fee, 0, ',', '.');
     }
 
     public function getFormattedAppFeeAttribute(): string
     {
-        return 'Rp ' . number_format($this->app_fee, 0, ',', '.');
+        return 'Rp '.number_format($this->app_fee, 0, ',', '.');
     }
 
     public function getFormattedSellerAmountAttribute(): string
     {
-        return 'Rp ' . number_format($this->seller_amount, 0, ',', '.');
+        return 'Rp '.number_format($this->seller_amount, 0, ',', '.');
     }
 
     // ─── Status Badges ─────────────────────────────────────

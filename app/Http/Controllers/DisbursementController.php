@@ -13,8 +13,7 @@ class DisbursementController extends Controller
 {
     public function __construct(
         protected DisbursementService $disbursementService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a listing of user's disbursements.
@@ -45,7 +44,7 @@ class DisbursementController extends Controller
         return Inertia::render('disbursements/create', [
             'accounts' => $accounts,
             'balance' => $balance,
-            'formattedBalance' => 'Rp ' . number_format($balance, 0, ',', '.'),
+            'formattedBalance' => 'Rp '.number_format($balance, 0, ',', '.'),
             'minAmount' => Disbursement::MIN_AMOUNT,
             'feePercentage' => Disbursement::FEE_PERCENTAGE,
         ]);
@@ -58,7 +57,7 @@ class DisbursementController extends Controller
     {
         $validated = $request->validate([
             'bank_account_id' => 'required|exists:bank_accounts,id',
-            'amount' => 'required|numeric|min:' . Disbursement::MIN_AMOUNT,
+            'amount' => 'required|numeric|min:'.Disbursement::MIN_AMOUNT,
             'notes' => 'nullable|string|max:500',
         ]);
 
@@ -103,6 +102,7 @@ class DisbursementController extends Controller
     {
         try {
             $this->disbursementService->cancelDisbursement($disbursement, $request->user());
+
             return back()->with('success', 'Permintaan penarikan berhasil dibatalkan');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
@@ -115,6 +115,7 @@ class DisbursementController extends Controller
     public function feePreview(Request $request)
     {
         $amount = (float) $request->input('amount', 0);
+
         return response()->json($this->disbursementService->getFeePreview($amount));
     }
 }

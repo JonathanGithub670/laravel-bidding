@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use App\Models\Auction;
-use App\Models\Reimbursement;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
@@ -23,7 +22,7 @@ class AuctionLostNotification extends Notification
 
     public function toArray(object $notifiable): array
     {
-        $formattedAmount = 'Rp ' . number_format($this->refundAmount, 0, ',', '.');
+        $formattedAmount = 'Rp '.number_format($this->refundAmount, 0, ',', '.');
 
         return [
             'type' => 'auction_lost',
@@ -33,7 +32,7 @@ class AuctionLostNotification extends Notification
             'auction_id' => $this->auction->id,
             'auction_title' => $this->auction->title,
             'amount' => $this->refundAmount,
-            'url' => "/user/reimbursements",
+            'url' => '/user/reimbursements',
         ];
     }
 }

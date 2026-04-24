@@ -6,9 +6,5 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
         return null;
     }
 
-    return (
-        <div className="space-y-6">
-            {children}
-        </div>
-    );
+    return <div className="space-y-6">{children}</div>;
 }

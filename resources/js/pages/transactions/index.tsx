@@ -1,5 +1,4 @@
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
 import {
     ArrowLeft,
     ArrowDownLeft,
@@ -16,6 +15,7 @@ import {
     CreditCard,
 } from 'lucide-react';
 import { useState } from 'react';
+import AppLayout from '@/layouts/app-layout';
 
 interface Transaction {
     id: number;
@@ -74,7 +74,11 @@ const typeIcons: Record<string, typeof Wallet> = {
     disbursement_refund: RefreshCcw,
 };
 
-export default function TransactionsIndex({ transactions, summary, currentFilter }: Props) {
+export default function TransactionsIndex({
+    transactions,
+    summary,
+    currentFilter,
+}: Props) {
     const [filter, setFilter] = useState(currentFilter || 'all');
 
     const formatDate = (dateString: string) => {
@@ -123,8 +127,12 @@ export default function TransactionsIndex({ transactions, summary, currentFilter
                             <ArrowLeft className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                         </Link>
                         <div>
-                            <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Riwayat Transaksi</h1>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Semua aktivitas saldo Anda</p>
+                            <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+                                Riwayat Transaksi
+                            </h1>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                Semua aktivitas saldo Anda
+                            </p>
                         </div>
                     </div>
 
@@ -132,24 +140,36 @@ export default function TransactionsIndex({ transactions, summary, currentFilter
                     <div className="mb-6 rounded-2xl bg-gradient-to-br from-gray-900 to-gray-800 p-6 text-white dark:from-gray-800 dark:to-gray-900">
                         <div className="mb-2 flex items-center gap-2">
                             <Wallet className="h-5 w-5 text-gray-400" />
-                            <span className="text-sm text-gray-400">Saldo Saat Ini</span>
+                            <span className="text-sm text-gray-400">
+                                Saldo Saat Ini
+                            </span>
                         </div>
-                        <p className="mb-6 text-3xl font-bold">{summary.formatted_balance}</p>
+                        <p className="mb-6 text-3xl font-bold">
+                            {summary.formatted_balance}
+                        </p>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="rounded-xl bg-white/10 p-3">
                                 <div className="mb-1 flex items-center gap-2">
                                     <TrendingUp className="h-4 w-4 text-emerald-400" />
-                                    <span className="text-xs text-gray-400">Total Masuk</span>
+                                    <span className="text-xs text-gray-400">
+                                        Total Masuk
+                                    </span>
                                 </div>
-                                <p className="font-semibold text-emerald-400">{summary.formatted_income}</p>
+                                <p className="font-semibold text-emerald-400">
+                                    {summary.formatted_income}
+                                </p>
                             </div>
                             <div className="rounded-xl bg-white/10 p-3">
                                 <div className="mb-1 flex items-center gap-2">
                                     <TrendingDown className="h-4 w-4 text-red-400" />
-                                    <span className="text-xs text-gray-400">Total Keluar</span>
+                                    <span className="text-xs text-gray-400">
+                                        Total Keluar
+                                    </span>
                                 </div>
-                                <p className="font-semibold text-red-400">{summary.formatted_expense}</p>
+                                <p className="font-semibold text-red-400">
+                                    {summary.formatted_expense}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -181,7 +201,9 @@ export default function TransactionsIndex({ transactions, summary, currentFilter
                     {filteredTransactions.length === 0 ? (
                         <div className="rounded-2xl border border-gray-200 bg-white py-16 text-center dark:border-gray-700 dark:bg-gray-800">
                             <Clock className="mx-auto mb-4 h-12 w-12 text-gray-300 dark:text-gray-600" />
-                            <h3 className="mb-1 font-medium text-gray-900 dark:text-white">Belum ada transaksi</h3>
+                            <h3 className="mb-1 font-medium text-gray-900 dark:text-white">
+                                Belum ada transaksi
+                            </h3>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
                                 {filter === 'income'
                                     ? 'Belum ada pemasukan'
@@ -193,8 +215,11 @@ export default function TransactionsIndex({ transactions, summary, currentFilter
                     ) : (
                         <div className="space-y-3">
                             {filteredTransactions.map((transaction) => {
-                                const Icon = typeIcons[transaction.type] || ArrowLeftRight;
-                                const isIncome = transaction.category === 'income';
+                                const Icon =
+                                    typeIcons[transaction.type] ||
+                                    ArrowLeftRight;
+                                const isIncome =
+                                    transaction.category === 'income';
                                 return (
                                     <div
                                         key={`${transaction.type}-${transaction.id}`}
@@ -230,10 +255,14 @@ export default function TransactionsIndex({ transactions, summary, currentFilter
                                                         }`}
                                                     >
                                                         <Icon className="h-3 w-3" />
-                                                        {typeLabels[transaction.type] || transaction.type}
+                                                        {typeLabels[
+                                                            transaction.type
+                                                        ] || transaction.type}
                                                     </span>
                                                     <span className="text-xs text-gray-400">
-                                                        {formatDate(transaction.created_at)}
+                                                        {formatDate(
+                                                            transaction.created_at,
+                                                        )}
                                                     </span>
                                                 </div>
                                             </div>
@@ -242,11 +271,15 @@ export default function TransactionsIndex({ transactions, summary, currentFilter
                                             <div className="text-right">
                                                 <p
                                                     className={`font-semibold ${
-                                                        isIncome ? 'text-emerald-600' : 'text-red-600'
+                                                        isIncome
+                                                            ? 'text-emerald-600'
+                                                            : 'text-red-600'
                                                     }`}
                                                 >
                                                     {isIncome ? '+' : '-'}
-                                                    {transaction.formatted_amount}
+                                                    {
+                                                        transaction.formatted_amount
+                                                    }
                                                 </p>
                                             </div>
                                         </div>
@@ -259,7 +292,10 @@ export default function TransactionsIndex({ transactions, summary, currentFilter
                     {/* Pagination */}
                     {transactions.last_page > 1 && (
                         <div className="mt-6 flex justify-center gap-2">
-                            {Array.from({ length: transactions.last_page }, (_, i) => i + 1).map((page) => (
+                            {Array.from(
+                                { length: transactions.last_page },
+                                (_, i) => i + 1,
+                            ).map((page) => (
                                 <Link
                                     key={page}
                                     href={`/transactions?filter=${filter}&page=${page}`}

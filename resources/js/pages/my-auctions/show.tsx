@@ -1,15 +1,15 @@
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
-import { 
-    ArrowLeft, 
-    Clock, 
-    CheckCircle, 
-    XCircle, 
-    AlertCircle, 
+import {
+    ArrowLeft,
+    Clock,
+    CheckCircle,
+    XCircle,
+    AlertCircle,
     Gavel,
     Calendar,
-    DollarSign
+    DollarSign,
 } from 'lucide-react';
+import AppLayout from '@/layouts/app-layout';
 
 interface Category {
     id: number;
@@ -37,7 +37,13 @@ interface Auction {
     starting_price: number;
     current_price: number;
     bid_increment: number;
-    status: 'pending' | 'scheduled' | 'live' | 'ended' | 'rejected' | 'cancelled';
+    status:
+        | 'pending'
+        | 'scheduled'
+        | 'live'
+        | 'ended'
+        | 'rejected'
+        | 'cancelled';
     created_at: string;
     starts_at: string | null;
     ends_at: string | null;
@@ -115,14 +121,14 @@ export default function ShowMyAuction({ auction }: Props) {
         <AppLayout>
             <Head title={`${auction.title} - My Auctions`} />
 
-            <div className="p-6 max-w-4xl mx-auto">
+            <div className="mx-auto max-w-4xl p-6">
                 {/* Header */}
-                <div className="flex items-center gap-4 mb-6">
+                <div className="mb-6 flex items-center gap-4">
                     <Link
                         href="/my-auctions"
-                        className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                        className="rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
                     >
-                        <ArrowLeft className="w-5 h-5 text-gray-500" />
+                        <ArrowLeft className="h-5 w-5 text-gray-500" />
                     </Link>
                     <div className="flex-1">
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -135,48 +141,58 @@ export default function ShowMyAuction({ auction }: Props) {
                 </div>
 
                 {/* Status Banner */}
-                <div className={`flex items-start gap-3 p-4 mb-6 rounded-xl ${status.color}`}>
-                    <StatusIcon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                <div
+                    className={`mb-6 flex items-start gap-3 rounded-xl p-4 ${status.color}`}
+                >
+                    <StatusIcon className="mt-0.5 h-5 w-5 flex-shrink-0" />
                     <div>
                         <p className="font-semibold">{status.label}</p>
-                        <p className="text-sm opacity-80">{status.description}</p>
-                        {auction.status === 'rejected' && auction.metadata?.rejection_reason && (
-                            <p className="text-sm mt-2 font-medium">
-                                Alasan: {auction.metadata.rejection_reason}
-                            </p>
-                        )}
+                        <p className="text-sm opacity-80">
+                            {status.description}
+                        </p>
+                        {auction.status === 'rejected' &&
+                            auction.metadata?.rejection_reason && (
+                                <p className="mt-2 text-sm font-medium">
+                                    Alasan: {auction.metadata.rejection_reason}
+                                </p>
+                            )}
                     </div>
                 </div>
 
-                <div className="grid lg:grid-cols-2 gap-6">
+                <div className="grid gap-6 lg:grid-cols-2">
                     {/* Images */}
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl p-4">
+                    <div className="rounded-2xl bg-white p-4 dark:bg-gray-800">
                         {auction.images && auction.images.length > 0 ? (
                             <div className="space-y-3">
-                                <div className="aspect-square rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700">
+                                <div className="aspect-square overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-700">
                                     <img
                                         src={auction.images[0]}
                                         alt={auction.title}
-                                        className="w-full h-full object-cover"
+                                        className="h-full w-full object-cover"
                                     />
                                 </div>
                                 {auction.images.length > 1 && (
                                     <div className="grid grid-cols-4 gap-2">
-                                        {auction.images.slice(1).map((image, index) => (
-                                            <div key={index} className="aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
-                                                <img
-                                                    src={image}
-                                                    alt={`${auction.title} - ${index + 2}`}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            </div>
-                                        ))}
+                                        {auction.images
+                                            .slice(1)
+                                            .map((image, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="aspect-square overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700"
+                                                >
+                                                    <img
+                                                        src={image}
+                                                        alt={`${auction.title} - ${index + 2}`}
+                                                        className="h-full w-full object-cover"
+                                                    />
+                                                </div>
+                                            ))}
                                     </div>
                                 )}
                             </div>
                         ) : (
-                            <div className="aspect-square rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-                                <Gavel className="w-16 h-16 text-gray-400" />
+                            <div className="flex aspect-square items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-700">
+                                <Gavel className="h-16 w-16 text-gray-400" />
                             </div>
                         )}
                     </div>
@@ -184,32 +200,40 @@ export default function ShowMyAuction({ auction }: Props) {
                     {/* Details */}
                     <div className="space-y-6">
                         {/* Price Info */}
-                        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6">
-                            <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                <DollarSign className="w-5 h-5 text-amber-500" />
+                        <div className="rounded-2xl bg-white p-6 dark:bg-gray-800">
+                            <h3 className="mb-4 flex items-center gap-2 font-semibold text-gray-900 dark:text-white">
+                                <DollarSign className="h-5 w-5 text-amber-500" />
                                 Informasi Harga
                             </h3>
                             <div className="space-y-3">
                                 <div className="flex justify-between">
-                                    <span className="text-gray-500 dark:text-gray-400">Harga Awal</span>
+                                    <span className="text-gray-500 dark:text-gray-400">
+                                        Harga Awal
+                                    </span>
                                     <span className="font-semibold text-gray-900 dark:text-white">
                                         {formatCurrency(auction.starting_price)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-gray-500 dark:text-gray-400">Harga Saat Ini</span>
-                                    <span className="font-bold text-amber-500 text-lg">
+                                    <span className="text-gray-500 dark:text-gray-400">
+                                        Harga Saat Ini
+                                    </span>
+                                    <span className="text-lg font-bold text-amber-500">
                                         {formatCurrency(auction.current_price)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-gray-500 dark:text-gray-400">Kelipatan Bid</span>
+                                    <span className="text-gray-500 dark:text-gray-400">
+                                        Kelipatan Bid
+                                    </span>
                                     <span className="text-gray-900 dark:text-white">
                                         {formatCurrency(auction.bid_increment)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-gray-500 dark:text-gray-400">Total Bids</span>
+                                    <span className="text-gray-500 dark:text-gray-400">
+                                        Total Bids
+                                    </span>
                                     <span className="text-gray-900 dark:text-white">
                                         {auction.total_bids || 0}
                                     </span>
@@ -218,27 +242,36 @@ export default function ShowMyAuction({ auction }: Props) {
                         </div>
 
                         {/* Schedule Info */}
-                        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6">
-                            <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                <Calendar className="w-5 h-5 text-amber-500" />
+                        <div className="rounded-2xl bg-white p-6 dark:bg-gray-800">
+                            <h3 className="mb-4 flex items-center gap-2 font-semibold text-gray-900 dark:text-white">
+                                <Calendar className="h-5 w-5 text-amber-500" />
                                 Jadwal
                             </h3>
                             <div className="space-y-3">
                                 <div className="flex justify-between">
-                                    <span className="text-gray-500 dark:text-gray-400">Durasi</span>
+                                    <span className="text-gray-500 dark:text-gray-400">
+                                        Durasi
+                                    </span>
                                     <span className="text-gray-900 dark:text-white">
-                                        {auction.metadata?.requested_duration_hours || 24} Jam
+                                        {auction.metadata
+                                            ?.requested_duration_hours ||
+                                            24}{' '}
+                                        Jam
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-gray-500 dark:text-gray-400">Diajukan</span>
+                                    <span className="text-gray-500 dark:text-gray-400">
+                                        Diajukan
+                                    </span>
                                     <span className="text-gray-900 dark:text-white">
                                         {formatDateTime(auction.created_at)}
                                     </span>
                                 </div>
                                 {auction.starts_at && (
                                     <div className="flex justify-between">
-                                        <span className="text-gray-500 dark:text-gray-400">Mulai</span>
+                                        <span className="text-gray-500 dark:text-gray-400">
+                                            Mulai
+                                        </span>
                                         <span className="text-gray-900 dark:text-white">
                                             {formatDateTime(auction.starts_at)}
                                         </span>
@@ -246,7 +279,9 @@ export default function ShowMyAuction({ auction }: Props) {
                                 )}
                                 {auction.ends_at && (
                                     <div className="flex justify-between">
-                                        <span className="text-gray-500 dark:text-gray-400">Berakhir</span>
+                                        <span className="text-gray-500 dark:text-gray-400">
+                                            Berakhir
+                                        </span>
                                         <span className="text-gray-900 dark:text-white">
                                             {formatDateTime(auction.ends_at)}
                                         </span>
@@ -258,28 +293,30 @@ export default function ShowMyAuction({ auction }: Props) {
                 </div>
 
                 {/* Description */}
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mt-6">
-                    <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
+                <div className="mt-6 rounded-2xl bg-white p-6 dark:bg-gray-800">
+                    <h3 className="mb-4 font-semibold text-gray-900 dark:text-white">
                         Deskripsi
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
+                    <p className="whitespace-pre-wrap text-gray-600 dark:text-gray-400">
                         {auction.description}
                     </p>
                 </div>
 
                 {/* Bids History */}
                 {auction.bids && auction.bids.length > 0 && (
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mt-6">
-                        <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                            <Gavel className="w-5 h-5 text-amber-500" />
+                    <div className="mt-6 rounded-2xl bg-white p-6 dark:bg-gray-800">
+                        <h3 className="mb-4 flex items-center gap-2 font-semibold text-gray-900 dark:text-white">
+                            <Gavel className="h-5 w-5 text-amber-500" />
                             Riwayat Bid
                         </h3>
                         <div className="space-y-2">
                             {auction.bids.map((bid, index) => (
                                 <div
                                     key={bid.id}
-                                    className={`flex items-center justify-between p-3 rounded-lg ${
-                                        index === 0 ? 'bg-amber-50 dark:bg-amber-900/20' : 'bg-gray-50 dark:bg-gray-700/50'
+                                    className={`flex items-center justify-between rounded-lg p-3 ${
+                                        index === 0
+                                            ? 'bg-amber-50 dark:bg-amber-900/20'
+                                            : 'bg-gray-50 dark:bg-gray-700/50'
                                     }`}
                                 >
                                     <span className="text-gray-700 dark:text-gray-300">

@@ -13,8 +13,7 @@ class DisbursementController extends Controller
 {
     public function __construct(
         protected DisbursementService $disbursementService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a listing of all disbursements for admin.
@@ -69,6 +68,7 @@ class DisbursementController extends Controller
     {
         try {
             $this->disbursementService->approveDisbursement($disbursement, $request->user());
+
             return back()->with('success', 'Disbursement berhasil disetujui dan diproses');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
@@ -86,6 +86,7 @@ class DisbursementController extends Controller
 
         try {
             $this->disbursementService->rejectDisbursement($disbursement, $request->user(), $validated['reason']);
+
             return back()->with('success', 'Disbursement berhasil ditolak');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);

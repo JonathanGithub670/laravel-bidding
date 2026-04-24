@@ -1,13 +1,24 @@
 import { Head, router } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
+import {
+    Eye,
+    EyeOff,
+    Mail,
+    CheckCircle,
+    RefreshCw,
+    Clock,
+    ShieldCheck,
+    ArrowRight,
+    ArrowLeft,
+    User,
+    Lock,
+    Sparkles,
+} from 'lucide-react';
+import type { KeyboardEvent, ClipboardEvent } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import TextLink from '@/components/text-link';
 import { login } from '@/routes';
-import { useState, useEffect, useRef, FormEvent, KeyboardEvent, ClipboardEvent } from 'react';
-import {
-    Eye, EyeOff, Mail, CheckCircle, XCircle, RefreshCw, Clock,
-    ShieldCheck, ArrowRight, ArrowLeft, User, Lock, Sparkles
-} from 'lucide-react';
 import { home } from '@/routes';
-import { Link } from '@inertiajs/react';
 
 const STEPS = [
     { label: 'Nama', icon: User },
@@ -33,9 +44,19 @@ export default function Register() {
     const [otpVerified, setOtpVerified] = useState(false);
     const [otpSending, setOtpSending] = useState(false);
     const [otpVerifying, setOtpVerifying] = useState(false);
-    const [otpMessage, setOtpMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+    const [otpMessage, setOtpMessage] = useState<{
+        type: 'success' | 'error';
+        text: string;
+    } | null>(null);
     const [countdown, setCountdown] = useState(0);
-    const [otpDigits, setOtpDigits] = useState<string[]>(['', '', '', '', '', '']);
+    const [otpDigits, setOtpDigits] = useState<string[]>([
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+    ]);
 
     // Form processing
     const [processing, setProcessing] = useState(false);
@@ -66,7 +87,10 @@ export default function Register() {
         if (countdown <= 0) return;
         const timer = setInterval(() => {
             setCountdown((prev) => {
-                if (prev <= 1) { clearInterval(timer); return 0; }
+                if (prev <= 1) {
+                    clearInterval(timer);
+                    return 0;
+                }
                 return prev - 1;
             });
         }, 1000);
@@ -77,17 +101,38 @@ export default function Register() {
     const validateStep = (): boolean => {
         setStepErrors('');
         if (step === 0) {
-            if (!name.trim()) { setStepErrors('Nama wajib diisi.'); return false; }
-            if (name.trim().length < 2) { setStepErrors('Nama minimal 2 karakter.'); return false; }
+            if (!name.trim()) {
+                setStepErrors('Nama wajib diisi.');
+                return false;
+            }
+            if (name.trim().length < 2) {
+                setStepErrors('Nama minimal 2 karakter.');
+                return false;
+            }
         }
         if (step === 1) {
-            if (!email.trim()) { setStepErrors('Email wajib diisi.'); return false; }
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setStepErrors('Format email tidak valid.'); return false; }
+            if (!email.trim()) {
+                setStepErrors('Email wajib diisi.');
+                return false;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                setStepErrors('Format email tidak valid.');
+                return false;
+            }
         }
         if (step === 2) {
-            if (!password) { setStepErrors('Password wajib diisi.'); return false; }
-            if (password.length < 8) { setStepErrors('Password minimal 8 karakter.'); return false; }
-            if (password !== passwordConfirmation) { setStepErrors('Konfirmasi password tidak cocok.'); return false; }
+            if (!password) {
+                setStepErrors('Password wajib diisi.');
+                return false;
+            }
+            if (password.length < 8) {
+                setStepErrors('Password minimal 8 karakter.');
+                return false;
+            }
+            if (password !== passwordConfirmation) {
+                setStepErrors('Konfirmasi password tidak cocok.');
+                return false;
+            }
         }
         return true;
     };
@@ -121,8 +166,11 @@ export default function Register() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN':
+                        document
+                            .querySelector('meta[name="csrf-token"]')
+                            ?.getAttribute('content') || '',
+                    Accept: 'application/json',
                 },
                 body: JSON.stringify({ email }),
             });
@@ -142,7 +190,10 @@ export default function Register() {
                 if (data.seconds_left) setCountdown(data.seconds_left);
             }
         } catch {
-            setOtpMessage({ type: 'error', text: 'Gagal mengirim OTP. Coba lagi.' });
+            setOtpMessage({
+                type: 'error',
+                text: 'Gagal mengirim OTP. Coba lagi.',
+            });
         } finally {
             setOtpSending(false);
         }
@@ -158,7 +209,10 @@ export default function Register() {
         if (value && index < 5) otpInputRefs.current[index + 1]?.focus();
     };
 
-    const handleDigitKeyDown = (index: number, e: KeyboardEvent<HTMLInputElement>) => {
+    const handleDigitKeyDown = (
+        index: number,
+        e: KeyboardEvent<HTMLInputElement>,
+    ) => {
         if (e.key === 'Backspace' && !otpDigits[index] && index > 0) {
             otpInputRefs.current[index - 1]?.focus();
         }
@@ -166,7 +220,10 @@ export default function Register() {
 
     const handleDigitPaste = (e: ClipboardEvent<HTMLInputElement>) => {
         e.preventDefault();
-        const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+        const pasted = e.clipboardData
+            .getData('text')
+            .replace(/\D/g, '')
+            .slice(0, 6);
         if (!pasted) return;
         const newDigits = [...otpDigits];
         for (let i = 0; i < 6; i++) newDigits[i] = pasted[i] || '';
@@ -178,7 +235,10 @@ export default function Register() {
     const handleVerifyOtp = async () => {
         const code = otpDigits.join('');
         if (code.length !== 6) {
-            setOtpMessage({ type: 'error', text: 'Masukkan 6 digit kode OTP.' });
+            setOtpMessage({
+                type: 'error',
+                text: 'Masukkan 6 digit kode OTP.',
+            });
             return;
         }
 
@@ -190,8 +250,11 @@ export default function Register() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN':
+                        document
+                            .querySelector('meta[name="csrf-token"]')
+                            ?.getAttribute('content') || '',
+                    Accept: 'application/json',
                 },
                 body: JSON.stringify({ email, otp_code: code }),
             });
@@ -218,28 +281,32 @@ export default function Register() {
         setProcessing(true);
         setErrors({});
 
-        router.post('/register', {
-            name,
-            email,
-            password,
-            password_confirmation: passwordConfirmation,
-            otp_code: otpCodeFinal || otpCode,
-        }, {
-            onSuccess: () => {
-                setSuccess(true);
+        router.post(
+            '/register',
+            {
+                name,
+                email,
+                password,
+                password_confirmation: passwordConfirmation,
+                otp_code: otpCodeFinal || otpCode,
             },
-            onError: (err) => {
-                setErrors(err);
-                setProcessing(false);
-                if (err.otp_code) {
-                    setOtpVerified(false);
-                    setOtpMessage({ type: 'error', text: err.otp_code });
-                }
-                if (err.name) setStep(0);
-                else if (err.email) setStep(1);
-                else if (err.password) setStep(2);
+            {
+                onSuccess: () => {
+                    setSuccess(true);
+                },
+                onError: (err) => {
+                    setErrors(err);
+                    setProcessing(false);
+                    if (err.otp_code) {
+                        setOtpVerified(false);
+                        setOtpMessage({ type: 'error', text: err.otp_code });
+                    }
+                    if (err.name) setStep(0);
+                    else if (err.email) setStep(1);
+                    else if (err.password) setStep(2);
+                },
             },
-        });
+        );
     };
 
     const formatCountdown = (s: number) => {
@@ -253,22 +320,26 @@ export default function Register() {
         {
             title: 'Buat Akun Anda',
             subtitle: 'Mulai perjalanan Anda bersama kami',
-            description: 'Bergabunglah dengan komunitas nathBid dan nikmati berbagai layanan lelang eksklusif yang telah kami siapkan untuk Anda.',
+            description:
+                'Bergabunglah dengan komunitas nathBid dan nikmati berbagai layanan lelang eksklusif yang telah kami siapkan untuk Anda.',
         },
         {
             title: 'Alamat Email',
             subtitle: 'Gunakan email aktif Anda',
-            description: 'Email akan digunakan untuk login, menerima notifikasi penting, dan memverifikasi identitas akun Anda.',
+            description:
+                'Email akan digunakan untuk login, menerima notifikasi penting, dan memverifikasi identitas akun Anda.',
         },
         {
             title: 'Keamanan Akun',
             subtitle: 'Lindungi akun Anda',
-            description: 'Buat password yang kuat dengan kombinasi huruf besar, huruf kecil, angka, dan simbol untuk keamanan maksimal.',
+            description:
+                'Buat password yang kuat dengan kombinasi huruf besar, huruf kecil, angka, dan simbol untuk keamanan maksimal.',
         },
         {
             title: 'Verifikasi Email',
             subtitle: 'Satu langkah lagi',
-            description: 'Kami akan mengirimkan kode OTP ke email Anda. Masukkan kode tersebut untuk memverifikasi kepemilikan email.',
+            description:
+                'Kami akan mengirimkan kode OTP ke email Anda. Masukkan kode tersebut untuk memverifikasi kepemilikan email.',
         },
     ];
 
@@ -285,7 +356,8 @@ export default function Register() {
                         Selamat Datang! 🎉
                     </h1>
                     <p className="mb-10 text-lg text-gray-500 dark:text-gray-400">
-                        Akun Anda berhasil dibuat. Anda akan diarahkan ke dashboard.
+                        Akun Anda berhasil dibuat. Anda akan diarahkan ke
+                        dashboard.
                     </p>
                 </div>
             </div>
@@ -297,11 +369,9 @@ export default function Register() {
             <Head title="Buat Akun — nathBid" />
 
             <div className="w-full max-w-5xl">
-
                 {/* Main Card — Two Column */}
                 <div className="overflow-hidden rounded-3xl border border-gray-200/60 bg-white/90 shadow-2xl shadow-gray-200/60 backdrop-blur-sm dark:border-gray-700/50 dark:bg-gray-800/90 dark:shadow-gray-900/60">
                     <div className="flex flex-col lg:flex-row">
-
                         {/* Left Panel — Branding & Info */}
                         <div className="relative flex flex-col justify-between overflow-hidden bg-gradient-to-br from-[#4A7FB5] via-[#5B8DB8] to-[#3D6E99] p-8 lg:w-[420px] lg:p-10">
                             {/* Background decoration */}
@@ -317,7 +387,11 @@ export default function Register() {
                                 {/* Logo */}
                                 <div className="mb-5 flex justify-center">
                                     <Link href={home()}>
-                                        <img src="/Logo.png" alt="nathBid" className="h-42 w-auto brightness-0 invert" />
+                                        <img
+                                            src="/Logo.png"
+                                            alt="nathBid"
+                                            className="h-42 w-auto brightness-0 invert"
+                                        />
                                     </Link>
                                 </div>
 
@@ -330,7 +404,7 @@ export default function Register() {
                                 </div>
 
                                 {/* Dynamic title */}
-                                <h1 className="mb-3 text-3xl font-bold leading-tight text-white lg:text-4xl">
+                                <h1 className="mb-3 text-3xl leading-tight font-bold text-white lg:text-4xl">
                                     {stepInfo[step].title}
                                 </h1>
                                 <p className="mb-2 text-lg font-medium text-white/80">
@@ -347,24 +421,35 @@ export default function Register() {
                                     const isActive = i === step;
                                     const isCompleted = i < step;
                                     return (
-                                        <div key={i} className="flex items-center gap-3">
-                                            <div className={`flex items-center justify-center rounded-full transition-all duration-500 ${
-                                                isCompleted
-                                                    ? 'h-10 w-10 bg-white/25 backdrop-blur-sm'
-                                                    : isActive
-                                                        ? 'h-10 w-10 bg-white shadow-lg shadow-white/20'
-                                                        : 'h-10 w-10 bg-white/10'
-                                            }`}>
+                                        <div
+                                            key={i}
+                                            className="flex items-center gap-3"
+                                        >
+                                            <div
+                                                className={`flex items-center justify-center rounded-full transition-all duration-500 ${
+                                                    isCompleted
+                                                        ? 'h-10 w-10 bg-white/25 backdrop-blur-sm'
+                                                        : isActive
+                                                          ? 'h-10 w-10 bg-white shadow-lg shadow-white/20'
+                                                          : 'h-10 w-10 bg-white/10'
+                                                }`}
+                                            >
                                                 {isCompleted ? (
                                                     <CheckCircle className="h-5 w-5 text-white" />
                                                 ) : (
-                                                    <s.icon className={`h-5 w-5 ${isActive ? 'text-[#4A7FB5]' : 'text-white/40'}`} />
+                                                    <s.icon
+                                                        className={`h-5 w-5 ${isActive ? 'text-[#4A7FB5]' : 'text-white/40'}`}
+                                                    />
                                                 )}
                                             </div>
                                             {i < 3 && (
-                                                <div className={`hidden h-0.5 w-6 rounded-full transition-colors duration-500 lg:block ${
-                                                    i < step ? 'bg-white/40' : 'bg-white/10'
-                                                }`} />
+                                                <div
+                                                    className={`hidden h-0.5 w-6 rounded-full transition-colors duration-500 lg:block ${
+                                                        i < step
+                                                            ? 'bg-white/40'
+                                                            : 'bg-white/10'
+                                                    }`}
+                                                />
                                             )}
                                         </div>
                                     );
@@ -372,11 +457,11 @@ export default function Register() {
                             </div>
 
                             {/* Logo on left panel */}
-                            <div className="relative z-10 mt-0 mb-0 hidden lg:flex justify-center">
+                            <div className="relative z-10 mt-0 mb-0 hidden justify-center lg:flex">
                                 <img
                                     src="/Logo.png"
                                     alt="nathBid"
-                                    className="h-42 w-auto brightness-0 invert opacity-20"
+                                    className="h-42 w-auto opacity-20 brightness-0 invert"
                                 />
                             </div>
                         </div>
@@ -390,33 +475,46 @@ export default function Register() {
                                     const isActive = i === step;
                                     const isCompleted = i < step;
                                     return (
-                                        <div key={i} className="flex flex-1 items-center">
+                                        <div
+                                            key={i}
+                                            className="flex flex-1 items-center"
+                                        >
                                             <div className="flex flex-col items-center gap-1.5">
-                                                <div className={`flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 ${
-                                                    isCompleted
-                                                        ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white shadow-sm shadow-green-200 dark:shadow-green-900/30'
-                                                        : isActive
-                                                            ? 'bg-gradient-to-br from-[#4A7FB5] to-[#3D6E99] text-white shadow-sm shadow-blue-200 dark:shadow-blue-900/30'
-                                                            : 'bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500'
-                                                }`}>
+                                                <div
+                                                    className={`flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 ${
+                                                        isCompleted
+                                                            ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white shadow-sm shadow-green-200 dark:shadow-green-900/30'
+                                                            : isActive
+                                                              ? 'bg-gradient-to-br from-[#4A7FB5] to-[#3D6E99] text-white shadow-sm shadow-blue-200 dark:shadow-blue-900/30'
+                                                              : 'bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500'
+                                                    }`}
+                                                >
                                                     {isCompleted ? (
                                                         <CheckCircle className="h-4.5 w-4.5" />
                                                     ) : (
                                                         <Icon className="h-4 w-4" />
                                                     )}
                                                 </div>
-                                                <span className={`text-[10px] font-medium transition-colors ${
-                                                    isActive ? 'text-[#4A7FB5] dark:text-sky-400'
-                                                    : isCompleted ? 'text-green-600 dark:text-green-400'
-                                                    : 'text-gray-400 dark:text-gray-500'
-                                                }`}>
+                                                <span
+                                                    className={`text-[10px] font-medium transition-colors ${
+                                                        isActive
+                                                            ? 'text-[#4A7FB5] dark:text-sky-400'
+                                                            : isCompleted
+                                                              ? 'text-green-600 dark:text-green-400'
+                                                              : 'text-gray-400 dark:text-gray-500'
+                                                    }`}
+                                                >
                                                     {s.label}
                                                 </span>
                                             </div>
                                             {i < 3 && (
-                                                <div className={`mx-2 h-0.5 flex-1 rounded-full transition-colors duration-300 ${
-                                                    i < step ? 'bg-green-400' : 'bg-gray-200 dark:bg-gray-700'
-                                                }`} />
+                                                <div
+                                                    className={`mx-2 h-0.5 flex-1 rounded-full transition-colors duration-300 ${
+                                                        i < step
+                                                            ? 'bg-green-400'
+                                                            : 'bg-gray-200 dark:bg-gray-700'
+                                                    }`}
+                                                />
                                             )}
                                         </div>
                                     );
@@ -437,13 +535,17 @@ export default function Register() {
                             <div className="min-h-[280px]">
                                 {/* Step 0: Name */}
                                 {step === 0 && (
-                                    <div className="space-y-6" onKeyDown={handleKeyDown}>
+                                    <div
+                                        className="space-y-6"
+                                        onKeyDown={handleKeyDown}
+                                    >
                                         <div>
-                                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white lg:text-2xl">
+                                            <h2 className="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
                                                 Siapa nama Anda?
                                             </h2>
-                                            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 lg:text-base">
-                                                Nama ini akan ditampilkan di profil Anda
+                                            <p className="mt-2 text-sm text-gray-500 lg:text-base dark:text-gray-400">
+                                                Nama ini akan ditampilkan di
+                                                profil Anda
                                             </p>
                                         </div>
                                         <div>
@@ -454,25 +556,40 @@ export default function Register() {
                                                 ref={nameRef}
                                                 type="text"
                                                 value={name}
-                                                onChange={(e) => { setName(e.target.value); setStepErrors(''); }}
+                                                onChange={(e) => {
+                                                    setName(e.target.value);
+                                                    setStepErrors('');
+                                                }}
                                                 placeholder="Masukkan nama lengkap"
-                                                className="w-full rounded-xl border-2 border-gray-200 bg-white px-5 py-3.5 text-base text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-[#4A7FB5] focus:ring-4 focus:ring-sky-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:focus:border-sky-400 dark:focus:ring-sky-900/30"
+                                                className="w-full rounded-xl border-2 border-gray-200 bg-white px-5 py-3.5 text-base text-gray-900 placeholder-gray-400 transition-all outline-none focus:border-[#4A7FB5] focus:ring-4 focus:ring-sky-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:focus:border-sky-400 dark:focus:ring-sky-900/30"
                                             />
-                                            {stepErrors && <p className="mt-2 text-sm text-red-500">{stepErrors}</p>}
-                                            {errors.name && <p className="mt-2 text-sm text-red-500">{errors.name}</p>}
+                                            {stepErrors && (
+                                                <p className="mt-2 text-sm text-red-500">
+                                                    {stepErrors}
+                                                </p>
+                                            )}
+                                            {errors.name && (
+                                                <p className="mt-2 text-sm text-red-500">
+                                                    {errors.name}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
                                 )}
 
                                 {/* Step 1: Email */}
                                 {step === 1 && (
-                                    <div className="space-y-6" onKeyDown={handleKeyDown}>
+                                    <div
+                                        className="space-y-6"
+                                        onKeyDown={handleKeyDown}
+                                    >
                                         <div>
-                                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white lg:text-2xl">
+                                            <h2 className="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
                                                 Apa email Anda?
                                             </h2>
-                                            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 lg:text-base">
-                                                Email digunakan untuk login dan verifikasi
+                                            <p className="mt-2 text-sm text-gray-500 lg:text-base dark:text-gray-400">
+                                                Email digunakan untuk login dan
+                                                verifikasi
                                             </p>
                                         </div>
                                         <div>
@@ -489,28 +606,47 @@ export default function Register() {
                                                     // Reset OTP if email changes
                                                     setOtpSent(false);
                                                     setOtpVerified(false);
-                                                    setOtpDigits(['', '', '', '', '', '']);
+                                                    setOtpDigits([
+                                                        '',
+                                                        '',
+                                                        '',
+                                                        '',
+                                                        '',
+                                                        '',
+                                                    ]);
                                                     setOtpCode('');
                                                     setOtpMessage(null);
                                                 }}
                                                 placeholder="email@example.com"
-                                                className="w-full rounded-xl border-2 border-gray-200 bg-white px-5 py-3.5 text-base text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-[#4A7FB5] focus:ring-4 focus:ring-sky-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:focus:border-sky-400 dark:focus:ring-sky-900/30"
+                                                className="w-full rounded-xl border-2 border-gray-200 bg-white px-5 py-3.5 text-base text-gray-900 placeholder-gray-400 transition-all outline-none focus:border-[#4A7FB5] focus:ring-4 focus:ring-sky-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:focus:border-sky-400 dark:focus:ring-sky-900/30"
                                             />
-                                            {stepErrors && <p className="mt-2 text-sm text-red-500">{stepErrors}</p>}
-                                            {errors.email && <p className="mt-2 text-sm text-red-500">{errors.email}</p>}
+                                            {stepErrors && (
+                                                <p className="mt-2 text-sm text-red-500">
+                                                    {stepErrors}
+                                                </p>
+                                            )}
+                                            {errors.email && (
+                                                <p className="mt-2 text-sm text-red-500">
+                                                    {errors.email}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
                                 )}
 
                                 {/* Step 2: Password */}
                                 {step === 2 && (
-                                    <div className="space-y-6" onKeyDown={handleKeyDown}>
+                                    <div
+                                        className="space-y-6"
+                                        onKeyDown={handleKeyDown}
+                                    >
                                         <div>
-                                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white lg:text-2xl">
+                                            <h2 className="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
                                                 Buat password Anda
                                             </h2>
-                                            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 lg:text-base">
-                                                Minimal 8 karakter untuk keamanan
+                                            <p className="mt-2 text-sm text-gray-500 lg:text-base dark:text-gray-400">
+                                                Minimal 8 karakter untuk
+                                                keamanan
                                             </p>
                                         </div>
                                         <div className="space-y-4">
@@ -521,18 +657,35 @@ export default function Register() {
                                                 <div className="relative">
                                                     <input
                                                         ref={passwordRef}
-                                                        type={showPassword ? 'text' : 'password'}
+                                                        type={
+                                                            showPassword
+                                                                ? 'text'
+                                                                : 'password'
+                                                        }
                                                         value={password}
-                                                        onChange={(e) => { setPassword(e.target.value); setStepErrors(''); }}
+                                                        onChange={(e) => {
+                                                            setPassword(
+                                                                e.target.value,
+                                                            );
+                                                            setStepErrors('');
+                                                        }}
                                                         placeholder="Buat password"
-                                                        className="w-full rounded-xl border-2 border-gray-200 bg-white px-5 py-3.5 pr-12 text-base text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-[#4A7FB5] focus:ring-4 focus:ring-sky-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:focus:border-sky-400 dark:focus:ring-sky-900/30"
+                                                        className="w-full rounded-xl border-2 border-gray-200 bg-white px-5 py-3.5 pr-12 text-base text-gray-900 placeholder-gray-400 transition-all outline-none focus:border-[#4A7FB5] focus:ring-4 focus:ring-sky-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:focus:border-sky-400 dark:focus:ring-sky-900/30"
                                                     />
                                                     <button
                                                         type="button"
-                                                        onClick={() => setShowPassword(!showPassword)}
-                                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                                        onClick={() =>
+                                                            setShowPassword(
+                                                                !showPassword,
+                                                            )
+                                                        }
+                                                        className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
                                                     >
-                                                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                                        {showPassword ? (
+                                                            <EyeOff className="h-5 w-5" />
+                                                        ) : (
+                                                            <Eye className="h-5 w-5" />
+                                                        )}
                                                     </button>
                                                 </div>
                                             </div>
@@ -542,45 +695,98 @@ export default function Register() {
                                                 </label>
                                                 <div className="relative">
                                                     <input
-                                                        type={showConfirm ? 'text' : 'password'}
-                                                        value={passwordConfirmation}
-                                                        onChange={(e) => { setPasswordConfirmation(e.target.value); setStepErrors(''); }}
+                                                        type={
+                                                            showConfirm
+                                                                ? 'text'
+                                                                : 'password'
+                                                        }
+                                                        value={
+                                                            passwordConfirmation
+                                                        }
+                                                        onChange={(e) => {
+                                                            setPasswordConfirmation(
+                                                                e.target.value,
+                                                            );
+                                                            setStepErrors('');
+                                                        }}
                                                         placeholder="Ulangi password"
-                                                        className="w-full rounded-xl border-2 border-gray-200 bg-white px-5 py-3.5 pr-12 text-base text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-[#4A7FB5] focus:ring-4 focus:ring-sky-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:focus:border-sky-400 dark:focus:ring-sky-900/30"
+                                                        className="w-full rounded-xl border-2 border-gray-200 bg-white px-5 py-3.5 pr-12 text-base text-gray-900 placeholder-gray-400 transition-all outline-none focus:border-[#4A7FB5] focus:ring-4 focus:ring-sky-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:focus:border-sky-400 dark:focus:ring-sky-900/30"
                                                     />
                                                     <button
                                                         type="button"
-                                                        onClick={() => setShowConfirm(!showConfirm)}
-                                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                                        onClick={() =>
+                                                            setShowConfirm(
+                                                                !showConfirm,
+                                                            )
+                                                        }
+                                                        className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
                                                     >
-                                                        {showConfirm ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                                        {showConfirm ? (
+                                                            <EyeOff className="h-5 w-5" />
+                                                        ) : (
+                                                            <Eye className="h-5 w-5" />
+                                                        )}
                                                     </button>
                                                 </div>
                                             </div>
-                                            {stepErrors && <p className="text-sm text-red-500">{stepErrors}</p>}
-                                            {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
+                                            {stepErrors && (
+                                                <p className="text-sm text-red-500">
+                                                    {stepErrors}
+                                                </p>
+                                            )}
+                                            {errors.password && (
+                                                <p className="text-sm text-red-500">
+                                                    {errors.password}
+                                                </p>
+                                            )}
                                         </div>
 
                                         {/* Password strength hints */}
                                         <div className="rounded-xl bg-gray-50 p-4 dark:bg-gray-700/50">
-                                            <p className="mb-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                            <p className="mb-2 text-xs font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">
                                                 Tips password yang kuat:
                                             </p>
                                             <ul className="space-y-1.5 text-xs text-gray-500 dark:text-gray-400">
-                                                <li className={`flex items-center gap-2 ${password.length >= 8 ? 'text-green-600 dark:text-green-400' : ''}`}>
-                                                    {password.length >= 8 ? <CheckCircle className="h-3.5 w-3.5" /> : <div className="h-1.5 w-1.5 rounded-full bg-gray-300 dark:bg-gray-600" />}
+                                                <li
+                                                    className={`flex items-center gap-2 ${password.length >= 8 ? 'text-green-600 dark:text-green-400' : ''}`}
+                                                >
+                                                    {password.length >= 8 ? (
+                                                        <CheckCircle className="h-3.5 w-3.5" />
+                                                    ) : (
+                                                        <div className="h-1.5 w-1.5 rounded-full bg-gray-300 dark:bg-gray-600" />
+                                                    )}
                                                     Minimal 8 karakter
                                                 </li>
-                                                <li className={`flex items-center gap-2 ${/[A-Z]/.test(password) ? 'text-green-600 dark:text-green-400' : ''}`}>
-                                                    {/[A-Z]/.test(password) ? <CheckCircle className="h-3.5 w-3.5" /> : <div className="h-1.5 w-1.5 rounded-full bg-gray-300 dark:bg-gray-600" />}
+                                                <li
+                                                    className={`flex items-center gap-2 ${/[A-Z]/.test(password) ? 'text-green-600 dark:text-green-400' : ''}`}
+                                                >
+                                                    {/[A-Z]/.test(password) ? (
+                                                        <CheckCircle className="h-3.5 w-3.5" />
+                                                    ) : (
+                                                        <div className="h-1.5 w-1.5 rounded-full bg-gray-300 dark:bg-gray-600" />
+                                                    )}
                                                     Mengandung huruf besar
                                                 </li>
-                                                <li className={`flex items-center gap-2 ${/[0-9]/.test(password) ? 'text-green-600 dark:text-green-400' : ''}`}>
-                                                    {/[0-9]/.test(password) ? <CheckCircle className="h-3.5 w-3.5" /> : <div className="h-1.5 w-1.5 rounded-full bg-gray-300 dark:bg-gray-600" />}
+                                                <li
+                                                    className={`flex items-center gap-2 ${/[0-9]/.test(password) ? 'text-green-600 dark:text-green-400' : ''}`}
+                                                >
+                                                    {/[0-9]/.test(password) ? (
+                                                        <CheckCircle className="h-3.5 w-3.5" />
+                                                    ) : (
+                                                        <div className="h-1.5 w-1.5 rounded-full bg-gray-300 dark:bg-gray-600" />
+                                                    )}
                                                     Mengandung angka
                                                 </li>
-                                                <li className={`flex items-center gap-2 ${/[^A-Za-z0-9]/.test(password) ? 'text-green-600 dark:text-green-400' : ''}`}>
-                                                    {/[^A-Za-z0-9]/.test(password) ? <CheckCircle className="h-3.5 w-3.5" /> : <div className="h-1.5 w-1.5 rounded-full bg-gray-300 dark:bg-gray-600" />}
+                                                <li
+                                                    className={`flex items-center gap-2 ${/[^A-Za-z0-9]/.test(password) ? 'text-green-600 dark:text-green-400' : ''}`}
+                                                >
+                                                    {/[^A-Za-z0-9]/.test(
+                                                        password,
+                                                    ) ? (
+                                                        <CheckCircle className="h-3.5 w-3.5" />
+                                                    ) : (
+                                                        <div className="h-1.5 w-1.5 rounded-full bg-gray-300 dark:bg-gray-600" />
+                                                    )}
                                                     Mengandung simbol (!@#$)
                                                 </li>
                                             </ul>
@@ -592,11 +798,14 @@ export default function Register() {
                                 {step === 3 && (
                                     <div className="space-y-6">
                                         <div>
-                                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white lg:text-2xl">
+                                            <h2 className="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
                                                 Verifikasi email Anda
                                             </h2>
-                                            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 lg:text-base">
-                                                Kode OTP akan dikirim ke <span className="font-semibold text-[#4A7FB5] dark:text-sky-400">{email}</span>
+                                            <p className="mt-2 text-sm text-gray-500 lg:text-base dark:text-gray-400">
+                                                Kode OTP akan dikirim ke{' '}
+                                                <span className="font-semibold text-[#4A7FB5] dark:text-sky-400">
+                                                    {email}
+                                                </span>
                                             </p>
                                         </div>
 
@@ -612,7 +821,9 @@ export default function Register() {
                                                 ) : (
                                                     <Mail className="h-5 w-5" />
                                                 )}
-                                                {otpSending ? 'Mengirim...' : 'Kirim Kode OTP'}
+                                                {otpSending
+                                                    ? 'Mengirim...'
+                                                    : 'Kirim Kode OTP'}
                                             </button>
                                         ) : (
                                             <div className="space-y-5">
@@ -620,35 +831,88 @@ export default function Register() {
                                                     <>
                                                         {/* 6 Box inputs */}
                                                         <div className="flex justify-center gap-3">
-                                                            {otpDigits.map((digit, index) => (
-                                                                <input
-                                                                    key={index}
-                                                                    ref={(el) => { otpInputRefs.current[index] = el; }}
-                                                                    type="text"
-                                                                    inputMode="numeric"
-                                                                    maxLength={1}
-                                                                    value={digit}
-                                                                    onChange={(e) => handleDigitChange(index, e.target.value)}
-                                                                    onKeyDown={(e) => handleDigitKeyDown(index, e)}
-                                                                    onPaste={index === 0 ? handleDigitPaste : undefined}
-                                                                    className="h-16 w-14 rounded-xl border-2 border-gray-200 bg-white text-center text-2xl font-bold text-gray-900 shadow-sm outline-none transition-all focus:border-[#4A7FB5] focus:ring-4 focus:ring-sky-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-sky-400 dark:focus:ring-sky-900/30"
-                                                                />
-                                                            ))}
+                                                            {otpDigits.map(
+                                                                (
+                                                                    digit,
+                                                                    index,
+                                                                ) => (
+                                                                    <input
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                        ref={(
+                                                                            el,
+                                                                        ) => {
+                                                                            otpInputRefs.current[
+                                                                                index
+                                                                            ] =
+                                                                                el;
+                                                                        }}
+                                                                        type="text"
+                                                                        inputMode="numeric"
+                                                                        maxLength={
+                                                                            1
+                                                                        }
+                                                                        value={
+                                                                            digit
+                                                                        }
+                                                                        onChange={(
+                                                                            e,
+                                                                        ) =>
+                                                                            handleDigitChange(
+                                                                                index,
+                                                                                e
+                                                                                    .target
+                                                                                    .value,
+                                                                            )
+                                                                        }
+                                                                        onKeyDown={(
+                                                                            e,
+                                                                        ) =>
+                                                                            handleDigitKeyDown(
+                                                                                index,
+                                                                                e,
+                                                                            )
+                                                                        }
+                                                                        onPaste={
+                                                                            index ===
+                                                                            0
+                                                                                ? handleDigitPaste
+                                                                                : undefined
+                                                                        }
+                                                                        className="h-16 w-14 rounded-xl border-2 border-gray-200 bg-white text-center text-2xl font-bold text-gray-900 shadow-sm transition-all outline-none focus:border-[#4A7FB5] focus:ring-4 focus:ring-sky-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-sky-400 dark:focus:ring-sky-900/30"
+                                                                    />
+                                                                ),
+                                                            )}
                                                         </div>
 
                                                         {/* Verify button */}
                                                         <button
                                                             type="button"
-                                                            onClick={handleVerifyOtp}
-                                                            disabled={otpVerifying || otpDigits.join('').length !== 6 || processing}
+                                                            onClick={
+                                                                handleVerifyOtp
+                                                            }
+                                                            disabled={
+                                                                otpVerifying ||
+                                                                otpDigits.join(
+                                                                    '',
+                                                                ).length !==
+                                                                    6 ||
+                                                                processing
+                                                            }
                                                             className="flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 px-5 py-4 text-base font-semibold text-white shadow-lg shadow-green-200 transition-all hover:from-emerald-600 hover:to-green-600 hover:shadow-xl disabled:opacity-50 dark:shadow-green-900/30"
                                                         >
-                                                            {(otpVerifying || processing) ? (
+                                                            {otpVerifying ||
+                                                            processing ? (
                                                                 <RefreshCw className="h-5 w-5 animate-spin" />
                                                             ) : (
                                                                 <ShieldCheck className="h-5 w-5" />
                                                             )}
-                                                            {processing ? 'Membuat akun...' : otpVerifying ? 'Memverifikasi...' : 'Verifikasi & Buat Akun'}
+                                                            {processing
+                                                                ? 'Membuat akun...'
+                                                                : otpVerifying
+                                                                  ? 'Memverifikasi...'
+                                                                  : 'Verifikasi & Buat Akun'}
                                                         </button>
                                                     </>
                                                 )}
@@ -657,7 +921,8 @@ export default function Register() {
                                                 {otpVerified && (
                                                     <div className="flex items-center justify-center gap-3 rounded-xl bg-green-50 py-4 text-base font-semibold text-green-700 dark:bg-green-900/30 dark:text-green-400">
                                                         <CheckCircle className="h-5 w-5" />
-                                                        OTP Terverifikasi — Membuat akun...
+                                                        OTP Terverifikasi —
+                                                        Membuat akun...
                                                     </div>
                                                 )}
 
@@ -667,16 +932,26 @@ export default function Register() {
                                                         {countdown > 0 ? (
                                                             <span className="flex items-center gap-2 text-sm text-gray-400">
                                                                 <Clock className="h-4 w-4" />
-                                                                Kirim ulang dalam {formatCountdown(countdown)}
+                                                                Kirim ulang
+                                                                dalam{' '}
+                                                                {formatCountdown(
+                                                                    countdown,
+                                                                )}
                                                             </span>
                                                         ) : (
                                                             <button
                                                                 type="button"
-                                                                onClick={handleSendOtp}
-                                                                disabled={otpSending}
-                                                                className="flex items-center gap-2 text-sm font-medium text-[#4A7FB5] hover:text-[#3D6E99] dark:text-sky-400 transition-colors"
+                                                                onClick={
+                                                                    handleSendOtp
+                                                                }
+                                                                disabled={
+                                                                    otpSending
+                                                                }
+                                                                className="flex items-center gap-2 text-sm font-medium text-[#4A7FB5] transition-colors hover:text-[#3D6E99] dark:text-sky-400"
                                                             >
-                                                                <RefreshCw className={`h-4 w-4 ${otpSending ? 'animate-spin' : ''}`} />
+                                                                <RefreshCw
+                                                                    className={`h-4 w-4 ${otpSending ? 'animate-spin' : ''}`}
+                                                                />
                                                                 Kirim Ulang OTP
                                                             </button>
                                                         )}
@@ -687,16 +962,21 @@ export default function Register() {
 
                                         {/* OTP Message */}
                                         {otpMessage && (
-                                            <p className={`text-center text-sm font-medium ${
-                                                otpMessage.type === 'success'
-                                                    ? 'text-green-600 dark:text-green-400'
-                                                    : 'text-red-500 dark:text-red-400'
-                                            }`}>
+                                            <p
+                                                className={`text-center text-sm font-medium ${
+                                                    otpMessage.type ===
+                                                    'success'
+                                                        ? 'text-green-600 dark:text-green-400'
+                                                        : 'text-red-500 dark:text-red-400'
+                                                }`}
+                                            >
                                                 {otpMessage.text}
                                             </p>
                                         )}
                                         {errors.otp_code && (
-                                            <p className="text-center text-sm text-red-500">{errors.otp_code}</p>
+                                            <p className="text-center text-sm text-red-500">
+                                                {errors.otp_code}
+                                            </p>
                                         )}
                                     </div>
                                 )}
@@ -704,11 +984,12 @@ export default function Register() {
 
                             {/* Navigation Buttons */}
                             <div className="mt-8 flex items-center gap-4">
-                                {step > 0 && step < 3 || (step === 3 && !otpSent) ? (
+                                {(step > 0 && step < 3) ||
+                                (step === 3 && !otpSent) ? (
                                     <button
                                         type="button"
                                         onClick={prevStep}
-                                        className="flex items-center gap-2 rounded-xl border-2 border-gray-200 bg-white px-5 py-3 text-sm font-medium text-gray-600 transition-all hover:bg-gray-50 hover:border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                                        className="flex items-center gap-2 rounded-xl border-2 border-gray-200 bg-white px-5 py-3 text-sm font-medium text-gray-600 transition-all hover:border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                                     >
                                         <ArrowLeft className="h-4 w-4" />
                                         Kembali
@@ -731,7 +1012,10 @@ export default function Register() {
                             <div className="mt-8 border-t border-gray-100 pt-6 dark:border-gray-700/50">
                                 <p className="text-center text-sm text-gray-500 dark:text-gray-400">
                                     Sudah punya akun?{' '}
-                                    <TextLink href={login()} className="font-semibold text-[#4A7FB5] hover:text-[#3D6E99] dark:text-sky-400">
+                                    <TextLink
+                                        href={login()}
+                                        className="font-semibold text-[#4A7FB5] hover:text-[#3D6E99] dark:text-sky-400"
+                                    >
                                         Masuk di sini
                                     </TextLink>
                                 </p>

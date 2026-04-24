@@ -63,9 +63,10 @@ class Bid extends Model
     {
         $name = $this->user->name;
         if (strlen($name) <= 3) {
-            return $name[0] . '***';
+            return $name[0].'***';
         }
-        return substr($name, 0, 3) . '***';
+
+        return substr($name, 0, 3).'***';
     }
 
     /**
@@ -73,7 +74,7 @@ class Bid extends Model
      */
     public function getFormattedAmountAttribute(): string
     {
-        return 'Rp ' . number_format($this->amount, 0, ',', '.');
+        return 'Rp '.number_format($this->amount, 0, ',', '.');
     }
 
     /**

@@ -1,26 +1,26 @@
 import { Link } from '@inertiajs/react';
+import { Home, Sun, Moon } from 'lucide-react';
+import { useState } from 'react';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
-import { Home, Sun, Moon } from 'lucide-react';
-import { useState, useEffect } from 'react';
 
 export function AppSidebarHeader({
     breadcrumbs = [],
 }: {
     breadcrumbs?: BreadcrumbItemType[];
 }) {
-    const [isDark, setIsDark] = useState(false);
-
-    useEffect(() => {
+    const [isDark, setIsDark] = useState(() => {
         const savedTheme = localStorage.getItem('theme');
-        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
-        if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
-            setIsDark(true);
+        const systemDark = window.matchMedia(
+            '(prefers-color-scheme: dark)',
+        ).matches;
+        const dark = savedTheme === 'dark' || (!savedTheme && systemDark);
+        if (dark) {
             document.documentElement.classList.add('dark');
         }
-    }, []);
+        return dark;
+    });
 
     const toggleTheme = () => {
         setIsDark(!isDark);
@@ -39,25 +39,33 @@ export function AppSidebarHeader({
                 <SidebarTrigger className="-ml-1" />
                 <Breadcrumbs breadcrumbs={breadcrumbs} />
             </div>
-            
+
             {/* Right side buttons */}
             <div className="ml-auto flex items-center gap-2">
                 {/* Home Button */}
                 <Link
                     href="/"
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-600 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
                 >
-                    <Home className="w-4 h-4" />
-                    <span className="hidden sm:inline text-sm font-medium">Home</span>
+                    <Home className="h-4 w-4" />
+                    <span className="hidden text-sm font-medium sm:inline">
+                        Home
+                    </span>
                 </Link>
 
                 {/* Dark Mode Toggle */}
                 <button
                     onClick={toggleTheme}
-                    className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                    title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                    className="rounded-lg bg-slate-100 p-2 text-slate-600 transition-colors hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                    title={
+                        isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'
+                    }
                 >
-                    {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                    {isDark ? (
+                        <Sun className="h-4 w-4" />
+                    ) : (
+                        <Moon className="h-4 w-4" />
+                    )}
                 </button>
             </div>
         </header>

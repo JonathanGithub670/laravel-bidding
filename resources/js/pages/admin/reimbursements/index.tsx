@@ -1,6 +1,4 @@
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
-import { useState } from 'react';
 import {
     RefreshCcw,
     Clock,
@@ -12,6 +10,8 @@ import {
     X,
     AlertCircle,
 } from 'lucide-react';
+import { useState } from 'react';
+import AppLayout from '@/layouts/app-layout';
 
 interface User {
     id: number;
@@ -63,7 +63,10 @@ interface Props {
     currentStatus: string;
 }
 
-const statusConfig: Record<string, { label: string; icon: typeof Clock; color: string }> = {
+const statusConfig: Record<
+    string,
+    { label: string; icon: typeof Clock; color: string }
+> = {
     pending: {
         label: 'Menunggu',
         icon: Clock,
@@ -91,12 +94,19 @@ const statusConfig: Record<string, { label: string; icon: typeof Clock; color: s
     },
 };
 
-export default function AdminReimbursementsIndex({ reimbursements, counts, currentStatus }: Props) {
+export default function AdminReimbursementsIndex({
+    reimbursements,
+    counts,
+    currentStatus,
+}: Props) {
     const [rejectingId, setRejectingId] = useState<number | null>(null);
     const [approvingId, setApprovingId] = useState<number | null>(null);
-    const [confirmApproveId, setConfirmApproveId] = useState<number | null>(null);
+    const [confirmApproveId, setConfirmApproveId] = useState<number | null>(
+        null,
+    );
     const rejectForm = useForm({ reason: '' });
-    const { flash } = usePage<{ flash: { success?: string; error?: string } }>().props as any;
+    const { flash } = usePage<{ flash: { success?: string; error?: string } }>()
+        .props as { flash: { success?: string; error?: string } };
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('id-ID', {
@@ -111,9 +121,13 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
     const handleApprove = (id: number) => {
         setApprovingId(id);
         setConfirmApproveId(null);
-        router.post(`/admin/reimbursements/${id}/approve`, {}, {
-            onFinish: () => setApprovingId(null),
-        });
+        router.post(
+            `/admin/reimbursements/${id}/approve`,
+            {},
+            {
+                onFinish: () => setApprovingId(null),
+            },
+        );
     };
 
     const handleReject = (id: number) => {
@@ -158,7 +172,8 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
 
                             {/* Message */}
                             <p className="mb-6 text-center text-sm text-gray-600 dark:text-gray-400">
-                                Setujui reimbursement ini? Dana akan dikembalikan ke saldo user.
+                                Setujui reimbursement ini? Dana akan
+                                dikembalikan ke saldo user.
                             </p>
 
                             {/* Buttons */}
@@ -170,8 +185,10 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
                                     Tidak
                                 </button>
                                 <button
-                                    onClick={() => handleApprove(confirmApproveId)}
-                                    className="flex-1 rounded-xl bg-green-500 px-4 py-2.5 font-semibold text-white transition-colors hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                                    onClick={() =>
+                                        handleApprove(confirmApproveId)
+                                    }
+                                    className="flex-1 rounded-xl bg-green-500 px-4 py-2.5 font-semibold text-white transition-colors hover:bg-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-none"
                                 >
                                     Setuju
                                 </button>
@@ -204,7 +221,8 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
                         Verifikasi Reimbursement Lelang
                     </h1>
                     <p className="mt-1 text-gray-500 dark:text-gray-400">
-                        Kelola pengembalian dana peserta yang tidak memenangkan lelang
+                        Kelola pengembalian dana peserta yang tidak memenangkan
+                        lelang
                     </p>
                 </div>
 
@@ -216,8 +234,12 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
                                 <Clock className="h-5 w-5 text-yellow-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-yellow-600">{counts.pending}</p>
-                                <p className="text-sm text-yellow-700 dark:text-yellow-400">Menunggu</p>
+                                <p className="text-2xl font-bold text-yellow-600">
+                                    {counts.pending}
+                                </p>
+                                <p className="text-sm text-yellow-700 dark:text-yellow-400">
+                                    Menunggu
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -227,8 +249,12 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
                                 <ShieldCheck className="h-5 w-5 text-blue-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-blue-600">{counts.eligible}</p>
-                                <p className="text-sm text-blue-700 dark:text-blue-400">Eligible</p>
+                                <p className="text-2xl font-bold text-blue-600">
+                                    {counts.eligible}
+                                </p>
+                                <p className="text-sm text-blue-700 dark:text-blue-400">
+                                    Eligible
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -238,8 +264,12 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
                                 <CheckCircle className="h-5 w-5 text-green-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-green-600">{counts.completed}</p>
-                                <p className="text-sm text-green-700 dark:text-green-400">Selesai</p>
+                                <p className="text-2xl font-bold text-green-600">
+                                    {counts.completed}
+                                </p>
+                                <p className="text-sm text-green-700 dark:text-green-400">
+                                    Selesai
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -249,8 +279,12 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
                                 <XCircle className="h-5 w-5 text-red-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-red-600">{counts.rejected}</p>
-                                <p className="text-sm text-red-700 dark:text-red-400">Ditolak</p>
+                                <p className="text-2xl font-bold text-red-600">
+                                    {counts.rejected}
+                                </p>
+                                <p className="text-sm text-red-700 dark:text-red-400">
+                                    Ditolak
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -262,14 +296,16 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
                         <Link
                             key={tab.key}
                             href={`/admin/reimbursements?status=${tab.key}`}
-                            className={`whitespace-nowrap rounded-lg px-4 py-2 font-medium transition-colors ${
+                            className={`rounded-lg px-4 py-2 font-medium whitespace-nowrap transition-colors ${
                                 currentStatus === tab.key
                                     ? 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400'
                                     : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
                             }`}
                         >
                             {tab.label}
-                            <span className="ml-2 text-xs">({counts[tab.key] || 0})</span>
+                            <span className="ml-2 text-xs">
+                                ({counts[tab.key] || 0})
+                            </span>
                         </Link>
                     ))}
                 </div>
@@ -291,32 +327,34 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
                             <table className="w-full">
                                 <thead className="bg-gray-50 dark:bg-gray-900/50">
                                     <tr>
-                                        <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
                                             User
                                         </th>
-                                        <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
                                             Lelang
                                         </th>
-                                        <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
                                             Jumlah
                                         </th>
-                                        <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
                                             Status
                                         </th>
-                                        <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
                                             Eligible
                                         </th>
-                                        <th className="px-6 py-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
                                             Tanggal
                                         </th>
-                                        <th className="px-6 py-4 text-right text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
+                                        <th className="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase dark:text-gray-400">
                                             Aksi
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                                     {reimbursements.data.map((item) => {
-                                        const status = statusConfig[item.status] || statusConfig.pending;
+                                        const status =
+                                            statusConfig[item.status] ||
+                                            statusConfig.pending;
 
                                         return (
                                             <tr
@@ -339,12 +377,16 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
                                                 <td className="max-w-[200px] px-6 py-4">
                                                     <p
                                                         className="truncate font-medium text-gray-900 dark:text-white"
-                                                        title={item.auction?.title}
+                                                        title={
+                                                            item.auction?.title
+                                                        }
                                                     >
-                                                        {item.auction?.title || '-'}
+                                                        {item.auction?.title ||
+                                                            '-'}
                                                     </p>
                                                     <p className="text-xs text-gray-500">
-                                                        Ref: {item.reference_number}
+                                                        Ref:{' '}
+                                                        {item.reference_number}
                                                     </p>
                                                 </td>
 
@@ -372,42 +414,65 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
 
                                                 {/* Eligible countdown */}
                                                 <td className="px-6 py-4">
-                                                    {item.status === 'pending' &&
+                                                    {item.status ===
+                                                        'pending' &&
                                                     item.remaining_days > 0 ? (
                                                         <div className="flex items-center gap-1.5 text-sm text-amber-600 dark:text-amber-400">
                                                             <Timer className="h-4 w-4" />
-                                                            <span>{item.remaining_days} hari lagi</span>
+                                                            <span>
+                                                                {
+                                                                    item.remaining_days
+                                                                }{' '}
+                                                                hari lagi
+                                                            </span>
                                                         </div>
-                                                    ) : item.status === 'pending' ? (
+                                                    ) : item.status ===
+                                                      'pending' ? (
                                                         <span className="text-sm text-blue-600 dark:text-blue-400">
                                                             Segera eligible
                                                         </span>
                                                     ) : item.eligible_at ? (
                                                         <span className="text-sm text-gray-500">
-                                                            {formatDate(item.eligible_at)}
+                                                            {formatDate(
+                                                                item.eligible_at,
+                                                            )}
                                                         </span>
                                                     ) : (
-                                                        <span className="text-sm text-gray-400">-</span>
+                                                        <span className="text-sm text-gray-400">
+                                                            -
+                                                        </span>
                                                     )}
                                                 </td>
 
                                                 {/* Date */}
                                                 <td className="px-6 py-4 text-sm text-gray-500">
-                                                    {formatDate(item.created_at)}
+                                                    {formatDate(
+                                                        item.created_at,
+                                                    )}
                                                 </td>
 
                                                 {/* Actions */}
                                                 <td className="px-6 py-4">
-                                                    {canApprove(item) || canReject(item) ? (
-                                                        rejectingId === item.id ? (
+                                                    {canApprove(item) ||
+                                                    canReject(item) ? (
+                                                        rejectingId ===
+                                                        item.id ? (
                                                             <div className="flex items-center justify-end gap-2">
                                                                 <input
                                                                     type="text"
-                                                                    value={rejectForm.data.reason}
-                                                                    onChange={(e) =>
+                                                                    value={
+                                                                        rejectForm
+                                                                            .data
+                                                                            .reason
+                                                                    }
+                                                                    onChange={(
+                                                                        e,
+                                                                    ) =>
                                                                         rejectForm.setData(
                                                                             'reason',
-                                                                            e.target.value,
+                                                                            e
+                                                                                .target
+                                                                                .value,
                                                                         )
                                                                     }
                                                                     placeholder="Alasan penolakan"
@@ -415,10 +480,14 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
                                                                 />
                                                                 <button
                                                                     onClick={() =>
-                                                                        handleReject(item.id)
+                                                                        handleReject(
+                                                                            item.id,
+                                                                        )
                                                                     }
                                                                     disabled={
-                                                                        !rejectForm.data.reason ||
+                                                                        !rejectForm
+                                                                            .data
+                                                                            .reason ||
                                                                         rejectForm.processing
                                                                     }
                                                                     className="rounded-lg p-1.5 text-red-600 hover:bg-red-50 disabled:opacity-50 dark:hover:bg-red-900/20"
@@ -427,7 +496,9 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
                                                                 </button>
                                                                 <button
                                                                     onClick={() => {
-                                                                        setRejectingId(null);
+                                                                        setRejectingId(
+                                                                            null,
+                                                                        );
                                                                         rejectForm.reset();
                                                                     }}
                                                                     className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -437,13 +508,18 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
                                                             </div>
                                                         ) : (
                                                             <div className="flex justify-end gap-2">
-                                                                {canApprove(item) && (
+                                                                {canApprove(
+                                                                    item,
+                                                                ) && (
                                                                     <button
                                                                         onClick={() =>
-                                                                            setConfirmApproveId(item.id)
+                                                                            setConfirmApproveId(
+                                                                                item.id,
+                                                                            )
                                                                         }
                                                                         disabled={
-                                                                            approvingId === item.id
+                                                                            approvingId ===
+                                                                            item.id
                                                                         }
                                                                         className="flex items-center gap-1 rounded-lg bg-green-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-green-700 disabled:opacity-50"
                                                                     >
@@ -451,10 +527,14 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
                                                                         Approve
                                                                     </button>
                                                                 )}
-                                                                {canReject(item) && (
+                                                                {canReject(
+                                                                    item,
+                                                                ) && (
                                                                     <button
                                                                         onClick={() =>
-                                                                            setRejectingId(item.id)
+                                                                            setRejectingId(
+                                                                                item.id,
+                                                                            )
                                                                         }
                                                                         className="flex items-center gap-1 rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-700"
                                                                     >
@@ -466,10 +546,17 @@ export default function AdminReimbursementsIndex({ reimbursements, counts, curre
                                                         )
                                                     ) : item.processed_by_user ? (
                                                         <p className="text-right text-xs text-gray-400">
-                                                            oleh {item.processed_by_user.name}
+                                                            oleh{' '}
+                                                            {
+                                                                item
+                                                                    .processed_by_user
+                                                                    .name
+                                                            }
                                                         </p>
                                                     ) : (
-                                                        <span className="text-sm text-gray-400">-</span>
+                                                        <span className="text-sm text-gray-400">
+                                                            -
+                                                        </span>
                                                     )}
                                                 </td>
                                             </tr>

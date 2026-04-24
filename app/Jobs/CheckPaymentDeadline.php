@@ -4,9 +4,8 @@ namespace App\Jobs;
 
 use App\Models\Auction;
 use App\Models\AuctionDeposit;
-use App\Models\Invoice;
 use App\Models\Bid;
-use App\Models\Reimbursement;
+use App\Models\Invoice;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Notifications\AuctionWonNotification;
@@ -72,7 +71,7 @@ class CheckPaymentDeadline implements ShouldQueue
                     'admin_fee' => (int) ($runnerUpBid->amount * 0.05),
                     'status' => 'pending',
                     'payment_due_at' => now()->addHour(),
-                    'notes' => 'Transferred from expired invoice: ' . $invoice->invoice_number,
+                    'notes' => 'Transferred from expired invoice: '.$invoice->invoice_number,
                 ]);
 
                 // Notify runner-up that they won
@@ -104,12 +103,12 @@ class CheckPaymentDeadline implements ShouldQueue
             ->where('amount', '>', 0)
             ->first();
 
-        if (!$deposit) {
+        if (! $deposit) {
             return;
         }
 
         $user = User::lockForUpdate()->find($userId);
-        if (!$user) {
+        if (! $user) {
             return;
         }
 
@@ -119,7 +118,7 @@ class CheckPaymentDeadline implements ShouldQueue
             $user->id,
             Transaction::TYPE_REIMBURSEMENT,
             $deposit->amount,
-            'Pengembalian deposit: gagal bayar lelang ' . ($auction->title ?? '#' . $auction->id),
+            'Pengembalian deposit: gagal bayar lelang '.($auction->title ?? '#'.$auction->id),
             $auction
         );
 

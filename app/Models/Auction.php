@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
-use Carbon\Carbon;
 
 class Auction extends Model
 {
@@ -154,8 +153,10 @@ class Auction extends Model
      */
     public function isUserRegistered(?int $userId): bool
     {
-        if (!$userId)
+        if (! $userId) {
             return false;
+        }
+
         return $this->participants()->where('user_id', $userId)->where('status', 'active')->exists();
     }
 
@@ -175,7 +176,8 @@ class Auction extends Model
         if ($this->registration_fee <= 0) {
             return 'Gratis';
         }
-        return 'Rp ' . number_format($this->registration_fee, 0, ',', '.');
+
+        return 'Rp '.number_format($this->registration_fee, 0, ',', '.');
     }
 
     /**
@@ -263,9 +265,10 @@ class Auction extends Model
      */
     public function getRemainingSecondsAttribute(): int
     {
-        if (!$this->is_live) {
+        if (! $this->is_live) {
             return 0;
         }
+
         return max(0, $this->ends_at->diffInSeconds(now(), false) * -1);
     }
 
@@ -298,7 +301,7 @@ class Auction extends Model
      */
     public function getFormattedPriceAttribute(): string
     {
-        return 'Rp ' . number_format($this->current_price, 0, ',', '.');
+        return 'Rp '.number_format($this->current_price, 0, ',', '.');
     }
 
     /**
@@ -306,7 +309,7 @@ class Auction extends Model
      */
     public function extendTime(int $seconds = 15): void
     {
-        if (!$this->original_ends_at) {
+        if (! $this->original_ends_at) {
             $this->original_ends_at = $this->ends_at;
         }
         $this->ends_at = $this->ends_at->addSeconds($seconds);

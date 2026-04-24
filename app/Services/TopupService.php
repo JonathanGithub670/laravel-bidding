@@ -17,15 +17,15 @@ class TopupService
     {
         // Validate amount
         if ($amount < Topup::MIN_AMOUNT) {
-            throw new Exception('Minimum top up adalah Rp ' . number_format(Topup::MIN_AMOUNT, 0, ',', '.'));
+            throw new Exception('Minimum top up adalah Rp '.number_format(Topup::MIN_AMOUNT, 0, ',', '.'));
         }
 
         if ($amount > Topup::MAX_AMOUNT) {
-            throw new Exception('Maksimum top up adalah Rp ' . number_format(Topup::MAX_AMOUNT, 0, ',', '.'));
+            throw new Exception('Maksimum top up adalah Rp '.number_format(Topup::MAX_AMOUNT, 0, ',', '.'));
         }
 
         // Validate payment method
-        if (!array_key_exists($paymentMethod, Topup::PAYMENT_METHODS)) {
+        if (! array_key_exists($paymentMethod, Topup::PAYMENT_METHODS)) {
             throw new Exception('Metode pembayaran tidak valid.');
         }
 
@@ -93,7 +93,7 @@ class TopupService
         ];
 
         $prefix = $prefixes[$topup->payment_method] ?? '8800';
-        $vaNumber = $prefix . str_pad($topup->user_id, 8, '0', STR_PAD_LEFT) . rand(1000, 9999);
+        $vaNumber = $prefix.str_pad($topup->user_id, 8, '0', STR_PAD_LEFT).rand(1000, 9999);
 
         $instructions = $this->getBankInstructions($topup->payment_method, $vaNumber, $topup->amount);
 
@@ -110,9 +110,9 @@ class TopupService
     {
         // In production, this would return a deep link or redirect URL
         $topup->update([
-            'external_id' => 'EW-' . strtoupper(uniqid()),
+            'external_id' => 'EW-'.strtoupper(uniqid()),
             'payment_instructions' => [
-                ['step' => 1, 'text' => 'Buka aplikasi ' . $topup->payment_method_name],
+                ['step' => 1, 'text' => 'Buka aplikasi '.$topup->payment_method_name],
                 ['step' => 2, 'text' => 'Pilih menu "Bayar" atau "Scan"'],
                 ['step' => 3, 'text' => 'Klik tombol "Bayar Sekarang" di bawah'],
                 ['step' => 4, 'text' => 'Konfirmasi pembayaran di aplikasi'],
@@ -127,13 +127,13 @@ class TopupService
     {
         // In production, this would generate actual QR code from payment gateway
         $topup->update([
-            'external_id' => 'QRIS-' . strtoupper(uniqid()),
-            'qr_code_url' => 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=SIMULATED_QRIS_' . $topup->reference_number,
+            'external_id' => 'QRIS-'.strtoupper(uniqid()),
+            'qr_code_url' => 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=SIMULATED_QRIS_'.$topup->reference_number,
             'payment_instructions' => [
                 ['step' => 1, 'text' => 'Buka aplikasi e-wallet atau mobile banking'],
                 ['step' => 2, 'text' => 'Pilih menu "Scan" atau "QRIS"'],
                 ['step' => 3, 'text' => 'Scan QR code di bawah'],
-                ['step' => 4, 'text' => 'Konfirmasi pembayaran sebesar ' . $topup->formatted_amount],
+                ['step' => 4, 'text' => 'Konfirmasi pembayaran sebesar '.$topup->formatted_amount],
             ],
         ]);
     }
@@ -144,27 +144,27 @@ class TopupService
     protected function getBankInstructions(string $method, string $vaNumber, float $amount): array
     {
         $bankName = Topup::PAYMENT_METHODS[$method]['name'] ?? 'Bank';
-        $formattedAmount = 'Rp ' . number_format($amount, 0, ',', '.');
+        $formattedAmount = 'Rp '.number_format($amount, 0, ',', '.');
 
         return [
             'atm' => [
                 ['step' => 1, 'text' => 'Masukkan kartu ATM dan PIN'],
                 ['step' => 2, 'text' => 'Pilih menu "Transfer" > "Virtual Account"'],
-                ['step' => 3, 'text' => 'Masukkan nomor VA: ' . $vaNumber],
-                ['step' => 4, 'text' => 'Konfirmasi detail dan nominal ' . $formattedAmount],
+                ['step' => 3, 'text' => 'Masukkan nomor VA: '.$vaNumber],
+                ['step' => 4, 'text' => 'Konfirmasi detail dan nominal '.$formattedAmount],
                 ['step' => 5, 'text' => 'Simpan bukti transfer'],
             ],
             'mobile_banking' => [
-                ['step' => 1, 'text' => 'Login ke aplikasi ' . $bankName],
+                ['step' => 1, 'text' => 'Login ke aplikasi '.$bankName],
                 ['step' => 2, 'text' => 'Pilih menu "Transfer" > "Virtual Account"'],
-                ['step' => 3, 'text' => 'Masukkan nomor VA: ' . $vaNumber],
-                ['step' => 4, 'text' => 'Konfirmasi pembayaran sebesar ' . $formattedAmount],
+                ['step' => 3, 'text' => 'Masukkan nomor VA: '.$vaNumber],
+                ['step' => 4, 'text' => 'Konfirmasi pembayaran sebesar '.$formattedAmount],
                 ['step' => 5, 'text' => 'Masukkan PIN/password untuk konfirmasi'],
             ],
             'internet_banking' => [
-                ['step' => 1, 'text' => 'Login ke ' . $bankName . ' Internet Banking'],
+                ['step' => 1, 'text' => 'Login ke '.$bankName.' Internet Banking'],
                 ['step' => 2, 'text' => 'Pilih menu "Transfer" > "Virtual Account"'],
-                ['step' => 3, 'text' => 'Masukkan nomor VA: ' . $vaNumber],
+                ['step' => 3, 'text' => 'Masukkan nomor VA: '.$vaNumber],
                 ['step' => 4, 'text' => 'Ikuti instruksi untuk menyelesaikan pembayaran'],
             ],
         ];
@@ -200,7 +200,7 @@ class TopupService
                 $topup->user_id,
                 \App\Models\Transaction::TYPE_TOPUP,
                 $topup->amount,
-                'Top Up Saldo via ' . ($topup->payment_method_name ?? $topup->payment_method),
+                'Top Up Saldo via '.($topup->payment_method_name ?? $topup->payment_method),
                 $topup
             );
 
@@ -222,10 +222,11 @@ class TopupService
     {
         $topup = Topup::where('reference_number', $referenceNumber)->first();
 
-        if (!$topup) {
+        if (! $topup) {
             Log::warning('Topup callback for unknown reference', [
                 'reference_number' => $referenceNumber,
             ]);
+
             return null;
         }
 

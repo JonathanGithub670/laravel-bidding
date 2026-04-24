@@ -46,6 +46,7 @@ class AuctionView extends Model
         if ($existingView) {
             // Update the viewed_at timestamp
             $existingView->update(['viewed_at' => now()]);
+
             return false;
         }
 

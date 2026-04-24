@@ -5,8 +5,6 @@ namespace App\Jobs;
 use App\Events\AuctionEnded;
 use App\Models\Auction;
 use App\Models\AuctionActivity;
-use App\Models\AuctionDeposit;
-use App\Models\AuctionParticipant;
 use App\Models\AuctionSettlement;
 use App\Models\Invoice;
 use App\Models\Reimbursement;
@@ -47,7 +45,7 @@ class ProcessAuctionEnd implements ShouldQueue
 
             // Skip if auction no longer exists or already processed
             // Note: use getAttributes() not ->attributes to bypass Eloquent __get() magic
-            if (!$auction || $auction->getAttributes()['status'] !== 'live') {
+            if (! $auction || $auction->getAttributes()['status'] !== 'live') {
                 return null;
             }
 
@@ -88,7 +86,7 @@ class ProcessAuctionEnd implements ShouldQueue
 
                 AuctionActivity::createSystemActivity(
                     $auction,
-                    "⚠️ Lelang berakhir tanpa pemenang."
+                    '⚠️ Lelang berakhir tanpa pemenang.'
                 );
             }
 
@@ -168,7 +166,7 @@ class ProcessAuctionEnd implements ShouldQueue
             ->get();
 
         foreach ($reimbursements as $reimbursement) {
-            if (!$reimbursement->user) {
+            if (! $reimbursement->user) {
                 continue;
             }
 
@@ -180,7 +178,7 @@ class ProcessAuctionEnd implements ShouldQueue
                 $reimbursement->user_id,
                 Transaction::TYPE_REIMBURSEMENT,
                 $reimbursement->amount,
-                'Pengembalian dana otomatis: ' . ($auction->title ?? 'Lelang #' . $auction->id),
+                'Pengembalian dana otomatis: '.($auction->title ?? 'Lelang #'.$auction->id),
                 $reimbursement
             );
 
@@ -222,7 +220,7 @@ class ProcessAuctionEnd implements ShouldQueue
             ->get();
 
         foreach ($reimbursements as $reimbursement) {
-            if (!$reimbursement->user) {
+            if (! $reimbursement->user) {
                 continue;
             }
 

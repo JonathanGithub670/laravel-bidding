@@ -1,6 +1,15 @@
 import { Head, Link, router } from '@inertiajs/react';
+import {
+    ArrowDownRight,
+    Clock,
+    CheckCircle,
+    XCircle,
+    Loader2,
+    ArrowRight,
+    Plus,
+    AlertCircle,
+} from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
-import { ArrowDownRight, Clock, CheckCircle, XCircle, Loader2, ArrowRight, Plus, AlertCircle } from 'lucide-react';
 
 interface BankAccount {
     id: number;
@@ -14,7 +23,13 @@ interface Disbursement {
     amount: string;
     fee: string;
     total: string;
-    status: 'pending' | 'approved' | 'processing' | 'completed' | 'failed' | 'rejected';
+    status:
+        | 'pending'
+        | 'approved'
+        | 'processing'
+        | 'completed'
+        | 'failed'
+        | 'rejected';
     reference_number: string;
     notes: string | null;
     admin_notes: string | null;
@@ -100,52 +115,54 @@ export default function DisbursementsIndex({ disbursements }: Props) {
         <AppLayout>
             <Head title="Riwayat Penarikan" />
 
-            <div className="p-6 max-w-4xl mx-auto">
+            <div className="mx-auto max-w-4xl p-6">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-8">
+                <div className="mb-8 flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                             Riwayat Penarikan
                         </h1>
-                        <p className="text-gray-500 dark:text-gray-400 mt-1">
+                        <p className="mt-1 text-gray-500 dark:text-gray-400">
                             Pantau status penarikan saldo Anda
                         </p>
                     </div>
                     <Link
                         href="/disbursements/create"
-                        className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium rounded-xl transition-colors shadow-lg shadow-violet-500/25"
+                        className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 px-4 py-2.5 font-medium text-white shadow-lg shadow-violet-500/25 transition-colors hover:from-violet-700 hover:to-purple-700"
                     >
-                        <Plus className="w-5 h-5" />
+                        <Plus className="h-5 w-5" />
                         Tarik Dana
                     </Link>
                 </div>
 
                 {/* Quick Links */}
-                <div className="flex gap-3 mb-6">
+                <div className="mb-6 flex gap-3">
                     <Link
                         href="/bank-accounts"
-                        className="flex-1 flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-violet-300 dark:hover:border-violet-700 transition-colors"
+                        className="flex flex-1 items-center justify-between rounded-xl border border-gray-200 bg-white p-4 transition-colors hover:border-violet-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-violet-700"
                     >
-                        <span className="text-gray-700 dark:text-gray-300">Kelola Rekening Bank</span>
-                        <ArrowRight className="w-5 h-5 text-gray-400" />
+                        <span className="text-gray-700 dark:text-gray-300">
+                            Kelola Rekening Bank
+                        </span>
+                        <ArrowRight className="h-5 w-5 text-gray-400" />
                     </Link>
                 </div>
 
                 {/* Disbursement List */}
                 {disbursements.data.length === 0 ? (
-                    <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700">
-                        <ArrowDownRight className="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                    <div className="rounded-2xl border border-gray-200 bg-white py-16 text-center dark:border-gray-700 dark:bg-gray-800">
+                        <ArrowDownRight className="mx-auto mb-4 h-16 w-16 text-gray-300 dark:text-gray-600" />
+                        <h3 className="mb-2 text-lg font-medium text-gray-900 dark:text-white">
                             Belum ada penarikan
                         </h3>
-                        <p className="text-gray-500 dark:text-gray-400 mb-6">
+                        <p className="mb-6 text-gray-500 dark:text-gray-400">
                             Anda belum pernah melakukan penarikan dana
                         </p>
                         <Link
                             href="/disbursements/create"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-xl transition-colors"
+                            className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-6 py-3 font-medium text-white transition-colors hover:bg-violet-700"
                         >
-                            <Plus className="w-5 h-5" />
+                            <Plus className="h-5 w-5" />
                             Tarik Dana Sekarang
                         </Link>
                     </div>
@@ -158,12 +175,16 @@ export default function DisbursementsIndex({ disbursements }: Props) {
                             return (
                                 <div
                                     key={item.id}
-                                    className="p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700"
+                                    className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800"
                                 >
-                                    <div className="flex items-start justify-between mb-4">
+                                    <div className="mb-4 flex items-start justify-between">
                                         <div className="flex items-center gap-3">
-                                            <div className={`p-2 rounded-lg ${status.color}`}>
-                                                <StatusIcon className={`w-5 h-5 ${'spin' in status && status.spin ? 'animate-spin' : ''}`} />
+                                            <div
+                                                className={`rounded-lg p-2 ${status.color}`}
+                                            >
+                                                <StatusIcon
+                                                    className={`h-5 w-5 ${'spin' in status && status.spin ? 'animate-spin' : ''}`}
+                                                />
                                             </div>
                                             <div>
                                                 <p className="font-semibold text-gray-900 dark:text-white">
@@ -174,50 +195,62 @@ export default function DisbursementsIndex({ disbursements }: Props) {
                                                 </p>
                                             </div>
                                         </div>
-                                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${status.color}`}>
+                                        <span
+                                            className={`rounded-full px-3 py-1 text-xs font-medium ${status.color}`}
+                                        >
                                             {status.label}
                                         </span>
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-4 text-sm mb-4">
+                                    <div className="mb-4 grid grid-cols-2 gap-4 text-sm">
                                         <div>
-                                            <p className="text-gray-500 dark:text-gray-400">Bank Tujuan</p>
+                                            <p className="text-gray-500 dark:text-gray-400">
+                                                Bank Tujuan
+                                            </p>
                                             <p className="font-medium text-gray-900 dark:text-white">
                                                 {item.bank_account.bank_name}
                                             </p>
                                             <p className="text-gray-600 dark:text-gray-400">
-                                                {item.bank_account.account_number}
+                                                {
+                                                    item.bank_account
+                                                        .account_number
+                                                }
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-gray-500 dark:text-gray-400">Yang Diterima</p>
+                                            <p className="text-gray-500 dark:text-gray-400">
+                                                Yang Diterima
+                                            </p>
                                             <p className="font-medium text-green-600 dark:text-green-400">
                                                 {item.formatted_total}
                                             </p>
-                                            <p className="text-gray-500 dark:text-gray-400 text-xs">
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
                                                 (Biaya: {item.formatted_fee})
                                             </p>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
+                                    <div className="flex items-center justify-between border-t border-gray-100 pt-4 dark:border-gray-700">
                                         <p className="text-xs text-gray-500 dark:text-gray-400">
                                             {formatDate(item.created_at)}
                                         </p>
                                         {item.status === 'pending' && (
                                             <button
-                                                onClick={() => handleCancel(item.id)}
-                                                className="text-sm text-red-600 hover:text-red-700 font-medium"
+                                                onClick={() =>
+                                                    handleCancel(item.id)
+                                                }
+                                                className="text-sm font-medium text-red-600 hover:text-red-700"
                                             >
                                                 Batalkan
                                             </button>
                                         )}
-                                        {item.admin_notes && item.status === 'rejected' && (
-                                            <div className="flex items-center gap-1 text-sm text-red-600">
-                                                <AlertCircle className="w-4 h-4" />
-                                                {item.admin_notes}
-                                            </div>
-                                        )}
+                                        {item.admin_notes &&
+                                            item.status === 'rejected' && (
+                                                <div className="flex items-center gap-1 text-sm text-red-600">
+                                                    <AlertCircle className="h-4 w-4" />
+                                                    {item.admin_notes}
+                                                </div>
+                                            )}
                                     </div>
                                 </div>
                             );
@@ -226,14 +259,17 @@ export default function DisbursementsIndex({ disbursements }: Props) {
                         {/* Pagination */}
                         {disbursements.last_page > 1 && (
                             <div className="flex justify-center gap-2 pt-4">
-                                {Array.from({ length: disbursements.last_page }, (_, i) => i + 1).map((page) => (
+                                {Array.from(
+                                    { length: disbursements.last_page },
+                                    (_, i) => i + 1,
+                                ).map((page) => (
                                     <Link
                                         key={page}
                                         href={`/disbursements?page=${page}`}
-                                        className={`w-10 h-10 flex items-center justify-center rounded-lg font-medium transition-colors ${
+                                        className={`flex h-10 w-10 items-center justify-center rounded-lg font-medium transition-colors ${
                                             page === disbursements.current_page
                                                 ? 'bg-violet-600 text-white'
-                                                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
                                         }`}
                                     >
                                         {page}

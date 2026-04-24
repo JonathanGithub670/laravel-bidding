@@ -13,16 +13,24 @@ class Transaction extends Model
 
     // Income types
     public const TYPE_TOPUP = 'topup';
+
     public const TYPE_REGISTRATION_INCOME = 'registration_income';
+
     public const TYPE_BID_REFUND = 'bid_refund';
+
     public const TYPE_REIMBURSEMENT = 'reimbursement';
+
     public const TYPE_SETTLEMENT_SELLER = 'settlement_seller';
+
     public const TYPE_SETTLEMENT_REFUND = 'settlement_refund';
+
     public const TYPE_DISBURSEMENT_REFUND = 'disbursement_refund';
 
     // Expense types
     public const TYPE_REGISTRATION_FEE = 'registration_fee';
+
     public const TYPE_BID = 'bid';
+
     public const TYPE_DISBURSEMENT = 'disbursement';
 
     public const INCOME_TYPES = [
@@ -98,7 +106,7 @@ class Transaction extends Model
      */
     public function getFormattedAmountAttribute(): string
     {
-        return 'Rp ' . number_format($this->amount, 0, ',', '.');
+        return 'Rp '.number_format($this->amount, 0, ',', '.');
     }
 
     /**

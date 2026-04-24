@@ -8,9 +8,11 @@ export default function AuthSimpleLayout({
     description,
 }: AuthLayoutProps) {
     return (
-        <div className="relative flex min-h-svh flex-col items-center justify-center p-6 md:p-10 overflow-hidden"
+        <div
+            className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden p-6 md:p-10"
             style={{
-                background: 'linear-gradient(135deg, #e8f0f8 0%, #f0f4f8 25%, #ffffff 50%, #f0f4f8 75%, #e8f0f8 100%)',
+                background:
+                    'linear-gradient(135deg, #e8f0f8 0%, #f0f4f8 25%, #ffffff 50%, #f0f4f8 75%, #e8f0f8 100%)',
             }}
         >
             {/* Decorative background elements */}
@@ -18,26 +20,35 @@ export default function AuthSimpleLayout({
                 {/* Top-left circle */}
                 <div
                     className="absolute -top-32 -left-32 h-96 w-96 rounded-full opacity-[0.07]"
-                    style={{ background: 'radial-gradient(circle, #4A7FB5, transparent 70%)' }}
+                    style={{
+                        background:
+                            'radial-gradient(circle, #4A7FB5, transparent 70%)',
+                    }}
                 />
                 {/* Bottom-right circle */}
                 <div
-                    className="absolute -bottom-40 -right-40 h-[500px] w-[500px] rounded-full opacity-[0.06]"
-                    style={{ background: 'radial-gradient(circle, #5B8DB8, transparent 70%)' }}
+                    className="absolute -right-40 -bottom-40 h-[500px] w-[500px] rounded-full opacity-[0.06]"
+                    style={{
+                        background:
+                            'radial-gradient(circle, #5B8DB8, transparent 70%)',
+                    }}
                 />
                 {/* Middle accent */}
                 <div
                     className="absolute top-1/4 right-1/4 h-64 w-64 rounded-full opacity-[0.04]"
-                    style={{ background: 'radial-gradient(circle, #6B9AC4, transparent 70%)' }}
+                    style={{
+                        background:
+                            'radial-gradient(circle, #6B9AC4, transparent 70%)',
+                    }}
                 />
             </div>
 
             <div className="relative z-10 w-full max-w-sm">
                 <div className="flex flex-col gap-8">
                     {/* Card wrapper */}
-                    <div className="rounded-2xl bg-white/80 backdrop-blur-sm border border-white/60 shadow-xl shadow-[#4A7FB5]/5 px-8 py-10">
+                    <div className="rounded-2xl border border-white/60 bg-white/80 px-8 py-10 shadow-xl shadow-[#4A7FB5]/5 backdrop-blur-sm">
                         {/* Logo + Header */}
-                        <div className="flex flex-col items-center gap-4 mb-8">
+                        <div className="mb-8 flex flex-col items-center gap-4">
                             <Link
                                 href={home()}
                                 className="flex flex-col items-center gap-2 font-medium transition-transform hover:scale-105"
@@ -51,10 +62,16 @@ export default function AuthSimpleLayout({
                             </Link>
 
                             <div className="space-y-2 text-center">
-                                <h1 className="text-xl font-semibold" style={{ color: '#2c5f8a' }}>
+                                <h1
+                                    className="text-xl font-semibold"
+                                    style={{ color: '#2c5f8a' }}
+                                >
                                     {title}
                                 </h1>
-                                <p className="text-center text-sm" style={{ color: '#6B9AC4' }}>
+                                <p
+                                    className="text-center text-sm"
+                                    style={{ color: '#6B9AC4' }}
+                                >
                                     {description}
                                 </p>
                             </div>
@@ -116,13 +133,17 @@ export default function AuthSimpleLayout({
                                 font-weight: 500;
                             }
                         `}</style>
-                        <div className="auth-themed">
-                            {children}
-                        </div>
+                        <div className="auth-themed">{children}</div>
                     </div>
 
                     {/* Bottom accent line */}
-                    <div className="mx-auto h-1 w-16 rounded-full" style={{ background: 'linear-gradient(90deg, #4A7FB5, #6B9AC4, #4A7FB5)' }} />
+                    <div
+                        className="mx-auto h-1 w-16 rounded-full"
+                        style={{
+                            background:
+                                'linear-gradient(90deg, #4A7FB5, #6B9AC4, #4A7FB5)',
+                        }}
+                    />
                 </div>
             </div>
         </div>

@@ -23,8 +23,8 @@ class AuctionSoldNotification extends Notification
 
     public function toArray(object $notifiable): array
     {
-        $formattedPrice = 'Rp ' . number_format($this->finalPrice, 0, ',', '.');
-        $formattedSeller = 'Rp ' . number_format($this->sellerAmount, 0, ',', '.');
+        $formattedPrice = 'Rp '.number_format($this->finalPrice, 0, ',', '.');
+        $formattedSeller = 'Rp '.number_format($this->sellerAmount, 0, ',', '.');
 
         return [
             'type' => 'auction_sold',
@@ -35,7 +35,7 @@ class AuctionSoldNotification extends Notification
             'auction_title' => $this->auction->title,
             'amount' => $this->finalPrice,
             'seller_amount' => $this->sellerAmount,
-            'url' => "/my-auctions/settlements",
+            'url' => '/my-auctions/settlements',
         ];
     }
 }

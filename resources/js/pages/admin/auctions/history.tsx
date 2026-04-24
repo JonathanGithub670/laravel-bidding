@@ -1,6 +1,14 @@
 import { Head, Link, router } from '@inertiajs/react';
+import {
+    History,
+    CheckCircle,
+    XCircle,
+    Gavel,
+    Clock,
+    Calendar,
+    Eye,
+} from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
-import { History, CheckCircle, XCircle, Gavel, Clock, Calendar, Eye } from 'lucide-react';
 
 interface Category {
     id: number;
@@ -37,7 +45,7 @@ interface Auction {
 interface Props {
     auctions: {
         data: Auction[];
-        links: any;
+        links: { url: string | null; label: string; active: boolean }[];
     };
     currentFilter: string;
 }
@@ -81,7 +89,11 @@ const statusConfig = {
 
 export default function AuctionHistory({ auctions, currentFilter }: Props) {
     const handleFilterChange = (filter: string) => {
-        router.get('/admin/auctions/history', { status: filter }, { preserveState: true });
+        router.get(
+            '/admin/auctions/history',
+            { status: filter },
+            { preserveState: true },
+        );
     };
 
     return (
@@ -90,7 +102,7 @@ export default function AuctionHistory({ auctions, currentFilter }: Props) {
 
             <div className="p-6">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-6">
+                <div className="mb-6 flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                             Riwayat Persetujuan
@@ -101,15 +113,15 @@ export default function AuctionHistory({ auctions, currentFilter }: Props) {
                     </div>
                     <Link
                         href="/admin/auctions/pending"
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 text-white font-semibold hover:bg-amber-600 transition-colors"
+                        className="flex items-center gap-2 rounded-xl bg-amber-500 px-4 py-2.5 font-semibold text-white transition-colors hover:bg-amber-600"
                     >
-                        <Clock className="w-5 h-5" />
+                        <Clock className="h-5 w-5" />
                         Lihat Pending
                     </Link>
                 </div>
 
                 {/* Filter Tabs */}
-                <div className="flex gap-2 mb-6">
+                <div className="mb-6 flex gap-2">
                     {[
                         { value: 'all', label: 'Semua' },
                         { value: 'approved', label: 'Disetujui' },
@@ -118,10 +130,10 @@ export default function AuctionHistory({ auctions, currentFilter }: Props) {
                         <button
                             key={filter.value}
                             onClick={() => handleFilterChange(filter.value)}
-                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                            className={`rounded-lg px-4 py-2 font-medium transition-colors ${
                                 currentFilter === filter.value
                                     ? 'bg-amber-500 text-white'
-                                    : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
                             }`}
                         >
                             {filter.label}
@@ -130,8 +142,8 @@ export default function AuctionHistory({ auctions, currentFilter }: Props) {
                 </div>
 
                 {/* Stats */}
-                <div className="flex items-center gap-3 p-4 mb-6 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700">
-                    <History className="w-5 h-5 text-gray-500" />
+                <div className="mb-6 flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/50">
+                    <History className="h-5 w-5 text-gray-500" />
                     <span className="text-gray-700 dark:text-gray-300">
                         <strong>{auctions.data.length}</strong> lelang ditemukan
                     </span>
@@ -139,9 +151,9 @@ export default function AuctionHistory({ auctions, currentFilter }: Props) {
 
                 {/* Auctions List */}
                 {auctions.data.length === 0 ? (
-                    <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl">
-                        <History className="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-                        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    <div className="rounded-2xl bg-white py-16 text-center dark:bg-gray-800">
+                        <History className="mx-auto mb-4 h-16 w-16 text-gray-300 dark:text-gray-600" />
+                        <h3 className="mb-2 text-xl font-semibold text-gray-700 dark:text-gray-300">
                             Belum Ada Riwayat
                         </h3>
                         <p className="text-gray-500 dark:text-gray-400">
@@ -149,7 +161,7 @@ export default function AuctionHistory({ auctions, currentFilter }: Props) {
                         </p>
                     </div>
                 ) : (
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden">
+                    <div className="overflow-hidden rounded-2xl bg-white dark:bg-gray-800">
                         <table className="w-full">
                             <thead className="bg-gray-50 dark:bg-gray-900">
                                 <tr>
@@ -179,22 +191,30 @@ export default function AuctionHistory({ auctions, currentFilter }: Props) {
                             <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                                 {auctions.data.map((auction) => {
                                     const status = statusConfig[auction.status];
-                                    const StatusIcon = status?.icon || CheckCircle;
+                                    const StatusIcon =
+                                        status?.icon || CheckCircle;
 
                                     return (
-                                        <tr key={auction.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                        <tr
+                                            key={auction.id}
+                                            className="hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                                        >
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 overflow-hidden flex-shrink-0">
+                                                    <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700">
                                                         {auction.primary_image ? (
                                                             <img
-                                                                src={auction.primary_image}
-                                                                alt={auction.title}
-                                                                className="w-full h-full object-cover"
+                                                                src={
+                                                                    auction.primary_image
+                                                                }
+                                                                alt={
+                                                                    auction.title
+                                                                }
+                                                                className="h-full w-full object-cover"
                                                             />
                                                         ) : (
-                                                            <div className="w-full h-full flex items-center justify-center">
-                                                                <Gavel className="w-6 h-6 text-gray-400" />
+                                                            <div className="flex h-full w-full items-center justify-center">
+                                                                <Gavel className="h-6 w-6 text-gray-400" />
                                                             </div>
                                                         )}
                                                     </div>
@@ -215,41 +235,64 @@ export default function AuctionHistory({ auctions, currentFilter }: Props) {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span className="text-gray-600 dark:text-gray-400">
-                                                    {auction.category.icon} {auction.category.name}
+                                                    {auction.category.icon}{' '}
+                                                    {auction.category.name}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span className="font-semibold text-gray-900 dark:text-white">
-                                                    {formatCurrency(auction.starting_price)}
+                                                    {formatCurrency(
+                                                        auction.starting_price,
+                                                    )}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${status?.color || ''}`}>
-                                                    <StatusIcon className="w-4 h-4" />
-                                                    {status?.label || auction.status}
+                                                <span
+                                                    className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium ${status?.color || ''}`}
+                                                >
+                                                    <StatusIcon className="h-4 w-4" />
+                                                    {status?.label ||
+                                                        auction.status}
                                                 </span>
-                                                {auction.status === 'rejected' && auction.metadata?.rejection_reason && (
-                                                    <p className="text-xs text-red-500 mt-1 max-w-[200px] truncate" title={auction.metadata.rejection_reason}>
-                                                        Alasan: {auction.metadata.rejection_reason}
-                                                    </p>
-                                                )}
+                                                {auction.status ===
+                                                    'rejected' &&
+                                                    auction.metadata
+                                                        ?.rejection_reason && (
+                                                        <p
+                                                            className="mt-1 max-w-[200px] truncate text-xs text-red-500"
+                                                            title={
+                                                                auction.metadata
+                                                                    .rejection_reason
+                                                            }
+                                                        >
+                                                            Alasan:{' '}
+                                                            {
+                                                                auction.metadata
+                                                                    .rejection_reason
+                                                            }
+                                                        </p>
+                                                    )}
                                             </td>
                                             <td className="px-6 py-4 text-gray-600 dark:text-gray-400">
                                                 {auction.starts_at ? (
                                                     <div className="flex items-center gap-1 text-sm">
-                                                        <Calendar className="w-4 h-4" />
-                                                        {formatDate(auction.starts_at)}
+                                                        <Calendar className="h-4 w-4" />
+                                                        {formatDate(
+                                                            auction.starts_at,
+                                                        )}
                                                     </div>
                                                 ) : (
-                                                    <span className="text-gray-400">-</span>
+                                                    <span className="text-gray-400">
+                                                        -
+                                                    </span>
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 <Link
                                                     href={`/auctions/${auction.uuid}`}
-                                                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium text-amber-600 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20 transition-colors"
+                                                    className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm font-medium text-amber-600 transition-colors hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20"
                                                 >
-                                                    <Eye className="w-4 h-4" />
+                                                    <Eye className="h-4 w-4" />
                                                     Lihat
                                                 </Link>
                                             </td>

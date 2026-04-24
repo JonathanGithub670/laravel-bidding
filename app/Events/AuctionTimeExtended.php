@@ -3,10 +3,8 @@
 namespace App\Events;
 
 use App\Models\Auction;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -16,6 +14,7 @@ class AuctionTimeExtended implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public Auction $auction;
+
     public int $extendedSeconds;
 
     /**
@@ -35,7 +34,7 @@ class AuctionTimeExtended implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PresenceChannel('auction.' . $this->auction->id),
+            new PresenceChannel('auction.'.$this->auction->id),
         ];
     }
 

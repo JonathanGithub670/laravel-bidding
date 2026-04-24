@@ -50,7 +50,7 @@ class EmailOtp extends Model
             ->where('otp_code', $code)
             ->first();
 
-        if (!$otp || !$otp->isValid()) {
+        if (! $otp || ! $otp->isValid()) {
             return false;
         }
 

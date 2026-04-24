@@ -135,7 +135,7 @@ class HandleInertiaRequests extends Middleware
             'userBadges' => $userBadges,
             'adminBadges' => $adminBadges,
             'unreadNotifications' => $user ? $user->unreadNotifications()->count() : 0,
-            'sidebarOpen' => !$request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }
 }

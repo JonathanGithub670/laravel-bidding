@@ -12,13 +12,15 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable, \App\Traits\LogActivity;
+    use \App\Traits\LogActivity, HasFactory, Notifiable, TwoFactorAuthenticatable;
 
     /**
      * User verification status constants.
      */
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_APPROVED = 'approved';
+
     public const STATUS_REJECTED = 'rejected';
 
     /**
@@ -85,8 +87,6 @@ class User extends Authenticatable
 
     /**
      * Generate a unique 6-digit PIN.
-     *
-     * @return string
      */
     public static function generateUniquePin(): string
     {
@@ -100,7 +100,6 @@ class User extends Authenticatable
     /**
      * Find user by PIN.
      *
-     * @param string $pin
      * @return static|null
      */
     public static function findByPin(string $pin): ?self
@@ -145,11 +144,12 @@ class User extends Authenticatable
      */
     public function hasRole(string|array $roles): bool
     {
-        if (!$this->role) {
+        if (! $this->role) {
             return false;
         }
 
         $roles = is_array($roles) ? $roles : [$roles];
+
         return in_array($this->role->name, $roles);
     }
 

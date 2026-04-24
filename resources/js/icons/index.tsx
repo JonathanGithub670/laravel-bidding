@@ -85,7 +85,10 @@ export const SettingsIcon: React.FC<IconProps> = ({ className, ...props }) => (
     </svg>
 );
 
-export const ChevronDownIcon: React.FC<IconProps> = ({ className, ...props }) => (
+export const ChevronDownIcon: React.FC<IconProps> = ({
+    className,
+    ...props
+}) => (
     <svg
         className={className}
         width="20"
@@ -104,7 +107,10 @@ export const ChevronDownIcon: React.FC<IconProps> = ({ className, ...props }) =>
     </svg>
 );
 
-export const HorizontalDotsIcon: React.FC<IconProps> = ({ className, ...props }) => (
+export const HorizontalDotsIcon: React.FC<IconProps> = ({
+    className,
+    ...props
+}) => (
     <svg
         className={className}
         width="24"
@@ -255,7 +261,10 @@ export const GroupIcon: React.FC<IconProps> = ({ className, ...props }) => (
     </svg>
 );
 
-export const ShoppingBagIcon: React.FC<IconProps> = ({ className, ...props }) => (
+export const ShoppingBagIcon: React.FC<IconProps> = ({
+    className,
+    ...props
+}) => (
     <svg
         className={className}
         width="24"

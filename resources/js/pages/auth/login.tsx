@@ -1,4 +1,8 @@
 import { Head, router } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
+import { Eye, EyeOff, XCircle, X } from 'lucide-react';
+import type { FormEvent } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -8,9 +12,6 @@ import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
 import { register } from '@/routes';
 import { request } from '@/routes/password';
-import { useState, useEffect, useRef, FormEvent } from 'react';
-import { Eye, EyeOff, XCircle, X } from 'lucide-react';
-import { usePage } from '@inertiajs/react';
 
 type Props = {
     status?: string;
@@ -31,12 +32,12 @@ export default function Login({
     const [errorModal, setErrorModal] = useState<string | null>(null);
     const emailRef = useRef<HTMLInputElement>(null);
 
-    const { errors } = usePage().props as any;
+    const { errors } = usePage().props as { errors?: Record<string, string> };
 
     // Show modal when errors come from server
     useEffect(() => {
         if (errors?.email) {
-            setErrorModal(errors.email);
+            setErrorModal(errors.email); // eslint-disable-line react-hooks/set-state-in-effect
             setEmail('');
             setPassword('');
             // Focus email field after reset
@@ -47,23 +48,30 @@ export default function Login({
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         setProcessing(true);
-        router.post('/login', {
-            email,
-            password,
-            remember,
-        }, {
-            onError: (err) => {
-                const msg = err.email || err.password || 'Email atau password salah.';
-                setErrorModal(msg);
-                setEmail('');
-                setPassword('');
-                setProcessing(false);
-                setTimeout(() => emailRef.current?.focus(), 300);
+        router.post(
+            '/login',
+            {
+                email,
+                password,
+                remember,
             },
-            onFinish: () => {
-                setProcessing(false);
+            {
+                onError: (err) => {
+                    const msg =
+                        err.email ||
+                        err.password ||
+                        'Email atau password salah.';
+                    setErrorModal(msg);
+                    setEmail('');
+                    setPassword('');
+                    setProcessing(false);
+                    setTimeout(() => emailRef.current?.focus(), 300);
+                },
+                onFinish: () => {
+                    setProcessing(false);
+                },
             },
-        });
+        );
     };
 
     return (
@@ -75,12 +83,12 @@ export default function Login({
 
             {/* Error Modal */}
             {errorModal && (
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="relative mx-4 w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-800 animate-in zoom-in-95 duration-200">
+                <div className="fixed inset-0 z-[9999] flex animate-in items-center justify-center bg-black/50 backdrop-blur-sm duration-200 fade-in">
+                    <div className="relative mx-4 w-full max-w-sm animate-in rounded-2xl bg-white p-6 shadow-2xl duration-200 zoom-in-95 dark:bg-gray-800">
                         {/* Close button */}
                         <button
                             onClick={() => setErrorModal(null)}
-                            className="absolute top-3 right-3 rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300 transition-colors"
+                            className="absolute top-3 right-3 rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
                         >
                             <X className="h-5 w-5" />
                         </button>
@@ -103,7 +111,7 @@ export default function Login({
                         {/* Button */}
                         <button
                             onClick={() => setErrorModal(null)}
-                            className="w-full rounded-xl bg-red-500 px-4 py-2.5 font-semibold text-white transition-colors hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                            className="w-full rounded-xl bg-red-500 px-4 py-2.5 font-semibold text-white transition-colors hover:bg-red-600 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none"
                         >
                             Coba Lagi
                         </button>
@@ -111,10 +119,7 @@ export default function Login({
                 </div>
             )}
 
-            <form
-                onSubmit={handleSubmit}
-                className="flex flex-col gap-6"
-            >
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                 <div className="grid gap-6">
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email address</Label>
@@ -163,9 +168,13 @@ export default function Login({
                                 type="button"
                                 tabIndex={-1}
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                                className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                             >
-                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                {showPassword ? (
+                                    <EyeOff className="h-4 w-4" />
+                                ) : (
+                                    <Eye className="h-4 w-4" />
+                                )}
                             </button>
                         </div>
                     </div>
@@ -175,7 +184,9 @@ export default function Login({
                             id="remember"
                             name="remember"
                             checked={remember}
-                            onCheckedChange={(checked) => setRemember(!!checked)}
+                            onCheckedChange={(checked) =>
+                                setRemember(!!checked)
+                            }
                             tabIndex={3}
                         />
                         <Label htmlFor="remember">Remember me</Label>
@@ -211,4 +222,3 @@ export default function Login({
         </AuthLayout>
     );
 }
-

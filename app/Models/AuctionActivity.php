@@ -67,6 +67,7 @@ class AuctionActivity extends Model
         if ($this->type === 'system') {
             return '🤖 System';
         }
+
         return $this->user?->name ?? 'Anonymous';
     }
 

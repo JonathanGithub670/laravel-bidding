@@ -36,6 +36,7 @@ class OtpController extends Controller
 
         if ($recent) {
             $secondsLeft = 60 - now()->diffInSeconds($recent->created_at);
+
             return response()->json([
                 'success' => false,
                 'message' => "Tunggu {$secondsLeft} detik sebelum mengirim ulang.",
@@ -84,7 +85,7 @@ class OtpController extends Controller
             $request->input('otp_code')
         );
 
-        if (!$isValid) {
+        if (! $isValid) {
             return response()->json([
                 'success' => false,
                 'message' => 'Kode OTP tidak valid atau sudah kedaluwarsa.',

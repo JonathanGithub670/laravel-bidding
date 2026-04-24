@@ -53,7 +53,7 @@ class AdminUserController extends Controller
 
         $adminRole = Role::where('name', Role::ADMIN)->first();
 
-        if (!$adminRole) {
+        if (! $adminRole) {
             return back()->with('error', 'Role admin tidak ditemukan.');
         }
 
@@ -77,7 +77,7 @@ class AdminUserController extends Controller
     public function destroy(User $user)
     {
         // Ensure we're only deleting admin users, not superadmins
-        if (!$user->hasRole(Role::ADMIN)) {
+        if (! $user->hasRole(Role::ADMIN)) {
             return back()->with('error', 'Hanya user dengan role admin yang bisa dihapus dari sini.');
         }
 
@@ -93,7 +93,7 @@ class AdminUserController extends Controller
     public function resetPassword(Request $request, User $user)
     {
         // Ensure we're only resetting admin passwords
-        if (!$user->hasRole(Role::ADMIN)) {
+        if (! $user->hasRole(Role::ADMIN)) {
             return back()->with('error', 'Hanya password admin yang bisa direset dari sini.');
         }
 

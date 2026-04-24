@@ -6,10 +6,10 @@ use App\Models\Auction;
 use App\Models\AuctionCategory;
 use App\Models\AuctionDeposit;
 use App\Models\AuctionParticipant;
+use App\Models\AuctionView;
 use App\Models\Role;
 use App\Models\Transaction;
 use App\Models\User;
-use App\Models\AuctionView;
 use App\Services\BiddingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -84,7 +84,7 @@ class AuctionController extends Controller
                 ],
                 'winner' => $auction->winner ? [
                     'id' => $auction->winner->id,
-                    'name' => substr($auction->winner->name, 0, 3) . '***',
+                    'name' => substr($auction->winner->name, 0, 3).'***',
                 ] : null,
                 'registration_fee' => $auction->registration_fee,
                 'formatted_registration_fee' => $auction->formatted_registration_fee,
@@ -94,12 +94,12 @@ class AuctionController extends Controller
             ],
             'userBalance' => $request->user() ? [
                 'amount' => (float) $request->user()->balance,
-                'formatted' => 'Rp ' . number_format($request->user()->balance, 0, ',', '.'),
+                'formatted' => 'Rp '.number_format($request->user()->balance, 0, ',', '.'),
             ] : null,
             'userDeposit' => $request->user() ? (int) (AuctionDeposit::where('auction_id', $auction->id)
                 ->where('user_id', $request->user()->id)
                 ->value('amount') ?? 0) : 0,
-            'recentBids' => $recentBids->map(fn($bid) => [
+            'recentBids' => $recentBids->map(fn ($bid) => [
                 'id' => $bid->id,
                 'amount' => $bid->amount,
                 'formatted_amount' => $bid->formatted_amount,
@@ -108,7 +108,7 @@ class AuctionController extends Controller
                 'is_winning' => $bid->is_winning,
                 'created_at' => $bid->created_at->toISOString(),
             ]),
-            'activities' => $activities->map(fn($activity) => [
+            'activities' => $activities->map(fn ($activity) => [
                 'id' => $activity->id,
                 'type' => $activity->type,
                 'content' => $activity->content,
@@ -144,14 +144,14 @@ class AuctionController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Bid berhasil! Dipotong Rp ' . number_format($result['charge_amount'], 0, ',', '.'),
+                'message' => 'Bid berhasil! Dipotong Rp '.number_format($result['charge_amount'], 0, ',', '.'),
                 'bid' => [
                     'id' => $bid->id,
                     'amount' => $bid->amount,
                     'formatted_amount' => $bid->formatted_amount,
                 ],
                 'new_balance' => (float) $request->user()->balance,
-                'formatted_balance' => 'Rp ' . number_format($request->user()->balance, 0, ',', '.'),
+                'formatted_balance' => 'Rp '.number_format($request->user()->balance, 0, ',', '.'),
                 'charge_amount' => $result['charge_amount'],
                 'deposit_amount' => $result['deposit_amount'],
             ]);
@@ -171,7 +171,7 @@ class AuctionController extends Controller
         $user = $request->user();
 
         // Check if auction is live or scheduled
-        if (!in_array($auction->status, ['live', 'scheduled'])) {
+        if (! in_array($auction->status, ['live', 'scheduled'])) {
             return response()->json([
                 'success' => false,
                 'message' => 'Lelang ini tidak dapat didaftarkan.',
@@ -201,7 +201,7 @@ class AuctionController extends Controller
             if ($user->balance < $registrationFee) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Saldo tidak cukup. Biaya pendaftaran: Rp ' . number_format($registrationFee, 0, ',', '.') . '. Saldo Anda: Rp ' . number_format($user->balance, 0, ',', '.'),
+                    'message' => 'Saldo tidak cukup. Biaya pendaftaran: Rp '.number_format($registrationFee, 0, ',', '.').'. Saldo Anda: Rp '.number_format($user->balance, 0, ',', '.'),
                     'required_balance' => $registrationFee,
                     'current_balance' => $user->balance,
                 ], 422);
@@ -219,7 +219,7 @@ class AuctionController extends Controller
                         $user->id,
                         Transaction::TYPE_REGISTRATION_FEE,
                         $registrationFee,
-                        'Biaya pendaftaran lelang: ' . $auction->title,
+                        'Biaya pendaftaran lelang: '.$auction->title,
                         $auction
                     );
 
@@ -236,7 +236,7 @@ class AuctionController extends Controller
                             $superadmin->id,
                             Transaction::TYPE_REGISTRATION_INCOME,
                             $registrationFee,
-                            'Pendapatan pendaftaran lelang: ' . $auction->title . ' (dari ' . $user->name . ')',
+                            'Pendapatan pendaftaran lelang: '.$auction->title.' (dari '.$user->name.')',
                             $auction
                         );
                     }
@@ -255,14 +255,14 @@ class AuctionController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => $registrationFee > 0
-                    ? 'Berhasil mendaftar! Saldo Anda telah dikurangi Rp ' . number_format($registrationFee, 0, ',', '.')
+                    ? 'Berhasil mendaftar! Saldo Anda telah dikurangi Rp '.number_format($registrationFee, 0, ',', '.')
                     : 'Berhasil mendaftar! Silakan mulai bidding.',
                 'new_balance' => $user->fresh()->balance,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal mendaftar: ' . $e->getMessage(),
+                'message' => 'Gagal mendaftar: '.$e->getMessage(),
             ], 500);
         }
     }

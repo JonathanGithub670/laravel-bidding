@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { Zap, Wallet, AlertTriangle, X } from 'lucide-react';
+import { useState } from 'react';
 
 interface QuickBid {
     label: string;
@@ -35,7 +35,9 @@ export default function BidControls({
 }: BidControlsProps) {
     const [customAmount, setCustomAmount] = useState<string>('');
     const [error, setError] = useState<string>('');
-    const [pendingBidAmount, setPendingBidAmount] = useState<number | null>(null);
+    const [pendingBidAmount, setPendingBidAmount] = useState<number | null>(
+        null,
+    );
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
     const requestBid = (amount: number) => {
@@ -47,7 +49,7 @@ export default function BidControls({
         // Check balance before showing confirmation (only check incremental charge)
         if (userBalance !== null && userBalance < chargeAmount) {
             setError(
-                `Saldo tidak mencukupi. Saldo Anda: ${formatCurrency(userBalance)}, Perlu tambahan: ${formatCurrency(chargeAmount)}`
+                `Saldo tidak mencukupi. Saldo Anda: ${formatCurrency(userBalance)}, Perlu tambahan: ${formatCurrency(chargeAmount)}`,
             );
             return;
         }
@@ -66,8 +68,11 @@ export default function BidControls({
 
         try {
             await onPlaceBid(amount);
-        } catch (e: any) {
-            setError(e.message || 'Gagal menempatkan bid');
+        } catch (e: unknown) {
+            setError(
+                (e instanceof Error ? e.message : null) ||
+                    'Gagal menempatkan bid',
+            );
         }
     };
 
@@ -101,7 +106,9 @@ export default function BidControls({
     const formatInputValue = (value: string): string => {
         const numericValue = value.replace(/\D/g, '');
         if (!numericValue) return '';
-        return new Intl.NumberFormat('id-ID').format(parseInt(numericValue, 10));
+        return new Intl.NumberFormat('id-ID').format(
+            parseInt(numericValue, 10),
+        );
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,21 +121,26 @@ export default function BidControls({
         <div className="space-y-4">
             {/* Balance Display */}
             {userBalance !== null && (
-                <div className="flex items-center gap-2 p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-                    <Wallet className="w-4 h-4 text-blue-500" />
+                <div className="flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-900/20">
+                    <Wallet className="h-4 w-4 text-blue-500" />
                     <span className="text-sm text-blue-700 dark:text-blue-300">
-                        Saldo Anda: <span className="font-bold">{formatCurrency(userBalance)}</span>
+                        Saldo Anda:{' '}
+                        <span className="font-bold">
+                            {formatCurrency(userBalance)}
+                        </span>
                     </span>
                 </div>
             )}
 
             {/* Current Price Display */}
-            <div className="text-center p-4 bg-slate-100 dark:bg-slate-800 rounded-xl">
-                <p className="text-sm text-slate-500 dark:text-slate-400">Harga Saat Ini</p>
+            <div className="rounded-xl bg-slate-100 p-4 text-center dark:bg-slate-800">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                    Harga Saat Ini
+                </p>
                 <p className="text-3xl font-bold text-slate-900 dark:text-white">
                     {formatCurrency(currentPrice)}
                 </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                     Minimum bid: {formatCurrency(nextMinBid)}
                 </p>
             </div>
@@ -140,13 +152,13 @@ export default function BidControls({
                         key={index}
                         onClick={() => handleQuickBid(bid.amount)}
                         disabled={disabled || isLoading}
-                        className="group relative py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                        className="group relative rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-3 font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-500/25 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
                     >
                         <span className="flex items-center justify-center gap-2">
-                            <Zap className="w-4 h-4" />
+                            <Zap className="h-4 w-4" />
                             {bid.label}
                         </span>
-                        <span className="text-xs opacity-75 block">
+                        <span className="block text-xs opacity-75">
                             {formatCurrency(bid.amount)}
                         </span>
                     </button>
@@ -157,7 +169,7 @@ export default function BidControls({
             <div className="space-y-2">
                 <div className="flex gap-2">
                     <div className="relative flex-1">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400">
+                        <span className="absolute top-1/2 left-3 -translate-y-1/2 text-slate-500 dark:text-slate-400">
                             Rp
                         </span>
                         <input
@@ -166,13 +178,13 @@ export default function BidControls({
                             onChange={handleInputChange}
                             placeholder="Masukkan jumlah"
                             disabled={disabled || isLoading}
-                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:opacity-50"
+                            className="w-full rounded-xl border border-slate-300 bg-white py-3 pr-4 pl-10 text-slate-900 focus:border-transparent focus:ring-2 focus:ring-amber-500 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
                         />
                     </div>
                     <button
                         onClick={handleCustomBid}
                         disabled={disabled || isLoading || !customAmount}
-                        className="px-6 py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="rounded-xl bg-slate-900 px-6 py-3 font-semibold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
                     >
                         {isLoading ? (
                             <span className="animate-spin">⏳</span>
@@ -183,9 +195,11 @@ export default function BidControls({
                 </div>
 
                 {error && (
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                        <AlertTriangle className="w-4 h-4 text-red-500 flex-shrink-0" />
-                        <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+                    <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20">
+                        <AlertTriangle className="h-4 w-4 flex-shrink-0 text-red-500" />
+                        <p className="text-sm text-red-600 dark:text-red-400">
+                            {error}
+                        </p>
                     </div>
                 )}
             </div>
@@ -205,33 +219,35 @@ export default function BidControls({
                     />
 
                     {/* Dialog */}
-                    <div className="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 space-y-5 animate-in fade-in zoom-in-95">
+                    <div className="relative w-full max-w-sm animate-in space-y-5 rounded-2xl bg-white p-6 shadow-2xl zoom-in-95 fade-in dark:bg-slate-800">
                         {/* Close button */}
                         <button
                             onClick={cancelBid}
-                            className="absolute top-4 right-4 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                            className="absolute top-4 right-4 rounded-lg p-1 transition-colors hover:bg-slate-100 dark:hover:bg-slate-700"
                         >
-                            <X className="w-5 h-5 text-slate-400" />
+                            <X className="h-5 w-5 text-slate-400" />
                         </button>
 
                         {/* Header */}
                         <div className="text-center">
-                            <div className="mx-auto w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-3">
-                                <Zap className="w-6 h-6 text-amber-500" />
+                            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+                                <Zap className="h-6 w-6 text-amber-500" />
                             </div>
                             <h3 className="text-lg font-bold text-slate-900 dark:text-white">
                                 Konfirmasi Bid
                             </h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                                 Saldo Anda akan dipotong untuk bid ini
                             </p>
                         </div>
 
                         {/* Details */}
-                        <div className="space-y-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 p-4">
+                        <div className="space-y-3 rounded-xl bg-slate-50 p-4 dark:bg-slate-700/50">
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-slate-500 dark:text-slate-400">Jumlah Bid</span>
-                                <span className="font-bold text-lg text-amber-600 dark:text-amber-400">
+                                <span className="text-sm text-slate-500 dark:text-slate-400">
+                                    Jumlah Bid
+                                </span>
+                                <span className="text-lg font-bold text-amber-600 dark:text-amber-400">
                                     {formatCurrency(pendingBidAmount)}
                                 </span>
                             </div>
@@ -239,7 +255,9 @@ export default function BidControls({
                                 <>
                                     <div className="border-t border-slate-200 dark:border-slate-600" />
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm text-slate-500 dark:text-slate-400">Deposit Ditahan</span>
+                                        <span className="text-sm text-slate-500 dark:text-slate-400">
+                                            Deposit Ditahan
+                                        </span>
                                         <span className="font-semibold text-blue-600 dark:text-blue-400">
                                             - {formatCurrency(userDeposit)}
                                         </span>
@@ -249,38 +267,62 @@ export default function BidControls({
                             <div className="border-t border-slate-200 dark:border-slate-600" />
                             <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                                    {userDeposit > 0 ? 'Tambahan Potongan' : 'Potongan Saldo'}
+                                    {userDeposit > 0
+                                        ? 'Tambahan Potongan'
+                                        : 'Potongan Saldo'}
                                 </span>
-                                <span className="font-bold text-lg text-red-600 dark:text-red-400">
-                                    {formatCurrency(pendingBidAmount - userDeposit)}
+                                <span className="text-lg font-bold text-red-600 dark:text-red-400">
+                                    {formatCurrency(
+                                        pendingBidAmount - userDeposit,
+                                    )}
                                 </span>
                             </div>
                             <div className="border-t border-slate-200 dark:border-slate-600" />
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-slate-500 dark:text-slate-400">Saldo Saat Ini</span>
+                                <span className="text-sm text-slate-500 dark:text-slate-400">
+                                    Saldo Saat Ini
+                                </span>
                                 <span className="font-semibold text-slate-900 dark:text-white">
-                                    {userBalance !== null ? formatCurrency(userBalance) : '-'}
+                                    {userBalance !== null
+                                        ? formatCurrency(userBalance)
+                                        : '-'}
                                 </span>
                             </div>
                             <div className="flex items-center justify-between">
-                                <span className="text-sm text-slate-500 dark:text-slate-400">Saldo Setelah Bid</span>
-                                <span className={`font-semibold ${
-                                    userBalance !== null && userBalance - (pendingBidAmount - userDeposit) >= 0
-                                        ? 'text-green-600 dark:text-green-400'
-                                        : 'text-red-600 dark:text-red-400'
-                                }`}>
+                                <span className="text-sm text-slate-500 dark:text-slate-400">
+                                    Saldo Setelah Bid
+                                </span>
+                                <span
+                                    className={`font-semibold ${
+                                        userBalance !== null &&
+                                        userBalance -
+                                            (pendingBidAmount - userDeposit) >=
+                                            0
+                                            ? 'text-green-600 dark:text-green-400'
+                                            : 'text-red-600 dark:text-red-400'
+                                    }`}
+                                >
                                     {userBalance !== null
-                                        ? formatCurrency(Math.max(0, userBalance - (pendingBidAmount - userDeposit)))
+                                        ? formatCurrency(
+                                              Math.max(
+                                                  0,
+                                                  userBalance -
+                                                      (pendingBidAmount -
+                                                          userDeposit),
+                                              ),
+                                          )
                                         : '-'}
                                 </span>
                             </div>
                         </div>
 
                         {/* Warning */}
-                        <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-                            <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                        <div className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-900/20">
+                            <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-500" />
                             <p className="text-xs text-amber-700 dark:text-amber-300">
-                                Deposit saldo ditahan selama lelang berlangsung. Jika Anda tidak menang, deposit akan dikembalikan setelah lelang berakhir.
+                                Deposit saldo ditahan selama lelang berlangsung.
+                                Jika Anda tidak menang, deposit akan
+                                dikembalikan setelah lelang berakhir.
                             </p>
                         </div>
 
@@ -288,13 +330,13 @@ export default function BidControls({
                         <div className="flex gap-3">
                             <button
                                 onClick={cancelBid}
-                                className="flex-1 px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 font-medium hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                                className="flex-1 rounded-xl border border-slate-300 px-4 py-3 font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
                             >
                                 Batal
                             </button>
                             <button
                                 onClick={confirmBid}
-                                className="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold hover:shadow-lg hover:shadow-amber-500/25 transition-all"
+                                className="flex-1 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-3 font-semibold text-white transition-all hover:shadow-lg hover:shadow-amber-500/25"
                             >
                                 Konfirmasi Bid
                             </button>

@@ -4,7 +4,6 @@ use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Laravel\Fortify\Features;
 
 // Enable broadcasting auth routes for private channels
 Broadcast::routes(['middleware' => ['web', 'auth']]);
@@ -17,9 +16,10 @@ Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('h
 
 Route::get('dashboard', function () {
     $user = auth()->user();
+
     return Inertia::render('dashboard', [
         'balance' => (float) $user->balance,
-        'formattedBalance' => 'Rp ' . number_format($user->balance, 0, ',', '.'),
+        'formattedBalance' => 'Rp '.number_format($user->balance, 0, ',', '.'),
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -71,8 +71,8 @@ Route::middleware(['auth', 'verified', 'role:superadmin,admin'])->prefix('admin'
     Route::post('/auctions/{auction}/approve', [\App\Http\Controllers\Admin\AuctionApprovalController::class, 'approve'])->name('admin.auctions.approve');
     Route::post('/auctions/{auction}/reject', [\App\Http\Controllers\Admin\AuctionApprovalController::class, 'reject'])->name('admin.auctions.reject');
     // GET fallbacks — redirect to pending list if accessed via browser
-    Route::get('/auctions/{auction}/approve', fn() => redirect()->route('admin.auctions.pending'));
-    Route::get('/auctions/{auction}/reject', fn() => redirect()->route('admin.auctions.pending'));
+    Route::get('/auctions/{auction}/approve', fn () => redirect()->route('admin.auctions.pending'));
+    Route::get('/auctions/{auction}/reject', fn () => redirect()->route('admin.auctions.pending'));
 
     // Auction duration management routes
     Route::get('/durations', [\App\Http\Controllers\Admin\AuctionDurationController::class, 'index'])->name('admin.durations.index');
@@ -156,11 +156,9 @@ Route::middleware(['auth', 'verified'])->prefix('notifications')->group(function
     Route::post('/{id}/mark-read', [\App\Http\Controllers\NotificationController::class, 'markRead'])->name('notifications.mark-read');
 });
 
-
-
 // Auction routes
 Route::prefix('auctions')->group(function () {
-    Route::get('/', fn() => redirect()->route('auctions.list'))->name('auctions.index');
+    Route::get('/', fn () => redirect()->route('auctions.list'))->name('auctions.index');
 
     // Authenticated auction actions - including view detail
     Route::middleware(['auth', 'verified'])->group(function () {
@@ -175,4 +173,4 @@ Route::prefix('auctions')->group(function () {
     });
 });
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

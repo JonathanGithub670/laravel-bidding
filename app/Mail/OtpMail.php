@@ -22,7 +22,7 @@ class OtpMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->otpCode . ' adalah kode verifikasi Anda - ' . config('app.name'),
+            subject: $this->otpCode.' adalah kode verifikasi Anda - '.config('app.name'),
         );
     }
 

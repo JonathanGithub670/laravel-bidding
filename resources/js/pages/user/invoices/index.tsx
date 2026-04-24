@@ -1,15 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
+import { FileText, ArrowRight, Receipt, Wallet } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
-import {
-    FileText,
-    RefreshCcw,
-    Clock,
-    CheckCircle,
-    XCircle,
-    ArrowRight,
-    Receipt,
-    Wallet,
-} from 'lucide-react';
 
 interface InvoiceItem {
     id: number;
@@ -46,7 +37,11 @@ const typeIconMap = {
     reimbursement: Wallet,
 };
 
-export default function UserInvoicesIndex({ items, counts, currentType }: Props) {
+export default function UserInvoicesIndex({
+    items,
+    counts,
+    currentType,
+}: Props) {
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('id-ID', {
             day: 'numeric',
@@ -74,7 +69,8 @@ export default function UserInvoicesIndex({ items, counts, currentType }: Props)
                         💰 Tagihan Saya
                     </h1>
                     <p className="mt-1 text-gray-500 dark:text-gray-400">
-                        Semua invoice dari lelang yang dimenangkan dan pengembalian dana
+                        Semua invoice dari lelang yang dimenangkan dan
+                        pengembalian dana
                     </p>
                 </div>
 
@@ -86,7 +82,9 @@ export default function UserInvoicesIndex({ items, counts, currentType }: Props)
                                 <FileText className="h-5 w-5 text-violet-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-gray-900 dark:text-white">{counts.all}</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                                    {counts.all}
+                                </p>
                                 <p className="text-sm text-gray-500">Total</p>
                             </div>
                         </div>
@@ -97,8 +95,12 @@ export default function UserInvoicesIndex({ items, counts, currentType }: Props)
                                 <Receipt className="h-5 w-5 text-amber-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-amber-600">{counts.invoice}</p>
-                                <p className="text-sm text-amber-700 dark:text-amber-400">Invoice Lelang</p>
+                                <p className="text-2xl font-bold text-amber-600">
+                                    {counts.invoice}
+                                </p>
+                                <p className="text-sm text-amber-700 dark:text-amber-400">
+                                    Invoice Lelang
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -108,8 +110,12 @@ export default function UserInvoicesIndex({ items, counts, currentType }: Props)
                                 <Wallet className="h-5 w-5 text-green-600" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-green-600">{counts.reimbursement}</p>
-                                <p className="text-sm text-green-700 dark:text-green-400">Reimbursement</p>
+                                <p className="text-2xl font-bold text-green-600">
+                                    {counts.reimbursement}
+                                </p>
+                                <p className="text-sm text-green-700 dark:text-green-400">
+                                    Reimbursement
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -121,7 +127,7 @@ export default function UserInvoicesIndex({ items, counts, currentType }: Props)
                         <Link
                             key={tab.key}
                             href={`/user/invoices?type=${tab.key}`}
-                            className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2 font-medium transition-colors ${
+                            className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium whitespace-nowrap transition-colors ${
                                 currentType === tab.key
                                     ? 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400'
                                     : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
@@ -129,7 +135,9 @@ export default function UserInvoicesIndex({ items, counts, currentType }: Props)
                         >
                             <tab.icon className="h-4 w-4" />
                             {tab.label}
-                            <span className="text-xs">({counts[tab.key] || 0})</span>
+                            <span className="text-xs">
+                                ({counts[tab.key] || 0})
+                            </span>
                         </Link>
                     ))}
                 </div>
@@ -156,46 +164,60 @@ export default function UserInvoicesIndex({ items, counts, currentType }: Props)
                                     className="group flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-5 transition-all hover:border-violet-300 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:hover:border-violet-600"
                                 >
                                     {/* Icon */}
-                                    <div className={`rounded-xl p-3 ${
-                                        item.type === 'invoice'
-                                            ? 'bg-amber-100 dark:bg-amber-900/30'
-                                            : 'bg-green-100 dark:bg-green-900/30'
-                                    }`}>
-                                        <Icon className={`h-6 w-6 ${
+                                    <div
+                                        className={`rounded-xl p-3 ${
                                             item.type === 'invoice'
-                                                ? 'text-amber-600'
-                                                : 'text-green-600'
-                                        }`} />
+                                                ? 'bg-amber-100 dark:bg-amber-900/30'
+                                                : 'bg-green-100 dark:bg-green-900/30'
+                                        }`}
+                                    >
+                                        <Icon
+                                            className={`h-6 w-6 ${
+                                                item.type === 'invoice'
+                                                    ? 'text-amber-600'
+                                                    : 'text-green-600'
+                                            }`}
+                                        />
                                     </div>
 
                                     {/* Info */}
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <p className="font-semibold text-gray-900 dark:text-white truncate">
+                                    <div className="min-w-0 flex-1">
+                                        <div className="mb-1 flex items-center gap-2">
+                                            <p className="truncate font-semibold text-gray-900 dark:text-white">
                                                 {item.title}
                                             </p>
-                                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                                                statusColorMap[item.status_color] || statusColorMap.gray
-                                            }`}>
+                                            <span
+                                                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                                                    statusColorMap[
+                                                        item.status_color
+                                                    ] || statusColorMap.gray
+                                                }`}
+                                            >
                                                 {item.status_label}
                                             </span>
                                         </div>
                                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                                            {item.description} • {item.reference}
+                                            {item.description} •{' '}
+                                            {item.reference}
                                         </p>
-                                        <p className="text-xs text-gray-400 mt-1">
+                                        <p className="mt-1 text-xs text-gray-400">
                                             {formatDate(item.created_at)}
                                         </p>
                                     </div>
 
                                     {/* Amount */}
                                     <div className="text-right">
-                                        <p className={`text-lg font-bold ${
-                                            item.type === 'reimbursement'
-                                                ? 'text-green-600 dark:text-green-400'
-                                                : 'text-gray-900 dark:text-white'
-                                        }`}>
-                                            {item.type === 'reimbursement' ? '+' : ''}{item.formatted_amount}
+                                        <p
+                                            className={`text-lg font-bold ${
+                                                item.type === 'reimbursement'
+                                                    ? 'text-green-600 dark:text-green-400'
+                                                    : 'text-gray-900 dark:text-white'
+                                            }`}
+                                        >
+                                            {item.type === 'reimbursement'
+                                                ? '+'
+                                                : ''}
+                                            {item.formatted_amount}
                                         </p>
                                     </div>
 

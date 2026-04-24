@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap") layer(base);
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap')
+layer(base);
 
 @import 'tailwindcss';
 @import 'tw-animate-css';
@@ -9,7 +10,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans:
+        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
     --font-outfit: Outfit, sans-serif;
 
     --radius-lg: var(--radius);
@@ -96,9 +100,15 @@
     --color-gray-950: #0c111d;
 
     /* TailAdmin Shadows */
-    --shadow-theme-md: 0px 4px 8px -2px rgba(16, 24, 40, 0.1), 0px 2px 4px -2px rgba(16, 24, 40, 0.06);
-    --shadow-theme-lg: 0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03);
-    --shadow-theme-sm: 0px 1px 3px 0px rgba(16, 24, 40, 0.1), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
+    --shadow-theme-md:
+        0px 4px 8px -2px rgba(16, 24, 40, 0.1),
+        0px 2px 4px -2px rgba(16, 24, 40, 0.06);
+    --shadow-theme-lg:
+        0px 12px 16px -4px rgba(16, 24, 40, 0.08),
+        0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+    --shadow-theme-sm:
+        0px 1px 3px 0px rgba(16, 24, 40, 0.1),
+        0px 1px 2px 0px rgba(16, 24, 40, 0.06);
     --shadow-theme-xs: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 
     /* Text Sizes */
@@ -193,20 +203,20 @@
         border-color: var(--color-gray-200, currentColor);
     }
     button:not(:disabled),
-    [role="button"]:not(:disabled) {
+    [role='button']:not(:disabled) {
         cursor: pointer;
     }
     * {
         @apply border-border;
     }
     body {
-        @apply relative font-normal bg-background text-foreground;
+        @apply relative bg-background font-normal text-foreground;
     }
 }
 
 /* TailAdmin Menu Utilities */
 @utility menu-item {
-    @apply relative flex items-center w-full gap-3 px-3 py-2.5 font-medium rounded-lg text-sm;
+    @apply relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium;
 }
 
 @utility menu-item-active {
@@ -214,7 +224,7 @@
 }
 
 @utility menu-item-inactive {
-    @apply text-gray-700 hover:bg-gray-100 group-hover:text-gray-700 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-gray-300;
+    @apply text-gray-700 group-hover:text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-gray-300;
 }
 
 @utility menu-item-icon-active {
@@ -259,7 +269,7 @@
         @apply rounded-full;
     }
     &::-webkit-scrollbar-thumb {
-        @apply bg-gray-200 rounded-full dark:bg-gray-700;
+        @apply rounded-full bg-gray-200 dark:bg-gray-700;
     }
 }
 

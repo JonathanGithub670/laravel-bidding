@@ -10,13 +10,14 @@ Broadcast::channel('chat.{id}', function ($user, $id) {
     \Illuminate\Support\Facades\Log::info("Channel auth attempt: User {$user->id} for Chat {$id}");
     $chat = \App\Models\Chat::find($id);
 
-    if (!$chat) {
+    if (! $chat) {
         \Illuminate\Support\Facades\Log::warning("Channel auth failed: Chat {$id} not found");
+
         return false;
     }
 
     $isParticipant = $chat->user_one_id == $user->id || $chat->user_two_id == $user->id;
-    \Illuminate\Support\Facades\Log::info("Channel auth result for Chat {$id}: " . ($isParticipant ? 'Allowed' : 'Denied'));
+    \Illuminate\Support\Facades\Log::info("Channel auth result for Chat {$id}: ".($isParticipant ? 'Allowed' : 'Denied'));
 
     return $isParticipant;
 });
@@ -25,7 +26,7 @@ Broadcast::channel('chat.{id}', function ($user, $id) {
 Broadcast::channel('auction.{id}', function ($user, $id) {
     $auction = \App\Models\Auction::find($id);
 
-    if (!$auction) {
+    if (! $auction) {
         return false;
     }
 

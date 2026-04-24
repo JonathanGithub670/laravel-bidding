@@ -1,8 +1,8 @@
-import invoices from './invoices'
-import reimbursements from './reimbursements'
+import invoices from './invoices';
+import reimbursements from './reimbursements';
 const user = {
     invoices: Object.assign(invoices, invoices),
-reimbursements: Object.assign(reimbursements, reimbursements),
-}
+    reimbursements: Object.assign(reimbursements, reimbursements),
+};
 
-export default user
+export default user;

@@ -1,29 +1,25 @@
 import { Head, router } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
 import {
     UserCheck,
     CheckCircle,
     XCircle,
     AlertCircle,
     Clock,
-    Mail,
     Shield,
     Calendar,
     Hash,
-    User,
     Sparkles,
     Loader2,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
-    DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import AppLayout from '@/layouts/app-layout';
 
 interface PendingUser {
     id: number;
@@ -65,18 +61,14 @@ export default function UserVerification({ pendingUsers }: Props) {
                 ? `/admin/users/${selectedUser.id}/approve`
                 : `/admin/users/${selectedUser.id}/reject`;
 
-        router.post(
-            url,
-            action === 'reject' ? { note: rejectNote } : {},
-            {
-                onFinish: () => {
-                    setIsProcessing(false);
-                    setSelectedUser(null);
-                    setAction(null);
-                    setRejectNote('');
-                },
+        router.post(url, action === 'reject' ? { note: rejectNote } : {}, {
+            onFinish: () => {
+                setIsProcessing(false);
+                setSelectedUser(null);
+                setAction(null);
+                setRejectNote('');
             },
-        );
+        });
     };
 
     const handleCancel = () => {
@@ -115,9 +107,9 @@ export default function UserVerification({ pendingUsers }: Props) {
             <div className="min-h-screen p-6 lg:p-8">
                 {/* Header with gradient */}
                 <div className="relative mb-8 overflow-hidden rounded-3xl bg-gradient-to-br from-[#4A7FB5] via-[#3d6d9e] to-[#2c5f8a] p-8 text-white shadow-2xl">
-                    <div className="absolute right-0 top-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+                    <div className="absolute top-0 right-0 -mt-16 -mr-16 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
                     <div className="absolute bottom-0 left-0 -mb-16 -ml-16 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
-                    
+
                     <div className="relative z-10">
                         <div className="flex items-center gap-4">
                             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
@@ -128,7 +120,8 @@ export default function UserVerification({ pendingUsers }: Props) {
                                     Verifikasi User
                                 </h1>
                                 <p className="mt-1 text-white/80">
-                                    Kelola dan verifikasi pendaftaran akun baru dari pengguna
+                                    Kelola dan verifikasi pendaftaran akun baru
+                                    dari pengguna
                                 </p>
                             </div>
                         </div>
@@ -138,8 +131,12 @@ export default function UserVerification({ pendingUsers }: Props) {
                             <div className="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
                                 <Clock className="h-5 w-5 text-yellow-300" />
                                 <div>
-                                    <p className="text-2xl font-bold">{pendingUsers.length}</p>
-                                    <p className="text-xs text-white/70">Menunggu Verifikasi</p>
+                                    <p className="text-2xl font-bold">
+                                        {pendingUsers.length}
+                                    </p>
+                                    <p className="text-xs text-white/70">
+                                        Menunggu Verifikasi
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -149,8 +146,15 @@ export default function UserVerification({ pendingUsers }: Props) {
                 {/* Users List */}
                 {pendingUsers.length === 0 ? (
                     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#f0f6fc] to-[#e0edf8] py-20 text-center dark:from-[#4A7FB5]/10 dark:to-[#3d6d9e]/10">
-                        <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(74,127,181,0.12) 1px, transparent 0)', backgroundSize: '24px 24px' }} />
-                        
+                        <div
+                            className="absolute inset-0 opacity-30"
+                            style={{
+                                backgroundImage:
+                                    'radial-gradient(circle at 2px 2px, rgba(74,127,181,0.12) 1px, transparent 0)',
+                                backgroundSize: '24px 24px',
+                            }}
+                        />
+
                         <div className="relative z-10">
                             <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-[#4A7FB5] to-[#3d6d9e] shadow-lg shadow-[#4A7FB5]/30">
                                 <Sparkles className="h-12 w-12 text-white" />
@@ -171,7 +175,7 @@ export default function UserVerification({ pendingUsers }: Props) {
                                 className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800"
                             >
                                 {/* Pending Badge */}
-                                <div className="absolute right-4 top-4">
+                                <div className="absolute top-4 right-4">
                                     <span className="inline-flex items-center gap-1 rounded-full bg-[#4A7FB5]/10 px-3 py-1 text-xs font-medium text-[#4A7FB5] dark:bg-[#4A7FB5]/20 dark:text-[#6B9AC4]">
                                         <Loader2 className="h-3 w-3 animate-spin" />
                                         Pending
@@ -202,7 +206,9 @@ export default function UserVerification({ pendingUsers }: Props) {
                                             <Hash className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">PIN</p>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                PIN
+                                            </p>
                                             <p className="font-mono font-medium text-gray-900 dark:text-white">
                                                 {user.pin}
                                             </p>
@@ -214,8 +220,10 @@ export default function UserVerification({ pendingUsers }: Props) {
                                             <Shield className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">Role</p>
-                                            <p className="font-medium capitalize text-gray-900 dark:text-white">
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                Role
+                                            </p>
+                                            <p className="font-medium text-gray-900 capitalize dark:text-white">
                                                 {user.role || 'User'}
                                             </p>
                                         </div>
@@ -226,7 +234,9 @@ export default function UserVerification({ pendingUsers }: Props) {
                                             <Calendar className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">Tanggal Daftar</p>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                Tanggal Daftar
+                                            </p>
                                             <p className="font-medium text-gray-900 dark:text-white">
                                                 {user.created_at_human}
                                             </p>
@@ -285,13 +295,15 @@ export default function UserVerification({ pendingUsers }: Props) {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="p-6">
                         <div className="mb-6 flex items-center gap-4 rounded-xl bg-gray-50 p-4 dark:bg-gray-800">
                             <div
                                 className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${selectedUser ? getAvatarGradient(selectedUser.id) : ''} text-lg font-bold text-white`}
                             >
-                                {selectedUser ? getInitials(selectedUser.name) : ''}
+                                {selectedUser
+                                    ? getInitials(selectedUser.name)
+                                    : ''}
                             </div>
                             <div>
                                 <p className="font-semibold text-gray-900 dark:text-white">
@@ -307,9 +319,12 @@ export default function UserVerification({ pendingUsers }: Props) {
                             <div className="flex items-start gap-3">
                                 <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#4A7FB5] dark:text-[#6B9AC4]" />
                                 <div className="text-sm text-[#2c5f8a] dark:text-[#6B9AC4]">
-                                    <p className="font-medium">User akan diaktifkan</p>
+                                    <p className="font-medium">
+                                        User akan diaktifkan
+                                    </p>
                                     <p className="mt-1 text-[#4A7FB5] dark:text-[#6B9AC4]">
-                                        Setelah disetujui, user dapat login dan mengakses aplikasi.
+                                        Setelah disetujui, user dapat login dan
+                                        mengakses aplikasi.
                                     </p>
                                 </div>
                             </div>
@@ -332,9 +347,24 @@ export default function UserVerification({ pendingUsers }: Props) {
                         >
                             {isProcessing ? (
                                 <>
-                                    <svg className="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                    <svg
+                                        className="mr-2 h-4 w-4 animate-spin"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            className="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                            fill="none"
+                                        />
+                                        <path
+                                            className="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                                        />
                                     </svg>
                                     Processing...
                                 </>
@@ -374,13 +404,15 @@ export default function UserVerification({ pendingUsers }: Props) {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="p-6">
                         <div className="mb-6 flex items-center gap-4 rounded-xl bg-gray-50 p-4 dark:bg-gray-800">
                             <div
                                 className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${selectedUser ? getAvatarGradient(selectedUser.id) : ''} text-lg font-bold text-white`}
                             >
-                                {selectedUser ? getInitials(selectedUser.name) : ''}
+                                {selectedUser
+                                    ? getInitials(selectedUser.name)
+                                    : ''}
                             </div>
                             <div>
                                 <p className="font-semibold text-gray-900 dark:text-white">
@@ -398,7 +430,8 @@ export default function UserVerification({ pendingUsers }: Props) {
                                 <div className="text-sm text-red-800 dark:text-red-300">
                                     <p className="font-medium">Perhatian!</p>
                                     <p className="mt-1 text-red-600 dark:text-red-400">
-                                        User tidak akan dapat login dan harus mendaftar ulang.
+                                        User tidak akan dapat login dan harus
+                                        mendaftar ulang.
                                     </p>
                                 </div>
                             </div>
@@ -413,7 +446,7 @@ export default function UserVerification({ pendingUsers }: Props) {
                                 onChange={(e) => setRejectNote(e.target.value)}
                                 placeholder="Berikan alasan mengapa pendaftaran ditolak..."
                                 rows={3}
-                                className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm transition-all focus:border-red-300 focus:outline-none focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-900/30"
+                                className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm transition-all focus:border-red-300 focus:ring-4 focus:ring-red-100 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-red-500 dark:focus:ring-red-900/30"
                             />
                         </div>
                     </div>
@@ -434,9 +467,24 @@ export default function UserVerification({ pendingUsers }: Props) {
                         >
                             {isProcessing ? (
                                 <>
-                                    <svg className="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                    <svg
+                                        className="mr-2 h-4 w-4 animate-spin"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            className="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                            fill="none"
+                                        />
+                                        <path
+                                            className="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                                        />
                                     </svg>
                                     Processing...
                                 </>

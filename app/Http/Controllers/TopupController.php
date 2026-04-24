@@ -12,8 +12,7 @@ class TopupController extends Controller
 {
     public function __construct(
         protected TopupService $topupService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a listing of user's topups.
@@ -48,7 +47,7 @@ class TopupController extends Controller
 
         return Inertia::render('topups/create', [
             'balance' => $balance,
-            'formattedBalance' => 'Rp ' . number_format($balance, 0, ',', '.'),
+            'formattedBalance' => 'Rp '.number_format($balance, 0, ',', '.'),
             'presetAmounts' => Topup::PRESET_AMOUNTS,
             'minAmount' => Topup::MIN_AMOUNT,
             'maxAmount' => Topup::MAX_AMOUNT,
@@ -62,8 +61,8 @@ class TopupController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'amount' => 'required|numeric|min:' . Topup::MIN_AMOUNT . '|max:' . Topup::MAX_AMOUNT,
-            'payment_method' => 'required|string|in:' . implode(',', array_keys(Topup::PAYMENT_METHODS)),
+            'amount' => 'required|numeric|min:'.Topup::MIN_AMOUNT.'|max:'.Topup::MAX_AMOUNT,
+            'payment_method' => 'required|string|in:'.implode(',', array_keys(Topup::PAYMENT_METHODS)),
         ]);
 
         try {
@@ -113,6 +112,7 @@ class TopupController extends Controller
 
         try {
             $this->topupService->confirmPayment($topup);
+
             return redirect()->route('topups.show', $topup)
                 ->with('success', 'Pembayaran berhasil! Saldo Anda sudah bertambah.');
         } catch (\Exception $e) {

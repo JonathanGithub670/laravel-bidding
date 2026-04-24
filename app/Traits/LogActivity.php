@@ -31,8 +31,8 @@ trait LogActivity
     /**
      * Log the activity to the 'crud' channel.
      *
-     * @param string $action
-     * @param mixed $model
+     * @param  string  $action
+     * @param  mixed  $model
      * @return void
      */
     protected static function logToCrud($action, $model)
@@ -61,6 +61,6 @@ trait LogActivity
             $logData['attributes'] = $model->toArray();
         }
 
-        Log::channel('crud')->info("{$action} " . class_basename($model) . " #{$model->id} by {$userEmail}", $logData);
+        Log::channel('crud')->info("{$action} ".class_basename($model)." #{$model->id} by {$userEmail}", $logData);
     }
 }

@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
 import { router } from '@inertiajs/react';
+import { useEffect, useState, useCallback } from 'react';
 
 /**
  * SessionExpiredModal — Global handler for 419 (CSRF token expired) errors.
@@ -95,23 +95,23 @@ export default function SessionExpiredModal() {
     return (
         <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
             {/* Backdrop with blur */}
-            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-fade-in" />
+            <div className="animate-fade-in absolute inset-0 bg-slate-900/60 backdrop-blur-sm" />
 
             {/* Modal */}
-            <div className="relative w-full max-w-sm animate-modal-in">
+            <div className="animate-modal-in relative w-full max-w-sm">
                 {/* Glowing border effect */}
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#5B8FAF] via-[#7BA8C4] to-[#5B8FAF] rounded-2xl opacity-75 blur-sm animate-pulse" />
+                <div className="absolute -inset-0.5 animate-pulse rounded-2xl bg-gradient-to-r from-[#5B8FAF] via-[#7BA8C4] to-[#5B8FAF] opacity-75 blur-sm" />
 
-                <div className="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+                <div className="relative overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-slate-800">
                     {/* Top accent bar */}
                     <div className="h-1.5 bg-gradient-to-r from-[#4A7A9B] via-[#5B8FAF] to-[#7BA8C4]" />
 
                     <div className="p-6">
                         {/* Logo + Icon */}
-                        <div className="flex flex-col items-center mb-5">
-                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#5B8FAF]/20 to-[#7BA8C4]/20 dark:from-[#5B8FAF]/30 dark:to-[#7BA8C4]/30 flex items-center justify-center mb-3 ring-4 ring-[#5B8FAF]/10">
+                        <div className="mb-5 flex flex-col items-center">
+                            <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#5B8FAF]/20 to-[#7BA8C4]/20 ring-4 ring-[#5B8FAF]/10 dark:from-[#5B8FAF]/30 dark:to-[#7BA8C4]/30">
                                 <svg
-                                    className="w-8 h-8 text-[#5B8FAF]"
+                                    className="h-8 w-8 text-[#5B8FAF]"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
@@ -132,20 +132,25 @@ export default function SessionExpiredModal() {
                         </div>
 
                         {/* Content */}
-                        <div className="text-center mb-6">
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                        <div className="mb-6 text-center">
+                            <h3 className="mb-2 text-lg font-bold text-slate-900 dark:text-white">
                                 Sesi Telah Berakhir
                             </h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                                Sesi login Anda telah kedaluwarsa. Halaman akan di-refresh otomatis untuk mendapatkan token baru.
+                            <p className="text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+                                Sesi login Anda telah kedaluwarsa. Halaman akan
+                                di-refresh otomatis untuk mendapatkan token
+                                baru.
                             </p>
                         </div>
 
                         {/* Countdown ring */}
-                        <div className="flex justify-center mb-6">
-                            <div className="relative w-16 h-16">
+                        <div className="mb-6 flex justify-center">
+                            <div className="relative h-16 w-16">
                                 {/* Background circle */}
-                                <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
+                                <svg
+                                    className="h-16 w-16 -rotate-90 transform"
+                                    viewBox="0 0 64 64"
+                                >
                                     <circle
                                         cx="32"
                                         cy="32"
@@ -167,7 +172,8 @@ export default function SessionExpiredModal() {
                                         className="text-[#5B8FAF]"
                                         strokeDasharray={`${(countdown / 5) * 175.93} 175.93`}
                                         style={{
-                                            transition: 'stroke-dasharray 1s linear',
+                                            transition:
+                                                'stroke-dasharray 1s linear',
                                         }}
                                     />
                                 </svg>
@@ -180,10 +186,10 @@ export default function SessionExpiredModal() {
                         {/* Refresh button */}
                         <button
                             onClick={handleRefreshNow}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-[#4A7A9B] to-[#5B8FAF] hover:from-[#3D6B8A] hover:to-[#4A7A9B] text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-[#5B8FAF]/25 hover:shadow-[#5B8FAF]/40 active:scale-[0.98]"
+                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#4A7A9B] to-[#5B8FAF] px-4 py-3 font-semibold text-white shadow-lg shadow-[#5B8FAF]/25 transition-all duration-200 hover:from-[#3D6B8A] hover:to-[#4A7A9B] hover:shadow-[#5B8FAF]/40 active:scale-[0.98]"
                         >
                             <svg
-                                className="w-5 h-5"
+                                className="h-5 w-5"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -199,7 +205,7 @@ export default function SessionExpiredModal() {
                         </button>
 
                         {/* Auto-refresh hint */}
-                        <p className="text-center text-xs text-slate-400 dark:text-slate-500 mt-3">
+                        <p className="mt-3 text-center text-xs text-slate-400 dark:text-slate-500">
                             Refresh otomatis dalam {countdown} detik...
                         </p>
                     </div>

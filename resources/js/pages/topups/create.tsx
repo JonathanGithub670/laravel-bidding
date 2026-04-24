@@ -1,7 +1,8 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
+import type { CreditCard } from 'lucide-react';
+import { ArrowLeft, Wallet, QrCode, Building2, Check } from 'lucide-react';
 import { useState } from 'react';
-import { ArrowLeft, Wallet, CreditCard, QrCode, Building2, Check } from 'lucide-react';
+import AppLayout from '@/layouts/app-layout';
 
 interface PaymentMethod {
     code: string;
@@ -23,13 +24,22 @@ interface Props {
     };
 }
 
-const paymentTypeConfig: Record<string, { label: string; icon: typeof CreditCard }> = {
+const paymentTypeConfig: Record<
+    string,
+    { label: string; icon: typeof CreditCard }
+> = {
     bank_transfer: { label: 'Transfer Bank', icon: Building2 },
     e_wallet: { label: 'E-Wallet', icon: Wallet },
     qris: { label: 'QRIS', icon: QrCode },
 };
 
-export default function TopupCreate({ balance, formattedBalance, presetAmounts, minAmount, maxAmount, paymentMethods }: Props) {
+export default function TopupCreate({
+    formattedBalance,
+    presetAmounts,
+    minAmount,
+    maxAmount,
+    paymentMethods,
+}: Props) {
     const [step, setStep] = useState<1 | 2>(1);
     const [selectedAmount, setSelectedAmount] = useState<number>(0);
     const [customAmount, setCustomAmount] = useState('');
@@ -45,7 +55,9 @@ export default function TopupCreate({ balance, formattedBalance, presetAmounts, 
         return new Intl.NumberFormat('id-ID').format(parseInt(numericValue));
     };
 
-    const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleCustomAmountChange = (
+        e: React.ChangeEvent<HTMLInputElement>,
+    ) => {
         const formatted = formatAmount(e.target.value);
         setCustomAmount(formatted);
         setSelectedAmount(parseInt(e.target.value.replace(/\D/g, '')) || 0);
@@ -79,30 +91,30 @@ export default function TopupCreate({ balance, formattedBalance, presetAmounts, 
         }
     };
 
-    const isValidAmount = selectedAmount >= minAmount && selectedAmount <= maxAmount;
+    const isValidAmount =
+        selectedAmount >= minAmount && selectedAmount <= maxAmount;
 
     return (
         <AppLayout>
             <Head title="Top Up Saldo" />
 
             <div className="min-h-[calc(100vh-4rem)] bg-gray-50 dark:bg-gray-950">
-                <div className="max-w-xl mx-auto px-4 py-8">
-                    
+                <div className="mx-auto max-w-xl px-4 py-8">
                     {/* Header with Back Button */}
-                    <div className="flex items-center gap-4 mb-8">
+                    <div className="mb-8 flex items-center gap-4">
                         {step === 1 ? (
                             <Link
                                 href="/dashboard"
-                                className="p-2 -ml-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                                className="-ml-2 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
                             >
-                                <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                                <ArrowLeft className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                             </Link>
                         ) : (
                             <button
                                 onClick={goBack}
-                                className="p-2 -ml-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                                className="-ml-2 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
                             >
-                                <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                                <ArrowLeft className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                             </button>
                         )}
                         <div>
@@ -110,41 +122,55 @@ export default function TopupCreate({ balance, formattedBalance, presetAmounts, 
                                 Top Up Saldo
                             </h1>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                                {step === 1 ? 'Pilih nominal' : 'Pilih metode pembayaran'}
+                                {step === 1
+                                    ? 'Pilih nominal'
+                                    : 'Pilih metode pembayaran'}
                             </p>
                         </div>
                     </div>
 
                     {/* Wizard Steps */}
-                    <div className="flex items-center gap-3 mb-8">
-                        <div className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                            step === 1 
-                                ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900' 
-                                : 'bg-gray-200 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
-                        }`}>
-                            {step === 2 ? <Check className="w-4 h-4" /> : <span className="w-4 text-center">1</span>}
+                    <div className="mb-8 flex items-center gap-3">
+                        <div
+                            className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                                step === 1
+                                    ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
+                                    : 'bg-gray-200 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                            }`}
+                        >
+                            {step === 2 ? (
+                                <Check className="h-4 w-4" />
+                            ) : (
+                                <span className="w-4 text-center">1</span>
+                            )}
                             <span>Nominal</span>
                         </div>
-                        <div className="w-8 h-px bg-gray-300 dark:bg-gray-700" />
-                        <div className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                            step === 2 
-                                ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900' 
-                                : 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500'
-                        }`}>
+                        <div className="h-px w-8 bg-gray-300 dark:bg-gray-700" />
+                        <div
+                            className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                                step === 2
+                                    ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
+                                    : 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500'
+                            }`}
+                        >
                             <span className="w-4 text-center">2</span>
                             <span>Metode</span>
                         </div>
                     </div>
 
                     {/* Current Balance - Compact */}
-                    <div className="flex items-center justify-between p-4 mb-6 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <div className="mb-6 flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                                <Wallet className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                            <div className="rounded-lg bg-gray-100 p-2 dark:bg-gray-800">
+                                <Wallet className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                             </div>
-                            <span className="text-sm text-gray-600 dark:text-gray-400">Saldo saat ini</span>
+                            <span className="text-sm text-gray-600 dark:text-gray-400">
+                                Saldo saat ini
+                            </span>
                         </div>
-                        <span className="font-semibold text-gray-900 dark:text-white">{formattedBalance}</span>
+                        <span className="font-semibold text-gray-900 dark:text-white">
+                            {formattedBalance}
+                        </span>
                     </div>
 
                     {step === 1 ? (
@@ -152,37 +178,42 @@ export default function TopupCreate({ balance, formattedBalance, presetAmounts, 
                         <div className="space-y-6">
                             {/* Preset Amounts */}
                             <div>
-                                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                                <h3 className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Pilih Nominal
                                 </h3>
                                 <div className="grid grid-cols-3 gap-3">
-                                    {presetAmounts.filter(a => a <= maxAmount).map((amount) => (
-                                        <button
-                                            key={amount}
-                                            onClick={() => handleAmountSelect(amount)}
-                                            className={`p-4 rounded-xl border-2 text-center transition-all ${
-                                                selectedAmount === amount && !customAmount
-                                                    ? 'border-gray-900 dark:border-white bg-gray-50 dark:bg-gray-800'
-                                                    : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 bg-white dark:bg-gray-900'
-                                            }`}
-                                        >
-                                            <p className="font-medium text-gray-900 dark:text-white">
-                                                {amount >= 1000000 
-                                                    ? `${amount / 1000000} Juta` 
-                                                    : `${amount / 1000} Ribu`}
-                                            </p>
-                                        </button>
-                                    ))}
+                                    {presetAmounts
+                                        .filter((a) => a <= maxAmount)
+                                        .map((amount) => (
+                                            <button
+                                                key={amount}
+                                                onClick={() =>
+                                                    handleAmountSelect(amount)
+                                                }
+                                                className={`rounded-xl border-2 p-4 text-center transition-all ${
+                                                    selectedAmount === amount &&
+                                                    !customAmount
+                                                        ? 'border-gray-900 bg-gray-50 dark:border-white dark:bg-gray-800'
+                                                        : 'border-gray-200 bg-white hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700'
+                                                }`}
+                                            >
+                                                <p className="font-medium text-gray-900 dark:text-white">
+                                                    {amount >= 1000000
+                                                        ? `${amount / 1000000} Juta`
+                                                        : `${amount / 1000} Ribu`}
+                                                </p>
+                                            </button>
+                                        ))}
                                 </div>
                             </div>
 
                             {/* Custom Amount */}
                             <div>
-                                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                                <h3 className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Atau masukkan nominal lain
                                 </h3>
                                 <div className="relative">
-                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">
+                                    <span className="absolute top-1/2 left-4 -translate-y-1/2 font-medium text-gray-400">
                                         Rp
                                     </span>
                                     <input
@@ -190,20 +221,32 @@ export default function TopupCreate({ balance, formattedBalance, presetAmounts, 
                                         value={customAmount}
                                         onChange={handleCustomAmountChange}
                                         placeholder="0"
-                                        className="w-full pl-12 pr-4 py-4 text-xl font-medium rounded-xl border-2 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:border-gray-900 dark:focus:border-white focus:ring-0 transition-colors"
+                                        className="w-full rounded-xl border-2 border-gray-200 bg-white py-4 pr-4 pl-12 text-xl font-medium text-gray-900 transition-colors focus:border-gray-900 focus:ring-0 dark:border-gray-800 dark:bg-gray-900 dark:text-white dark:focus:border-white"
                                     />
                                 </div>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                                    Min Rp {new Intl.NumberFormat('id-ID').format(minAmount)} • Max Rp {new Intl.NumberFormat('id-ID').format(maxAmount)}
+                                <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                    Min Rp{' '}
+                                    {new Intl.NumberFormat('id-ID').format(
+                                        minAmount,
+                                    )}{' '}
+                                    • Max Rp{' '}
+                                    {new Intl.NumberFormat('id-ID').format(
+                                        maxAmount,
+                                    )}
                                 </p>
                             </div>
 
                             {/* Selected Amount Preview */}
                             {selectedAmount > 0 && (
-                                <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-xl text-center">
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Nominal Top Up</p>
+                                <div className="rounded-xl bg-gray-100 p-4 text-center dark:bg-gray-800">
+                                    <p className="mb-1 text-xs text-gray-500 dark:text-gray-400">
+                                        Nominal Top Up
+                                    </p>
                                     <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                                        Rp {new Intl.NumberFormat('id-ID').format(selectedAmount)}
+                                        Rp{' '}
+                                        {new Intl.NumberFormat('id-ID').format(
+                                            selectedAmount,
+                                        )}
                                     </p>
                                 </div>
                             )}
@@ -212,89 +255,114 @@ export default function TopupCreate({ balance, formattedBalance, presetAmounts, 
                             <button
                                 onClick={proceedToMethod}
                                 disabled={!isValidAmount}
-                                className="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                                className="w-full rounded-xl bg-gray-900 py-4 font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
                             >
                                 Lanjutkan
                             </button>
 
                             {errors.amount && (
-                                <p className="text-red-500 text-center text-sm">{errors.amount}</p>
+                                <p className="text-center text-sm text-red-500">
+                                    {errors.amount}
+                                </p>
                             )}
                         </div>
                     ) : (
                         /* Step 2: Payment Method Selection */
                         <div className="space-y-6">
                             {/* Selected Amount Summary */}
-                            <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-xl">
+                            <div className="rounded-xl bg-gray-100 p-4 dark:bg-gray-800">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-sm text-gray-600 dark:text-gray-400">Nominal Top Up</span>
+                                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                                        Nominal Top Up
+                                    </span>
                                     <span className="font-semibold text-gray-900 dark:text-white">
-                                        Rp {new Intl.NumberFormat('id-ID').format(data.amount)}
+                                        Rp{' '}
+                                        {new Intl.NumberFormat('id-ID').format(
+                                            data.amount,
+                                        )}
                                     </span>
                                 </div>
                             </div>
 
                             {/* Payment Methods */}
-                            {Object.entries(paymentMethods).map(([type, methods]) => {
-                                const config = paymentTypeConfig[type];
-                                const TypeIcon = config?.icon || Wallet;
+                            {Object.entries(paymentMethods).map(
+                                ([type, methods]) => {
+                                    const config = paymentTypeConfig[type];
+                                    const TypeIcon = config?.icon || Wallet;
 
-                                return (
-                                    <div key={type}>
-                                        <div className="flex items-center gap-2 mb-3">
-                                            <TypeIcon className="w-4 h-4 text-gray-500" />
-                                            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                {config?.label || type}
-                                            </h3>
-                                        </div>
-                                        <div className="space-y-2">
-                                            {methods.map((method) => (
-                                                <button
-                                                    key={method.code}
-                                                    onClick={() => handleMethodSelect(method.code)}
-                                                    className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
-                                                        data.payment_method === method.code
-                                                            ? 'border-gray-900 dark:border-white bg-gray-50 dark:bg-gray-800'
-                                                            : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 bg-white dark:bg-gray-900'
-                                                    }`}
-                                                >
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-                                                            <span className="text-xs font-bold text-gray-500 dark:text-gray-400">
-                                                                {method.icon.toUpperCase().slice(0, 3)}
+                                    return (
+                                        <div key={type}>
+                                            <div className="mb-3 flex items-center gap-2">
+                                                <TypeIcon className="h-4 w-4 text-gray-500" />
+                                                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                    {config?.label || type}
+                                                </h3>
+                                            </div>
+                                            <div className="space-y-2">
+                                                {methods.map((method) => (
+                                                    <button
+                                                        key={method.code}
+                                                        onClick={() =>
+                                                            handleMethodSelect(
+                                                                method.code,
+                                                            )
+                                                        }
+                                                        className={`flex w-full items-center justify-between rounded-xl border-2 p-4 transition-all ${
+                                                            data.payment_method ===
+                                                            method.code
+                                                                ? 'border-gray-900 bg-gray-50 dark:border-white dark:bg-gray-800'
+                                                                : 'border-gray-200 bg-white hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700'
+                                                        }`}
+                                                    >
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-700">
+                                                                <span className="text-xs font-bold text-gray-500 dark:text-gray-400">
+                                                                    {method.icon
+                                                                        .toUpperCase()
+                                                                        .slice(
+                                                                            0,
+                                                                            3,
+                                                                        )}
+                                                                </span>
+                                                            </div>
+                                                            <span className="font-medium text-gray-900 dark:text-white">
+                                                                {method.name}
                                                             </span>
                                                         </div>
-                                                        <span className="font-medium text-gray-900 dark:text-white">
-                                                            {method.name}
-                                                        </span>
-                                                    </div>
-                                                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                                                        data.payment_method === method.code
-                                                            ? 'border-gray-900 bg-gray-900 dark:border-white dark:bg-white'
-                                                            : 'border-gray-300 dark:border-gray-600'
-                                                    }`}>
-                                                        {data.payment_method === method.code && (
-                                                            <Check className="w-3 h-3 text-white dark:text-gray-900" />
-                                                        )}
-                                                    </div>
-                                                </button>
-                                            ))}
+                                                        <div
+                                                            className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${
+                                                                data.payment_method ===
+                                                                method.code
+                                                                    ? 'border-gray-900 bg-gray-900 dark:border-white dark:bg-white'
+                                                                    : 'border-gray-300 dark:border-gray-600'
+                                                            }`}
+                                                        >
+                                                            {data.payment_method ===
+                                                                method.code && (
+                                                                <Check className="h-3 w-3 text-white dark:text-gray-900" />
+                                                            )}
+                                                        </div>
+                                                    </button>
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                },
+                            )}
 
                             {/* Pay Button */}
                             <button
                                 onClick={handleSubmit}
                                 disabled={!data.payment_method || processing}
-                                className="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                                className="w-full rounded-xl bg-gray-900 py-4 font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
                             >
                                 {processing ? 'Memproses...' : 'Bayar Sekarang'}
                             </button>
 
                             {errors.payment_method && (
-                                <p className="text-red-500 text-center text-sm">{errors.payment_method}</p>
+                                <p className="text-center text-sm text-red-500">
+                                    {errors.payment_method}
+                                </p>
                             )}
                         </div>
                     )}
@@ -303,7 +371,7 @@ export default function TopupCreate({ balance, formattedBalance, presetAmounts, 
                     <div className="mt-8 text-center">
                         <Link
                             href="/topups"
-                            className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+                            className="text-sm text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                         >
                             Lihat Riwayat Top Up
                         </Link>

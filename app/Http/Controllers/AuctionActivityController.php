@@ -19,7 +19,7 @@ class AuctionActivityController extends Controller
         ]);
 
         // Check if auction is live
-        if (!$auction->is_live) {
+        if (! $auction->is_live) {
             return response()->json([
                 'success' => false,
                 'message' => 'Tidak dapat mengirim pesan. Lelang tidak aktif.',

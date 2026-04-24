@@ -75,7 +75,7 @@ class BankAccount extends Model
             return $number;
         }
 
-        return str_repeat('*', $length - 4) . substr($number, -4);
+        return str_repeat('*', $length - 4).substr($number, -4);
     }
 
     /**

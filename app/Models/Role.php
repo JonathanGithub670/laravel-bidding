@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Role extends Model
 {
-    use HasFactory, \App\Traits\LogActivity;
+    use \App\Traits\LogActivity, HasFactory;
 
     protected $fillable = [
         'name',
@@ -20,10 +20,14 @@ class Role extends Model
      * Role constants.
      */
     public const SUPERADMIN = 'superadmin';
+
     public const GURU = 'guru';
+
     public const MURID = 'murid';
+
     // Backwards compatibility if needed, otherwise these might be deprecated
     public const ADMIN = 'admin';
+
     public const USER = 'user';
 
     /**

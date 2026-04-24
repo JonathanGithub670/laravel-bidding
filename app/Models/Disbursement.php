@@ -14,10 +14,15 @@ class Disbursement extends Model
      * Status constants
      */
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_APPROVED = 'approved';
+
     public const STATUS_PROCESSING = 'processing';
+
     public const STATUS_COMPLETED = 'completed';
+
     public const STATUS_FAILED = 'failed';
+
     public const STATUS_REJECTED = 'rejected';
 
     /**
@@ -69,7 +74,7 @@ class Disbursement extends Model
             $disbursement->total = $disbursement->amount - $disbursement->fee;
 
             // Generate reference number
-            $disbursement->reference_number = 'DSB-' . strtoupper(uniqid()) . '-' . date('Ymd');
+            $disbursement->reference_number = 'DSB-'.strtoupper(uniqid()).'-'.date('Ymd');
         });
     }
 
@@ -102,7 +107,7 @@ class Disbursement extends Model
      */
     public function getFormattedAmountAttribute(): string
     {
-        return 'Rp ' . number_format($this->amount, 0, ',', '.');
+        return 'Rp '.number_format($this->amount, 0, ',', '.');
     }
 
     /**
@@ -110,7 +115,7 @@ class Disbursement extends Model
      */
     public function getFormattedFeeAttribute(): string
     {
-        return 'Rp ' . number_format($this->fee, 0, ',', '.');
+        return 'Rp '.number_format($this->fee, 0, ',', '.');
     }
 
     /**
@@ -118,7 +123,7 @@ class Disbursement extends Model
      */
     public function getFormattedTotalAttribute(): string
     {
-        return 'Rp ' . number_format($this->total, 0, ',', '.');
+        return 'Rp '.number_format($this->total, 0, ',', '.');
     }
 
     /**

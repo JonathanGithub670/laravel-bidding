@@ -13,8 +13,7 @@ class AuctionSettlementController extends Controller
 {
     public function __construct(
         protected AuctionSettlementService $settlementService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a listing of all auction settlements for admin.
@@ -84,6 +83,7 @@ class AuctionSettlementController extends Controller
                 $validated['estimated_delivery_date'],
                 $validated['notes'] ?? null
             );
+
             return back()->with('success', 'Settlement berhasil disetujui. Dana dijadwalkan untuk dicairkan.');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
@@ -97,6 +97,7 @@ class AuctionSettlementController extends Controller
     {
         try {
             $this->settlementService->confirmShipping($settlement, $request->user());
+
             return back()->with('success', 'Pengiriman barang telah dikonfirmasi.');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
@@ -110,6 +111,7 @@ class AuctionSettlementController extends Controller
     {
         try {
             $this->settlementService->markDelivered($settlement, $request->user());
+
             return back()->with('success', 'Barang telah sampai ke pemenang.');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
@@ -127,6 +129,7 @@ class AuctionSettlementController extends Controller
 
         try {
             $this->settlementService->reject($settlement, $request->user(), $validated['reason']);
+
             return back()->with('success', 'Settlement berhasil ditolak. Dana dikembalikan ke pemenang.');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);

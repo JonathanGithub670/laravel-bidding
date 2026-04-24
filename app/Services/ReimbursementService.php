@@ -117,7 +117,7 @@ class ReimbursementService
      */
     public function approve(Reimbursement $reimbursement, User $admin): Reimbursement
     {
-        if (!$reimbursement->canBeApproved()) {
+        if (! $reimbursement->canBeApproved()) {
             throw new Exception('Reimbursement ini belum eligible atau sudah diproses.');
         }
 
@@ -130,7 +130,7 @@ class ReimbursementService
                 $reimbursement->user_id,
                 \App\Models\Transaction::TYPE_REIMBURSEMENT,
                 $reimbursement->amount,
-                'Pengembalian dana lelang: ' . ($reimbursement->auction->title ?? 'Lelang #' . $reimbursement->auction_id),
+                'Pengembalian dana lelang: '.($reimbursement->auction->title ?? 'Lelang #'.$reimbursement->auction_id),
                 $reimbursement
             );
 
@@ -166,7 +166,7 @@ class ReimbursementService
      */
     public function reject(Reimbursement $reimbursement, User $admin, string $reason): Reimbursement
     {
-        if (!$reimbursement->canBeRejected()) {
+        if (! $reimbursement->canBeRejected()) {
             throw new Exception('Reimbursement ini tidak dapat ditolak.');
         }
 

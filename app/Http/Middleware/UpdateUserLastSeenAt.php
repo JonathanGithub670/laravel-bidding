@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class UpdateUserLastSeenAt
 {
@@ -19,11 +19,12 @@ class UpdateUserLastSeenAt
         if (Auth::check()) {
             $user = Auth::user();
             // Update only if last update was more than 1 minute ago to avoid too many DB writes
-            if (!$user->last_seen_at || $user->last_seen_at->diffInMinutes(now()) >= 1) {
+            if (! $user->last_seen_at || $user->last_seen_at->diffInMinutes(now()) >= 1) {
                 $user->last_seen_at = now();
                 $user->save();
             }
         }
+
         return $next($request);
     }
 }

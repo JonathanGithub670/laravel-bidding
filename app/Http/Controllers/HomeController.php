@@ -35,7 +35,7 @@ class HomeController extends Controller
                         'icon' => $auction->category->icon,
                     ] : null,
                     'currentBid' => $auction->current_price,
-                    'formattedPrice' => 'Rp ' . number_format($auction->current_price, 0, ',', '.'),
+                    'formattedPrice' => 'Rp '.number_format($auction->current_price, 0, ',', '.'),
                     'image' => $auction->primary_image,
                     'timeLeft' => $remaining,
                     'startsAt' => $auction->starts_at?->toISOString(),
@@ -50,7 +50,7 @@ class HomeController extends Controller
         $categories = AuctionCategory::withCount([
             'auctions' => function ($query) {
                 $query->whereIn('status', ['live', 'scheduled']);
-            }
+            },
         ])
             ->whereRaw('"is_active" = true')
             ->orderBy('sort_order')

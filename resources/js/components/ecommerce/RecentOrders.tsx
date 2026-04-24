@@ -1,10 +1,16 @@
 import {
+    MoreHorizontal,
+    Eye,
+    Package,
+    CheckCircle,
+    XCircle,
+} from 'lucide-react';
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Eye, Package, CheckCircle, XCircle } from 'lucide-react';
 
 interface Order {
     id: string;
@@ -62,17 +68,20 @@ const statusConfig = {
     pending: {
         label: 'Pending',
         icon: Package,
-        className: 'bg-warning-50 text-warning-600 dark:bg-warning-500/15 dark:text-warning-500',
+        className:
+            'bg-warning-50 text-warning-600 dark:bg-warning-500/15 dark:text-warning-500',
     },
     completed: {
         label: 'Completed',
         icon: CheckCircle,
-        className: 'bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500',
+        className:
+            'bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500',
     },
     cancelled: {
         label: 'Cancelled',
         icon: XCircle,
-        className: 'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500',
+        className:
+            'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500',
     },
 };
 
@@ -100,22 +109,22 @@ export default function RecentOrders() {
                 <table className="w-full min-w-[600px]">
                     <thead>
                         <tr className="border-t border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50">
-                            <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
+                            <th className="px-5 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400">
                                 Order ID
                             </th>
-                            <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
+                            <th className="px-5 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400">
                                 Customer
                             </th>
-                            <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
+                            <th className="px-5 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400">
                                 Amount
                             </th>
-                            <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
+                            <th className="px-5 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400">
                                 Status
                             </th>
-                            <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
+                            <th className="px-5 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400">
                                 Date
                             </th>
-                            <th className="px-5 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
+                            <th className="px-5 py-3 text-right text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400">
                                 Action
                             </th>
                         </tr>
@@ -125,7 +134,10 @@ export default function RecentOrders() {
                             const status = statusConfig[order.status];
                             const StatusIcon = status.icon;
                             return (
-                                <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-white/[0.02]">
+                                <tr
+                                    key={order.id}
+                                    className="hover:bg-gray-50 dark:hover:bg-white/[0.02]"
+                                >
                                     <td className="px-5 py-4 text-sm font-medium text-gray-800 dark:text-white/90">
                                         {order.id}
                                     </td>
@@ -143,7 +155,9 @@ export default function RecentOrders() {
                                         {order.amount}
                                     </td>
                                     <td className="px-5 py-4">
-                                        <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${status.className}`}>
+                                        <span
+                                            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${status.className}`}
+                                        >
                                             <StatusIcon className="size-3" />
                                             {status.label}
                                         </span>
@@ -152,7 +166,7 @@ export default function RecentOrders() {
                                         {order.date}
                                     </td>
                                     <td className="px-5 py-4 text-right">
-                                        <button className="text-gray-400 hover:text-brand-500 transition-colors">
+                                        <button className="text-gray-400 transition-colors hover:text-brand-500">
                                             <Eye className="size-4" />
                                         </button>
                                     </td>

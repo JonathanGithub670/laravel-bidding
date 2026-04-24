@@ -1,5 +1,13 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, MessageSquare, Gavel, ShieldCheck, Clock } from 'lucide-react';
+import {
+    BookOpen,
+    Folder,
+    LayoutGrid,
+    MessageSquare,
+    Gavel,
+    ShieldCheck,
+    Clock,
+} from 'lucide-react';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -62,9 +70,11 @@ const footerNavItems: NavItem[] = [
 
 export function AppSidebar() {
     const { auth, adminBadges } = usePage<SharedData>().props;
-    
+
     // Check if user is admin or superadmin
-    const isAdmin = auth.user?.role?.name === 'admin' || auth.user?.role?.name === 'superadmin';
+    const isAdmin =
+        auth.user?.role?.name === 'admin' ||
+        auth.user?.role?.name === 'superadmin';
 
     // Add badge counts to admin nav items
     const adminNavWithBadges: NavItem[] = adminNavItems.map((item) => {
@@ -90,7 +100,9 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} label="Menu" />
-                {isAdmin && <NavMain items={adminNavWithBadges} label="Admin" />}
+                {isAdmin && (
+                    <NavMain items={adminNavWithBadges} label="Admin" />
+                )}
             </SidebarContent>
 
             <SidebarFooter>
@@ -100,4 +112,3 @@ export function AppSidebar() {
         </Sidebar>
     );
 }
-

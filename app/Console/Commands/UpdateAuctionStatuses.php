@@ -80,4 +80,3 @@ class UpdateAuctionStatuses extends Command
         return Command::SUCCESS;
     }
 }
-

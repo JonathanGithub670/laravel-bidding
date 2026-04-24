@@ -1,13 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
 import { Link } from '@inertiajs/react';
+import { usePage, router } from '@inertiajs/react';
+import {
+    Bell,
+    LogOut,
+    Settings,
+    User,
+    Moon,
+    Sun,
+    ChevronUp,
+    Info,
+    Home,
+} from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useSidebar } from '@/context/SidebarContext';
+import { useAppearance } from '@/hooks/use-appearance';
+import { useInitials } from '@/hooks/use-initials';
 import { MenuIcon, CloseIcon, SearchIcon } from '@/icons';
 import { type SharedData } from '@/types';
-import { usePage, router } from '@inertiajs/react';
-import { Bell, LogOut, Settings, User, Moon, Sun, ChevronUp, Info, Home } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useInitials } from '@/hooks/use-initials';
-import { useAppearance } from '@/hooks/use-appearance';
 
 interface NotificationItem {
     id: string;
@@ -33,8 +43,10 @@ export const AppHeader: React.FC = () => {
     const { auth, unreadNotifications } = usePage<SharedData>().props;
     const getInitials = useInitials();
     const { appearance, updateAppearance } = useAppearance();
-    const [localUnreadCount, setLocalUnreadCount] = useState(unreadNotifications || 0);
-    
+    const [localUnreadCount, setLocalUnreadCount] = useState(
+        unreadNotifications || 0,
+    );
+
     const userDropdownRef = useRef<HTMLDivElement>(null);
     const notificationRef = useRef<HTMLDivElement>(null);
 
@@ -79,16 +91,23 @@ export const AppHeader: React.FC = () => {
     // Close dropdowns when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+            if (
+                userDropdownRef.current &&
+                !userDropdownRef.current.contains(event.target as Node)
+            ) {
                 setIsUserDropdownOpen(false);
             }
-            if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+            if (
+                notificationRef.current &&
+                !notificationRef.current.contains(event.target as Node)
+            ) {
                 setIsNotificationOpen(false);
             }
         };
 
         document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        return () =>
+            document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     // Fetch notifications when dropdown is opened
@@ -97,7 +116,10 @@ export const AppHeader: React.FC = () => {
         setLoadingNotifications(true);
         try {
             const response = await fetch('/notifications', {
-                headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                headers: {
+                    Accept: 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
             });
             const data = await response.json();
             setNotifications(data.notifications || []);
@@ -124,10 +146,17 @@ export const AppHeader: React.FC = () => {
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+                    'X-CSRF-TOKEN':
+                        (
+                            document.querySelector(
+                                'meta[name="csrf-token"]',
+                            ) as HTMLMetaElement
+                        )?.content || '',
                 },
             });
-            setNotifications(prev => prev.map(n => ({ ...n, read_at: new Date().toISOString() })));
+            setNotifications((prev) =>
+                prev.map((n) => ({ ...n, read_at: new Date().toISOString() })),
+            );
             setLocalUnreadCount(0);
         } catch (e) {
             console.error('Failed to mark all read', e);
@@ -142,13 +171,22 @@ export const AppHeader: React.FC = () => {
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+                    'X-CSRF-TOKEN':
+                        (
+                            document.querySelector(
+                                'meta[name="csrf-token"]',
+                            ) as HTMLMetaElement
+                        )?.content || '',
                 },
             });
-            setNotifications(prev => prev.map(n =>
-                n.id === notification.id ? { ...n, read_at: new Date().toISOString() } : n
-            ));
-            setLocalUnreadCount(prev => Math.max(0, prev - 1));
+            setNotifications((prev) =>
+                prev.map((n) =>
+                    n.id === notification.id
+                        ? { ...n, read_at: new Date().toISOString() }
+                        : n,
+                ),
+            );
+            setLocalUnreadCount((prev) => Math.max(0, prev - 1));
         }
 
         // Navigate
@@ -158,7 +196,10 @@ export const AppHeader: React.FC = () => {
         }
     };
 
-    const getNotificationIcon = (type: string, fallbackIcon: string): string => {
+    const getNotificationIcon = (
+        type: string,
+        fallbackIcon: string,
+    ): string => {
         const iconMap: Record<string, string> = {
             auction_won: '🏆',
             auction_lost: '💰',
@@ -168,11 +209,11 @@ export const AppHeader: React.FC = () => {
     };
 
     return (
-        <header className="sticky top-0 flex w-full bg-white border-gray-200 z-40 dark:border-gray-800 dark:bg-gray-900 lg:border-b">
-            <div className="flex flex-col items-center justify-between grow lg:flex-row lg:px-6">
-                <div className="flex items-center justify-between w-full gap-2 px-3 py-3 border-b border-gray-200 dark:border-gray-800 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0 lg:py-4">
+        <header className="sticky top-0 z-40 flex w-full border-gray-200 bg-white lg:border-b dark:border-gray-800 dark:bg-gray-900">
+            <div className="flex grow flex-col items-center justify-between lg:flex-row lg:px-6">
+                <div className="flex w-full items-center justify-between gap-2 border-b border-gray-200 px-3 py-3 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0 lg:py-4 dark:border-gray-800">
                     <button
-                        className="items-center justify-center w-10 h-10 text-gray-500 border-gray-200 rounded-lg z-40 dark:border-gray-800 lg:flex dark:text-gray-400 lg:h-11 lg:w-11 lg:border hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                        className="z-40 h-10 w-10 items-center justify-center rounded-lg border-gray-200 text-gray-500 transition-colors hover:bg-gray-100 lg:flex lg:h-11 lg:w-11 lg:border dark:border-gray-800 dark:text-gray-400 dark:hover:bg-gray-800"
                         onClick={handleToggle}
                         aria-label="Toggle Sidebar"
                     >
@@ -180,12 +221,14 @@ export const AppHeader: React.FC = () => {
                     </button>
 
                     <Link href="/dashboard" className="lg:hidden">
-                        <span className="text-lg font-bold text-gray-900 dark:text-white">Dashboard</span>
+                        <span className="text-lg font-bold text-gray-900 dark:text-white">
+                            Dashboard
+                        </span>
                     </Link>
 
                     <button
                         onClick={toggleApplicationMenu}
-                        className="flex items-center justify-center w-10 h-10 text-gray-700 rounded-lg z-40 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 lg:hidden"
+                        className="z-40 flex h-10 w-10 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 lg:hidden dark:text-gray-400 dark:hover:bg-gray-800"
                     >
                         <svg
                             width="24"
@@ -206,18 +249,18 @@ export const AppHeader: React.FC = () => {
                     <div className="hidden lg:block">
                         <form>
                             <div className="relative">
-                                <span className="absolute -translate-y-1/2 pointer-events-none left-4 top-1/2">
+                                <span className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2">
                                     <SearchIcon className="fill-gray-500 dark:fill-gray-400" />
                                 </span>
                                 <input
                                     ref={inputRef}
                                     type="text"
                                     placeholder="Search or type command..."
-                                    className="h-11 w-full rounded-lg border border-gray-200 bg-transparent py-2.5 pl-12 pr-14 text-sm text-gray-800 shadow-sm placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-900 dark:bg-white/[0.03] dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 xl:w-[430px]"
+                                    className="h-11 w-full rounded-lg border border-gray-200 bg-transparent py-2.5 pr-14 pl-12 text-sm text-gray-800 shadow-sm placeholder:text-gray-400 focus:border-brand-300 focus:ring-2 focus:ring-brand-500/10 focus:outline-none xl:w-[430px] dark:border-gray-800 dark:bg-gray-900 dark:bg-white/[0.03] dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                                 />
-                                <button 
+                                <button
                                     type="button"
-                                    className="absolute right-2.5 top-1/2 inline-flex -translate-y-1/2 items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 px-[7px] py-[4.5px] text-xs -tracking-[0.2px] text-gray-500 dark:border-gray-800 dark:bg-white/[0.03] dark:text-gray-400"
+                                    className="absolute top-1/2 right-2.5 inline-flex -translate-y-1/2 items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 px-[7px] py-[4.5px] text-xs -tracking-[0.2px] text-gray-500 dark:border-gray-800 dark:bg-white/[0.03] dark:text-gray-400"
                                 >
                                     <span>⌘</span>
                                     <span>K</span>
@@ -229,13 +272,13 @@ export const AppHeader: React.FC = () => {
                 <div
                     className={`${
                         isApplicationMenuOpen ? 'flex' : 'hidden'
-                    } items-center justify-between w-full gap-4 px-5 py-4 lg:flex shadow-md lg:justify-end lg:px-0 lg:shadow-none`}
+                    } w-full items-center justify-between gap-4 px-5 py-4 shadow-md lg:flex lg:justify-end lg:px-0 lg:shadow-none`}
                 >
                     <div className="flex items-center gap-3">
                         {/* Home Button - Circular Button */}
                         <Link
                             href="/"
-                            className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm hover:bg-gray-50 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 transition-colors"
+                            className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-colors hover:bg-gray-50 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                             aria-label="Go to Home"
                         >
                             <Home className="h-5 w-5" />
@@ -244,7 +287,7 @@ export const AppHeader: React.FC = () => {
                         {/* Dark Mode Toggle - Circular Button */}
                         <button
                             onClick={toggleDarkMode}
-                            className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm hover:bg-gray-50 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 transition-colors"
+                            className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-colors hover:bg-gray-50 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                             aria-label="Toggle dark mode"
                         >
                             {appearance === 'dark' ? (
@@ -253,26 +296,30 @@ export const AppHeader: React.FC = () => {
                                 <Moon className="h-5 w-5" />
                             )}
                         </button>
-                        
+
                         {/* Notification Button - Circular with Badge */}
                         <div className="relative" ref={notificationRef}>
                             <button
                                 onClick={handleToggleNotifications}
-                                className="relative flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm hover:bg-gray-50 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 transition-colors"
+                                className="relative flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-colors hover:bg-gray-50 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                             >
                                 <Bell className="h-5 w-5" />
                                 {localUnreadCount > 0 && (
                                     <span className="absolute -top-0.5 -right-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
-                                        {localUnreadCount > 99 ? '99+' : localUnreadCount}
+                                        {localUnreadCount > 99
+                                            ? '99+'
+                                            : localUnreadCount}
                                     </span>
                                 )}
                             </button>
-                            
+
                             {/* Notification Dropdown */}
                             {isNotificationOpen && (
-                                <div className="absolute right-0 mt-3 w-96 rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900 z-50">
+                                <div className="absolute right-0 z-50 mt-3 w-96 rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900">
                                     <div className="flex items-center justify-between border-b border-gray-100 p-4 dark:border-gray-800">
-                                        <h5 className="font-semibold text-gray-800 dark:text-white">Notifikasi</h5>
+                                        <h5 className="font-semibold text-gray-800 dark:text-white">
+                                            Notifikasi
+                                        </h5>
                                         {localUnreadCount > 0 && (
                                             <button
                                                 onClick={handleMarkAllRead}
@@ -290,37 +337,68 @@ export const AppHeader: React.FC = () => {
                                         ) : notifications.length === 0 ? (
                                             <div className="py-8 text-center">
                                                 <Bell className="mx-auto mb-2 h-8 w-8 text-gray-300 dark:text-gray-600" />
-                                                <p className="text-sm text-gray-500 dark:text-gray-400">Belum ada notifikasi</p>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                    Belum ada notifikasi
+                                                </p>
                                             </div>
                                         ) : (
                                             <div className="divide-y divide-gray-50 dark:divide-gray-800">
-                                                {notifications.map((notification) => (
-                                                    <button
-                                                        key={notification.id}
-                                                        onClick={() => handleNotificationClick(notification)}
-                                                        className={`flex w-full items-start gap-3 p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 ${
-                                                            !notification.read_at ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''
-                                                        }`}
-                                                    >
-                                                        <span className="mt-0.5 text-xl">
-                                                            {getNotificationIcon(notification.data.type, notification.data.icon)}
-                                                        </span>
-                                                        <div className="flex-1 min-w-0">
-                                                            <p className={`text-sm ${!notification.read_at ? 'font-semibold text-gray-900 dark:text-white' : 'font-medium text-gray-700 dark:text-gray-300'}`}>
-                                                                {notification.data.title}
-                                                            </p>
-                                                            <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400 line-clamp-2">
-                                                                {notification.data.message}
-                                                            </p>
-                                                            <p className="mt-1 text-[10px] text-gray-400 dark:text-gray-500">
-                                                                {notification.created_at}
-                                                            </p>
-                                                        </div>
-                                                        {!notification.read_at && (
-                                                            <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-blue-500"></span>
-                                                        )}
-                                                    </button>
-                                                ))}
+                                                {notifications.map(
+                                                    (notification) => (
+                                                        <button
+                                                            key={
+                                                                notification.id
+                                                            }
+                                                            onClick={() =>
+                                                                handleNotificationClick(
+                                                                    notification,
+                                                                )
+                                                            }
+                                                            className={`flex w-full items-start gap-3 p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 ${
+                                                                !notification.read_at
+                                                                    ? 'bg-blue-50/50 dark:bg-blue-900/10'
+                                                                    : ''
+                                                            }`}
+                                                        >
+                                                            <span className="mt-0.5 text-xl">
+                                                                {getNotificationIcon(
+                                                                    notification
+                                                                        .data
+                                                                        .type,
+                                                                    notification
+                                                                        .data
+                                                                        .icon,
+                                                                )}
+                                                            </span>
+                                                            <div className="min-w-0 flex-1">
+                                                                <p
+                                                                    className={`text-sm ${!notification.read_at ? 'font-semibold text-gray-900 dark:text-white' : 'font-medium text-gray-700 dark:text-gray-300'}`}
+                                                                >
+                                                                    {
+                                                                        notification
+                                                                            .data
+                                                                            .title
+                                                                    }
+                                                                </p>
+                                                                <p className="mt-0.5 line-clamp-2 text-xs text-gray-500 dark:text-gray-400">
+                                                                    {
+                                                                        notification
+                                                                            .data
+                                                                            .message
+                                                                    }
+                                                                </p>
+                                                                <p className="mt-1 text-[10px] text-gray-400 dark:text-gray-500">
+                                                                    {
+                                                                        notification.created_at
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                            {!notification.read_at && (
+                                                                <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-blue-500"></span>
+                                                            )}
+                                                        </button>
+                                                    ),
+                                                )}
                                             </div>
                                         )}
                                     </div>
@@ -328,32 +406,41 @@ export const AppHeader: React.FC = () => {
                             )}
                         </div>
                     </div>
-                    
+
                     {/* User Profile Dropdown */}
                     <div className="relative" ref={userDropdownRef}>
                         {auth.user ? (
                             <>
-                                <button 
-                                    onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                                <button
+                                    onClick={() =>
+                                        setIsUserDropdownOpen(
+                                            !isUserDropdownOpen,
+                                        )
+                                    }
                                     className="flex items-center gap-3 text-left"
                                 >
                                     <Avatar className="h-11 w-11 border-2 border-gray-200 dark:border-gray-700">
-                                        <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
+                                        <AvatarImage
+                                            src={auth.user.avatar}
+                                            alt={auth.user.name}
+                                        />
                                         <AvatarFallback className="bg-brand-500 text-white">
                                             {getInitials(auth.user.name)}
                                         </AvatarFallback>
                                     </Avatar>
-                                    <div className="hidden lg:flex items-center gap-2">
+                                    <div className="hidden items-center gap-2 lg:flex">
                                         <span className="text-sm font-medium text-gray-800 dark:text-white">
                                             {auth.user.name}
                                         </span>
-                                        <ChevronUp className={`h-4 w-4 text-gray-500 transition-transform ${isUserDropdownOpen ? '' : 'rotate-180'}`} />
+                                        <ChevronUp
+                                            className={`h-4 w-4 text-gray-500 transition-transform ${isUserDropdownOpen ? '' : 'rotate-180'}`}
+                                        />
                                     </div>
                                 </button>
-                                
+
                                 {/* User Dropdown Menu */}
                                 {isUserDropdownOpen && (
-                                    <div className="absolute right-0 mt-3 w-64 rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900 z-50">
+                                    <div className="absolute right-0 z-50 mt-3 w-64 rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-900">
                                         {/* User Info Header */}
                                         <div className="border-b border-gray-200 p-4 dark:border-gray-800">
                                             <h5 className="font-semibold text-gray-800 dark:text-white">
@@ -363,13 +450,15 @@ export const AppHeader: React.FC = () => {
                                                 {auth.user.email}
                                             </p>
                                         </div>
-                                        
+
                                         {/* Menu Items */}
                                         <div className="p-2">
                                             <Link
                                                 href="/settings/profile"
                                                 className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-                                                onClick={() => setIsUserDropdownOpen(false)}
+                                                onClick={() =>
+                                                    setIsUserDropdownOpen(false)
+                                                }
                                             >
                                                 <User className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                                                 Edit profile
@@ -377,7 +466,9 @@ export const AppHeader: React.FC = () => {
                                             <Link
                                                 href="/settings/profile"
                                                 className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-                                                onClick={() => setIsUserDropdownOpen(false)}
+                                                onClick={() =>
+                                                    setIsUserDropdownOpen(false)
+                                                }
                                             >
                                                 <Settings className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                                                 Account settings
@@ -385,17 +476,21 @@ export const AppHeader: React.FC = () => {
                                             <Link
                                                 href="#"
                                                 className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-                                                onClick={() => setIsUserDropdownOpen(false)}
+                                                onClick={() =>
+                                                    setIsUserDropdownOpen(false)
+                                                }
                                             >
                                                 <Info className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                                                 Support
                                             </Link>
                                         </div>
-                                        
+
                                         {/* Sign Out */}
                                         <div className="border-t border-gray-200 p-2 dark:border-gray-800">
                                             <button
-                                                onClick={() => router.post('/logout')}
+                                                onClick={() =>
+                                                    router.post('/logout')
+                                                }
                                                 className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                                             >
                                                 <LogOut className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -409,13 +504,13 @@ export const AppHeader: React.FC = () => {
                             <div className="flex items-center gap-2">
                                 <Link
                                     href="/login"
-                                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+                                    className="px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
                                 >
                                     Login
                                 </Link>
                                 <Link
                                     href="/register"
-                                    className="px-4 py-2 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 transition-colors"
+                                    className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-600"
                                 >
                                     Register
                                 </Link>

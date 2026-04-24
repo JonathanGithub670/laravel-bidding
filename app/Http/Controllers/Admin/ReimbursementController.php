@@ -13,8 +13,7 @@ class ReimbursementController extends Controller
 {
     public function __construct(
         protected ReimbursementService $reimbursementService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a listing of all reimbursements for admin.
@@ -58,6 +57,7 @@ class ReimbursementController extends Controller
     {
         try {
             $this->reimbursementService->approve($reimbursement, $request->user());
+
             return back()->with('success', 'Reimbursement berhasil disetujui. Dana telah dikembalikan ke saldo user.');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
@@ -75,6 +75,7 @@ class ReimbursementController extends Controller
 
         try {
             $this->reimbursementService->reject($reimbursement, $request->user(), $validated['reason']);
+
             return back()->with('success', 'Reimbursement berhasil ditolak.');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);

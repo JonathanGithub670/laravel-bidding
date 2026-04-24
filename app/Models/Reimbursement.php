@@ -15,9 +15,13 @@ class Reimbursement extends Model
      * Status constants
      */
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_ELIGIBLE = 'eligible';
+
     public const STATUS_APPROVED = 'approved';
+
     public const STATUS_COMPLETED = 'completed';
+
     public const STATUS_REJECTED = 'rejected';
 
     /**
@@ -71,8 +75,8 @@ class Reimbursement extends Model
             if (empty($reimbursement->uuid)) {
                 $reimbursement->uuid = Str::uuid()->toString();
             }
-            if (!$reimbursement->reference_number) {
-                $reimbursement->reference_number = 'RMB-' . strtoupper(uniqid()) . '-' . date('Ymd');
+            if (! $reimbursement->reference_number) {
+                $reimbursement->reference_number = 'RMB-'.strtoupper(uniqid()).'-'.date('Ymd');
             }
         });
     }
@@ -114,7 +118,7 @@ class Reimbursement extends Model
      */
     public function getFormattedAmountAttribute(): string
     {
-        return 'Rp ' . number_format($this->amount, 0, ',', '.');
+        return 'Rp '.number_format($this->amount, 0, ',', '.');
     }
 
     /**
@@ -161,9 +165,10 @@ class Reimbursement extends Model
      */
     public function getRemainingDaysAttribute(): int
     {
-        if (!$this->eligible_at || $this->eligible_at->isPast()) {
+        if (! $this->eligible_at || $this->eligible_at->isPast()) {
             return 0;
         }
+
         return (int) now()->diffInDays($this->eligible_at, false);
     }
 
