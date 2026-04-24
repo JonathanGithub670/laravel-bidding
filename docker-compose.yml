@@ -1,0 +1,115 @@
+services:
+  # Laravel Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nathbid-app
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - app-storage:/var/www/html/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - nathbid
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: nathbid-postgres
+    restart: unless-stopped
+    ports:
+      - "54320:5432"
+    environment:
+      POSTGRES_DB: laravel_aplikasi
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nathbid
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: nathbid-redis
+    restart: unless-stopped
+    ports:
+      - "63790:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nathbid
+
+  # Laravel Reverb (WebSocket)
+  reverb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nathbid-reverb
+    restart: unless-stopped
+    ports:
+      - "8090:8080"
+    command: ["php", "artisan", "reverb:start", "--host=0.0.0.0", "--port=8080"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - nathbid
+
+  # Queue Worker
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nathbid-queue
+    restart: unless-stopped
+    command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=3", "--max-time=3600"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - nathbid
+
+  # Scheduler (cron)
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nathbid-scheduler
+    restart: unless-stopped
+    command: >
+      sh -c "while true; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - nathbid
+
+volumes:
+  postgres-data:
+  redis-data:
+  app-storage:
+
+networks:
+  nathbid:
+    driver: bridge
