@@ -82,6 +82,6 @@ COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 COPY docker/supervisord.conf /etc/supervisord.conf
 COPY docker/php.ini /usr/local/etc/php/conf.d/custom.ini
 
-EXPOSE 80
+EXPOSE 8081
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
