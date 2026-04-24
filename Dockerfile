@@ -24,6 +24,9 @@ WORKDIR /app
 # Copy composer vendor (wayfinder needs php artisan)
 COPY --from=composer /app /app
 
+# Copy .env.docker as .env so Vite can read VITE_* variables during build
+COPY .env.docker /app/.env
+
 # Install npm dependencies and build
 RUN npm ci && npm run build
 
