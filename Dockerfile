@@ -84,4 +84,8 @@ COPY docker/php.ini /usr/local/etc/php/conf.d/custom.ini
 
 EXPOSE 8081
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+# Entrypoint: migrate, cache config, then start supervisor
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+CMD ["/usr/local/bin/entrypoint.sh"]
