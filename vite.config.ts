@@ -17,9 +17,9 @@ export default defineConfig({
             },
         }),
         tailwindcss(),
-        ...(process.env.VERCEL ? [] : [wayfinder({
+        wayfinder({
             formVariants: true,
-        })]),
+        }),
     ],
     esbuild: {
         jsx: 'automatic',
