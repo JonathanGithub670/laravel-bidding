@@ -290,6 +290,7 @@ export default function AuctionShow({
         return () => {
             window.Echo?.leave(`auction.${auction.id}`);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [auction.id]); // Only depend on auction.id - stable identifier
 
     const formatShort = (num: number): string => {
@@ -369,6 +370,7 @@ export default function AuctionShow({
                 setIsPlacingBid(false);
             }
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [auction.id, auth.user],
     );
 
@@ -431,6 +433,7 @@ export default function AuctionShow({
         } finally {
             setIsRegistering(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [auction.id, auth.user, userBalance]);
 
     const handleSendMessage = useCallback(
@@ -457,6 +460,7 @@ export default function AuctionShow({
 
             // Don't add optimistically - let Echo broadcast handle it to prevent duplicates
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [auction.id, auth.user],
     );
 

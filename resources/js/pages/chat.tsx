@@ -242,6 +242,7 @@ export default function Chat({
                 window.Echo.leave(`chat.${selectedChat.id}`);
             }
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Subscribe to all chat channels for unread notifications
@@ -283,6 +284,7 @@ export default function Chat({
                 }
             });
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chatList.length, selectedChat?.id]);
 
     // Function to select chat and reset unread count
